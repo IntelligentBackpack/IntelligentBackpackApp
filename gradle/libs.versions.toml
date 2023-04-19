@@ -1,0 +1,27 @@
+[versions]
+kotest = "5.5.1"
+kotlin = "1.8.20"
+gradle = "8.0.0"
+
+[libraries]
+build-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle" }
+gradle-plugin = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotest-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-assertions-core-jvm = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest" }
+
+[bundles]
+kotlin-testing = [
+    "kotest-junit5-jvm",
+    "kotest-assertions-core",
+    "kotest-assertions-core-jvm"
+]
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+dokka = "org.jetbrains.dokka:1.8.20"
+android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+application = {id = "com.android.application", version.ref = "gradle" }
+library = {id = "com.android.library", version.ref = "gradle" }
+kotlin-qa = { id = "org.danilopianini.gradle-kotlin-qa", version = "0.29.2" }
+taskTree = { id = "com.dorongold.task-tree", version = "2.1.1" }
