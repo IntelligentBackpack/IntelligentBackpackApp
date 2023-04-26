@@ -2,8 +2,8 @@ name: Android CI
 
 on:
   push:
-      paths-ignore:
-          - '**/README.md'
+    paths-ignore:
+      - '**/README.md'
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew assembleDebug
 
 #  test:
 #    runs-on: ubuntu-latest
@@ -102,27 +102,16 @@ jobs:
           cache: gradle
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: create key
+        run: echo "$SIGNING_KEY" | base64 -d > key.jks
+        env:
+         SIGNING_KEY: ${{secrets.SIGNING_KEY}}
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN}}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           npm install
           npx semantic-release
-      - name: Generate app Bundle.
-        run: ./gradlew app:bundleRelease --stacktrace
-      - uses: ilharp/sign-android-release@v1
-        name: Sign app Bundle
-        # ID used to access action output
-        id: sign_app
-        with:
-          releaseDir: app/build/outputs/bundle/release
-          signingKey: ${{ secrets.SIGNING_KEY }}
-          keyAlias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-          buildToolsVersion: 33.0.0
-      - name: Upload Bundle
-        uses: actions/upload-artifact@v2
-        with:
-          name: signed_app_bundle
-          path: app/build/outputs/bundle/release/app-release.aab
