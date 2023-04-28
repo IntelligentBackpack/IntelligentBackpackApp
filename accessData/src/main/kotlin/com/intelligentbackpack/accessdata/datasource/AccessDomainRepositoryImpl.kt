@@ -7,6 +7,7 @@ class AccessDomainRepositoryImpl(
     private val accessLocalDataStorage: AccessLocalDataStorage,
     private val accessRemoteDataStorage: AccessRemoteDataStorage
 ) : AccessDomainRepository {
+
     override fun createUser(user: User): User = accessRemoteDataStorage.createUser(user)
 
     override fun isUserLogged(): Boolean = accessLocalDataStorage.isUserSaved()

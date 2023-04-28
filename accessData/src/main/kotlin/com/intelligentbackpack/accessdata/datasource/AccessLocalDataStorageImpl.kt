@@ -6,6 +6,7 @@ import com.intelligentbackpack.accessdata.storage.StorageUser
 import com.intelligentbackpack.accessdomain.entities.User
 
 class AccessLocalDataStorageImpl(private val storage: StorageUser) : AccessLocalDataStorage {
+
     override fun isUserSaved(): Boolean {
         return storage.isUserSaved()
     }
