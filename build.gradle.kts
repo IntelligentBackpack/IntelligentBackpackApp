@@ -8,6 +8,10 @@ plugins {
     alias(libs.plugins.taskTree)
 }
 
+subprojects {
+    apply(plugin = "org.danilopianini.gradle-kotlin-qa")
+}
+
 buildscript {
     repositories {
         google()
