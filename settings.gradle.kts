@@ -36,3 +36,4 @@ gitHooks {
 
 rootProject.name = "IntelligentBackpackApp"
 include(":app")
+include(":accessDomain")
