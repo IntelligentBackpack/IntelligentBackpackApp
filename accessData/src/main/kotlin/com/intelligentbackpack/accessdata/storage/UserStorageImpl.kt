@@ -8,7 +8,7 @@ import androidx.security.crypto.MasterKey
 import com.intelligentbackpack.accessdomain.entities.Role
 import com.intelligentbackpack.accessdomain.entities.User
 
-class StorageUserImpl(private val context: Context) : StorageUser {
+class UserStorageImpl(private val context: Context) : UserStorage {
 
     private val name = "IntelligentBackpackSharedPref"
 

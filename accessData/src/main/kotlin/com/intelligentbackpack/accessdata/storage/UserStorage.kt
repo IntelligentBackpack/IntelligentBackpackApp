@@ -2,7 +2,7 @@ package com.intelligentbackpack.accessdata.storage
 
 import com.intelligentbackpack.accessdomain.entities.User
 
-interface StorageUser {
+interface UserStorage {
 
     fun isUserSaved(): Boolean
 

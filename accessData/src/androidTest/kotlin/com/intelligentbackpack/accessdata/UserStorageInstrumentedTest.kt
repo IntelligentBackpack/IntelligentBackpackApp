@@ -3,8 +3,8 @@ package com.intelligentbackpack.accessdata
 import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.intelligentbackpack.accessdata.storage.StorageUser
-import com.intelligentbackpack.accessdata.storage.StorageUserImpl
+import com.intelligentbackpack.accessdata.storage.UserStorage
+import com.intelligentbackpack.accessdata.storage.UserStorageImpl
 import com.intelligentbackpack.accessdomain.entities.User
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -15,10 +15,10 @@ import org.junit.runner.RunWith
 
 /**
  * Instrumented test, which will execute on an Android device.
- * Tests for [StorageUser]
+ * Tests for [UserStorage]
  */
 @RunWith(AndroidJUnit4::class)
-class StorageUserInstrumentedTest {
+class UserStorageInstrumentedTest {
 
     @Test
     fun initiallyAUserIsntLogged() {
@@ -26,7 +26,7 @@ class StorageUserInstrumentedTest {
             InstrumentationRegistry
                 .getInstrumentation()
                 .targetContext
-        val storage: StorageUser = StorageUserImpl(appContext)
+        val storage: UserStorage = UserStorageImpl(appContext)
         assertFalse(storage.isUserSaved())
     }
 
@@ -36,7 +36,7 @@ class StorageUserInstrumentedTest {
             InstrumentationRegistry
                 .getInstrumentation()
                 .targetContext
-        val storage: StorageUser = StorageUserImpl(appContext)
+        val storage: UserStorage = UserStorageImpl(appContext)
         val expectedUser = User.build {
             email = "test@gmail.com"
             password = "Test#1234"
@@ -55,7 +55,7 @@ class StorageUserInstrumentedTest {
             InstrumentationRegistry
                 .getInstrumentation()
                 .targetContext
-        val storage: StorageUser = StorageUserImpl(appContext)
+        val storage: UserStorage = UserStorageImpl(appContext)
         assertFalse(storage.isUserSaved())
         assertThrows(IllegalStateException::class.java) {
             storage.getUser()
@@ -65,7 +65,7 @@ class StorageUserInstrumentedTest {
     @Test
     fun deleteUser() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        val storage: StorageUser = StorageUserImpl(appContext)
+        val storage: UserStorage = UserStorageImpl(appContext)
         val expectedUser = User.build {
             email = "test@gmail.com"
             password = "Test#1234"
@@ -81,7 +81,7 @@ class StorageUserInstrumentedTest {
     @Test
     fun passwordIsEncrypted() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        val storage: StorageUser = StorageUserImpl(appContext)
+        val storage: UserStorage = UserStorageImpl(appContext)
         val expectedUser = User.build {
             email = "test@gmail.com"
             password = "Test#1234"

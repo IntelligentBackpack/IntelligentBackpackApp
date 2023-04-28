@@ -6,7 +6,7 @@ import com.intelligentbackpack.accessdata.datasource.AccessDomainRepositoryImpl
 import com.intelligentbackpack.accessdata.datasource.AccessLocalDataStorageImpl
 import com.intelligentbackpack.accessdata.datasource.AccessRemoteDataStorage
 import com.intelligentbackpack.accessdata.exception.MissingUserException
-import com.intelligentbackpack.accessdata.storage.StorageUserImpl
+import com.intelligentbackpack.accessdata.storage.UserStorageImpl
 import com.intelligentbackpack.accessdomain.entities.User
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
@@ -47,7 +47,7 @@ class AccessDomainRepositoryInstrumentedTest {
                 ArgumentMatchers.anyString()
             )
         ).thenReturn(expectedUser)
-        val localAccessDataStorage = AccessLocalDataStorageImpl(StorageUserImpl(appContext))
+        val localAccessDataStorage = AccessLocalDataStorageImpl(UserStorageImpl(appContext))
         val accessLocalDataStorage = AccessDomainRepositoryImpl(localAccessDataStorage, accessRemoteDataStorage)
         assertFalse(localAccessDataStorage.isUserSaved())
         val user = accessLocalDataStorage.loginWithData("test@gmail.com", "Test#1234")
@@ -64,7 +64,7 @@ class AccessDomainRepositoryInstrumentedTest {
                 .getInstrumentation()
                 .targetContext
         val accessRemoteDataStorage = mock(AccessRemoteDataStorage::class.java)
-        val accessLocalDataStorage = AccessLocalDataStorageImpl(StorageUserImpl(appContext))
+        val accessLocalDataStorage = AccessLocalDataStorageImpl(UserStorageImpl(appContext))
         accessLocalDataStorage.saveUser(expectedUser)
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataStorage, accessRemoteDataStorage)
         assertTrue(accessLocalDataStorage.isUserSaved())
@@ -81,7 +81,7 @@ class AccessDomainRepositoryInstrumentedTest {
                 .getInstrumentation()
                 .targetContext
         val accessRemoteDataStorage = mock(AccessRemoteDataStorage::class.java)
-        val accessLocalDataStorage = AccessLocalDataStorageImpl(StorageUserImpl(appContext))
+        val accessLocalDataStorage = AccessLocalDataStorageImpl(UserStorageImpl(appContext))
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataStorage, accessRemoteDataStorage)
         assertFalse(accessLocalDataStorage.isUserSaved())
         assertThrows(MissingUserException::class.java) {
@@ -96,7 +96,7 @@ class AccessDomainRepositoryInstrumentedTest {
                 .getInstrumentation()
                 .targetContext
         val accessRemoteDataStorage = mock(AccessRemoteDataStorage::class.java)
-        val accessLocalDataStorage = AccessLocalDataStorageImpl(StorageUserImpl(appContext))
+        val accessLocalDataStorage = AccessLocalDataStorageImpl(UserStorageImpl(appContext))
         accessLocalDataStorage.saveUser(expectedUser)
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataStorage, accessRemoteDataStorage)
         assertTrue(accessDomainRepository.isUserLogged())

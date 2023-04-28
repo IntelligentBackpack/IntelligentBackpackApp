@@ -2,10 +2,10 @@ package com.intelligentbackpack.accessdata.datasource
 
 import com.intelligentbackpack.accessdata.exception.MissingUserException
 import com.intelligentbackpack.accessdata.exception.SavingUserException
-import com.intelligentbackpack.accessdata.storage.StorageUser
+import com.intelligentbackpack.accessdata.storage.UserStorage
 import com.intelligentbackpack.accessdomain.entities.User
 
-class AccessLocalDataStorageImpl(private val storage: StorageUser) : AccessLocalDataStorage {
+class AccessLocalDataStorageImpl(private val storage: UserStorage) : AccessLocalDataStorage {
 
     override fun isUserSaved(): Boolean {
         return storage.isUserSaved()
