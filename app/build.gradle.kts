@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.sem.ver)
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 androidGitSemVer {
@@ -86,6 +88,9 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(project(":accessData"))
     implementation(project(":accessDomain"))
+    implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
     testImplementation(libs.bundles.kotlin.testing)
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.androidTest)
