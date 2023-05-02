@@ -126,7 +126,7 @@ fun LoginForm(
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically)
     ) {
         var email by rememberSaveable { mutableStateOf("") }
-        val password = rememberSaveable { mutableStateOf("") }
+        var password by rememberSaveable { mutableStateOf("") }
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -144,10 +144,11 @@ fun LoginForm(
             })
         )
         PasswordFiled(
-            password = password,
+            value = password,
+            onValueChange = { password = it },
             imeAction = ImeAction.Done,
             keyboardActions = KeyboardActions(onDone = {
-                activateLogin(email, password.value)
+                activateLogin(email, password)
                 localFocusManager.clearFocus()
             }),
             modifier = Modifier.fillMaxWidth(0.8f)
@@ -178,7 +179,7 @@ fun LoginForm(
             }
             Button(
                 onClick = {
-                    activateLogin(email, password.value)
+                    activateLogin(email, password)
                     localFocusManager.clearFocus()
                 },
                 modifier = Modifier

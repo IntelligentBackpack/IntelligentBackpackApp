@@ -122,8 +122,8 @@ fun CreateForm(
         var email by rememberSaveable { mutableStateOf(emailInsert) }
         var name by rememberSaveable { mutableStateOf("") }
         var surname by rememberSaveable { mutableStateOf("") }
-        val password = rememberSaveable { mutableStateOf("") }
-        val passwordConfirm = rememberSaveable { mutableStateOf("") }
+        var password by rememberSaveable { mutableStateOf("") }
+        var passwordConfirm by rememberSaveable { mutableStateOf("") }
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -173,7 +173,8 @@ fun CreateForm(
             })
         )
         PasswordFiled(
-            password = password,
+            value = password,
+            onValueChange = { password = it },
             imeAction = ImeAction.Next,
             keyboardActions = KeyboardActions(onNext = {
                 localFocusManager.moveFocus(FocusDirection.Down)
@@ -181,7 +182,8 @@ fun CreateForm(
             modifier = Modifier.fillMaxWidth(0.8f)
         )
         PasswordFiled(
-            password = passwordConfirm,
+            value = passwordConfirm,
+            onValueChange = { passwordConfirm = it },
             imeAction = ImeAction.Done,
             keyboardActions = KeyboardActions(onDone = {
                 localFocusManager.clearFocus()
@@ -200,7 +202,7 @@ fun CreateForm(
                             email = email,
                             name = name,
                             surname = surname,
-                            password = password.value
+                            password = password,
                         )
                     )
                     localFocusManager.clearFocus()
