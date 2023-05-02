@@ -22,6 +22,7 @@ protobuf-kotlin = "3.19.6"
 retrofit = "2.9.0"
 retrofitProtobufJsonConverter = "1.0.0"
 runner = "1.5.2"
+compose-compiler = "1.4.5"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
