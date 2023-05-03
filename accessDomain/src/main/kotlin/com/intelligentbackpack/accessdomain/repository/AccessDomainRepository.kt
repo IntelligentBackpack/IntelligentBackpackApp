@@ -13,4 +13,6 @@ interface AccessDomainRepository {
     fun automaticLogin(): User
 
     fun logoutUser()
+
+    fun deleteUser()
 }
