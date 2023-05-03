@@ -14,4 +14,6 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
     suspend fun automaticLogin() = repository.automaticLogin()
 
     suspend fun logoutUser() = repository.logoutUser()
+
+    suspend fun deleteUser() = repository.deleteUser()
 }
