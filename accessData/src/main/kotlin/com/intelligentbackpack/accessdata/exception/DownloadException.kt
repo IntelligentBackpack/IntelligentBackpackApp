@@ -1,3 +1,3 @@
 package com.intelligentbackpack.accessdata.exception
 
-class DownloadException : Exception()
+class DownloadException(message: String) : Exception(message)
