@@ -6,5 +6,7 @@ interface AccessRemoteDataStorage {
 
     fun createUser(user: User): User
 
-    fun accessWithData(username: String, password: String) : User
+    fun accessWithData(email: String, password: String) : User
+
+    fun deleteUser(user: User)
 }
