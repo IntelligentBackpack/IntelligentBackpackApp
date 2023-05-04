@@ -26,4 +26,9 @@ class AccessDomainRepositoryImpl(
     override fun logoutUser() =
         accessLocalDataStorage.deleteUser()
 
+    override fun deleteUser() {
+        accessRemoteDataStorage.deleteUser(accessLocalDataStorage.getUser())
+        accessLocalDataStorage.deleteUser()
+    }
+
 }
