@@ -9,11 +9,13 @@ import com.intelligentbackpack.accessdomain.repository.AccessDomainRepository
 
 object ServiceLocator {
 
+    private const val accessUrl = "https://accesscontrollmicroservice.azurewebsites.net/"
+
     lateinit var accessRepository: AccessDomainRepository
         private set
 
     fun initializeRepository(context: Context) {
-        val accessRemoteDataStorage = AccessRemoteDataStorageImpl("http://localhost:8080/")
+        val accessRemoteDataStorage = AccessRemoteDataStorageImpl(accessUrl)
         val userStorage = UserStorageImpl(context)
         val accessLocalDataStorage = AccessLocalDataStorageImpl(userStorage)
         accessRepository = AccessDomainRepositoryImpl(accessLocalDataStorage, accessRemoteDataStorage)
