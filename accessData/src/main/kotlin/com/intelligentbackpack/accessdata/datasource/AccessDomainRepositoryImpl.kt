@@ -14,9 +14,9 @@ class AccessDomainRepositoryImpl(
 
     override fun isUserLogged(): Boolean = accessLocalDataStorage.isUserSaved()
 
-    override fun loginWithData(username: String, password: String): User =
+    override fun loginWithData(email: String, password: String): User =
         accessRemoteDataStorage
-            .accessWithData(username, password)
+            .accessWithData(email, password)
             .also { accessLocalDataStorage.saveUser(it) }
 
     override fun automaticLogin(): User =

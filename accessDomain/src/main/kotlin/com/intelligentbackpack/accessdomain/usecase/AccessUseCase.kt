@@ -9,7 +9,7 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
 
     suspend fun isUserLogged() = repository.isUserLogged()
 
-    suspend fun loginWithData(username: String, password: String) = repository.loginWithData(username, password)
+    suspend fun loginWithData(email: String, password: String) = repository.loginWithData(email, password)
 
     suspend fun automaticLogin() = repository.automaticLogin()
 

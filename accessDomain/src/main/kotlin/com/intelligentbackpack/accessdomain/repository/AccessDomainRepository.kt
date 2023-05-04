@@ -8,7 +8,7 @@ interface AccessDomainRepository {
 
     fun isUserLogged(): Boolean
 
-    fun loginWithData(username: String, password: String): User
+    fun loginWithData(email: String, password: String): User
 
     fun automaticLogin(): User
 
