@@ -1,5 +1,7 @@
 package com.intelligentbackpack.app.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -10,13 +12,18 @@ import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.app.App
 import com.intelligentbackpack.app.viewdata.UserView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginViewModel(
     private val accessUseCase: AccessUseCase,
 ) : ViewModel() {
 
-    var user: User? = null
+    val user: LiveData<User?>
+        get() = userImpl
+
+    private val userImpl = MutableLiveData<User?>()
     fun login(
         email: String,
         password: String,
@@ -25,8 +32,10 @@ class LoginViewModel(
     ) {
         viewModelScope.launch {
             try {
-                user = accessUseCase.loginWithData(email, password)
-                success(user!!)
+                withContext(Dispatchers.IO) {
+                    userImpl.postValue(accessUseCase.loginWithData(email, password))
+                }
+                success(userImpl.value!!)
             } catch (e: Exception) {
                 error(e.message ?: "Unknown error")
             }
@@ -38,8 +47,10 @@ class LoginViewModel(
     ) {
         viewModelScope.launch {
             if (accessUseCase.isUserLogged()) {
-                user = accessUseCase.automaticLogin()
-                success(user!!)
+                withContext(Dispatchers.IO) {
+                    userImpl.postValue(accessUseCase.automaticLogin())
+                }
+                success(userImpl.value!!)
             }
         }
     }
@@ -51,15 +62,17 @@ class LoginViewModel(
     ) {
         viewModelScope.launch {
             try {
-                val user = accessUseCase.createUser(
-                    User.build {
-                        email = data.email
-                        password = data.password
-                        name = data.name
-                        surname = data.surname
-                    }
-                )
-                success(user)
+                withContext(Dispatchers.IO) {
+                    userImpl.postValue(accessUseCase.createUser(
+                        User.build {
+                            email = data.email
+                            password = data.password
+                            name = data.name
+                            surname = data.surname
+                        }
+                    ))
+                }
+                success(userImpl.value!!)
             } catch (e: Exception) {
                 error(e.message ?: "Unknown error")
             }
