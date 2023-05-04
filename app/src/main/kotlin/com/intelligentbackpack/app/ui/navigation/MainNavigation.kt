@@ -11,4 +11,6 @@ object MainNavigation {
         } else {
             "createUser?$createUserParam=$email"
         }
+
+    const val user = "user"
 }
