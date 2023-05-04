@@ -79,10 +79,23 @@ class LoginViewModel(
         }
     }
 
-    fun logout() {
+    fun logout(success: () -> Unit) {
         viewModelScope.launch {
-            accessUseCase.logoutUser()
-            user = null
+            withContext(Dispatchers.IO) {
+                accessUseCase.logoutUser()
+            }
+            userImpl.postValue(null)
+            success()
+        }
+    }
+
+    fun deleteUser(success: () -> Unit) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                accessUseCase.deleteUser()
+            }
+            userImpl.postValue(null)
+            success()
         }
     }
 
