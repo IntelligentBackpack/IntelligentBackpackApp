@@ -9,6 +9,7 @@ grpc-protobuf = "1.45.1"
 junit-junit = "4.13.2"
 lifecycleRuntimeKtx = "2.6.1"
 navigationCompose = "2.5.3"
+orgJacocoCore = "0.8.8"
 protobuf-compiler = "3.22.3"
 junit = "1.1.5"
 kotest = "5.5.5"
@@ -46,6 +47,7 @@ lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", v
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 orchestrator = { module = "androidx.test:orchestrator", version.ref = "orchestrator" }
+org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "orgJacocoCore" }
 protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf-kotlin" }
 protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf-kotlin" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }

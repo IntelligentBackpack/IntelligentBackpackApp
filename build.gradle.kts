@@ -11,6 +11,7 @@ plugins {
 
 subprojects {
     apply(plugin = "org.danilopianini.gradle-kotlin-qa")
+    apply(plugin = "jacoco")
 }
 
 tasks.test {
@@ -39,5 +40,6 @@ buildscript {
         classpath(libs.gradle.plugin)
         classpath(libs.google.services)
         classpath(libs.firebase.crashlytics.gradle)
+        classpath(libs.org.jacoco.core)
     }
 }
