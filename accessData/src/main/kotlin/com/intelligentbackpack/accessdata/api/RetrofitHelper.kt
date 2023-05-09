@@ -4,7 +4,15 @@ import io.github.andreabrighi.converter.RetrofitJsonConverterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
+/**
+ * RetrofitHelper is an helper to create a Retrofit instance.
+ */
 object RetrofitHelper {
+    /**
+     * Creates a Retrofit instance.
+     * @param baseUrl is the base url of the API.
+     * @return the Retrofit instance.
+     */
     fun getInstance(baseUrl: String): Retrofit {
         val httpClient = OkHttpClient.Builder()
         return Retrofit

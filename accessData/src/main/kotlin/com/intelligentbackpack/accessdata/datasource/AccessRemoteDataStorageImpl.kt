@@ -8,10 +8,21 @@ import com.intelligentbackpack.accessdata.adapter.Adapter.fromRemoteToDomain
 import com.intelligentbackpack.accessdata.exception.DownloadException
 import org.json.JSONObject
 
+/**
+ * AccessRemoteDataStorageImpl is the implementation of AccessRemoteDataStorage.
+ * @param baseUrl is the base url of the remote data storage.
+ */
 class AccessRemoteDataStorageImpl(baseUrl: String) : AccessRemoteDataStorage {
 
     private val accessApi = RetrofitHelper.getInstance(baseUrl).create(AccessApi::class.java)
 
+    /**
+     * Creates a user.
+     * @param user is the user to create.
+     * @return the created user.
+     * @throws DownloadException if the user cannot be created.
+     */
+    @Throws(DownloadException::class)
     override fun createUser(user: User): User {
         val response = accessApi.createNewUser(user.fromDomainToRemote()).execute()
         return if (response.isSuccessful) {
@@ -22,6 +33,14 @@ class AccessRemoteDataStorageImpl(baseUrl: String) : AccessRemoteDataStorage {
         }
     }
 
+    /**
+     * Logs a user using email and password.
+     * @param email is the user email.
+     * @param password is the user password.
+     * @return the logged user.
+     * @throws DownloadException if the user cannot be logged.
+     */
+    @Throws(DownloadException::class)
     override fun accessWithData(email: String, password: String): User {
         val response = accessApi.getUser(
             access.communication.User.newBuilder()
@@ -37,6 +56,11 @@ class AccessRemoteDataStorageImpl(baseUrl: String) : AccessRemoteDataStorage {
         }
     }
 
+    /**
+     * Delete the user.
+     * @throws DownloadException if the user cannot be deleted.
+     */
+    @Throws(DownloadException::class)
     override fun deleteUser(user: User) {
         val response = accessApi.deleteUser(user.fromDomainToRemote()).execute()
         if (!response.isSuccessful) {

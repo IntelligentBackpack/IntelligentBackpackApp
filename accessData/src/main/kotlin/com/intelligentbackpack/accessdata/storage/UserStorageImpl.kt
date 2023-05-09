@@ -8,6 +8,12 @@ import androidx.security.crypto.MasterKey
 import com.intelligentbackpack.accessdomain.entities.Role
 import com.intelligentbackpack.accessdomain.entities.User
 
+/**
+ * UserStorageImpl is the implementation of UserStorage.
+ * @param context is the context of the application.
+ *
+ * This class uses SharedPreferences to save the user.
+ */
 class UserStorageImpl(private val context: Context) : UserStorage {
 
     private val name = "IntelligentBackpackSharedPref"
@@ -17,6 +23,12 @@ class UserStorageImpl(private val context: Context) : UserStorage {
         return sp.contains("email")
     }
 
+    /**
+     * Saves the user.
+     * @param user is the user to save.
+     *
+     * This function save the user password encrypted.
+     */
     override fun saveUser(user: User) {
         val sp: SharedPreferences = context.getSharedPreferences(name, MODE_PRIVATE)
         val masterKey: MasterKey =

@@ -6,8 +6,15 @@ import access.communication.User as UserRemote
 import access.communication.Role as RoleRemote
 import access.communication.user as userRemote
 
+/**
+ * Adapter is used to convert data from domain to remote and vice versa.
+ */
 object Adapter {
 
+    /**
+     * Converts a user from domain to remote.
+     * @return the converted remote user.
+     */
     fun User.fromDomainToRemote(): UserRemote {
         val user = this
         return userRemote {
@@ -26,6 +33,10 @@ object Adapter {
         }
     }
 
+    /**
+     * Converts a user from remote to domain.
+     * @return the converted domain user.
+     */
     fun UserRemote.fromRemoteToDomain(): User {
         val user = this
         return User.build {
