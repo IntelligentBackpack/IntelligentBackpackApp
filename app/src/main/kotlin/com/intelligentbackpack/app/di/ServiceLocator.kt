@@ -9,7 +9,7 @@ import com.intelligentbackpack.accessdomain.repository.AccessDomainRepository
 
 object ServiceLocator {
 
-    private const val accessUrl = "https://accesscontrollmicroservice.azurewebsites.net/"
+    private const val accessUrl = "https://accessmicroservice.azurewebsites.net/"
 
     lateinit var accessRepository: AccessDomainRepository
         private set
