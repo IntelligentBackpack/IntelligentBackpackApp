@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSI
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.protobuf.plugin)
 }
 
@@ -69,7 +70,7 @@ dependencies {
     implementation(libs.bundles.protobuf)
     implementation(libs.bundles.grpc)
     implementation(libs.bundles.room)
-    annotationProcessor(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
     implementation(project(":desktopDomain"))
     testImplementation(gradleTestKit())
     testImplementation(libs.bundles.kotlin.testing)
