@@ -12,7 +12,7 @@ import org.json.JSONObject
  * AccessRemoteDataStorageImpl is the implementation of AccessRemoteDataStorage.
  * @param baseUrl is the base url of the remote data storage.
  */
-class AccessRemoteDataStorageImpl(baseUrl: String) : AccessRemoteDataStorage {
+class AccessRemoteDataSourceImpl(baseUrl: String) : AccessRemoteDataSource {
 
     private val accessApi = RetrofitHelper.getInstance(baseUrl).create(AccessApi::class.java)
 

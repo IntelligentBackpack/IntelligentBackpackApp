@@ -9,7 +9,7 @@ import com.intelligentbackpack.accessdomain.entities.User
  * AccessLocalDataStorageImpl is the implementation of AccessLocalDataStorage.
  * @param storage is the storage of the user data [UserStorage].
  */
-class AccessLocalDataStorageImpl(private val storage: UserStorage) : AccessLocalDataStorage {
+class AccessLocalDataSourceImpl(private val storage: UserStorage) : AccessLocalDataSource {
 
     override fun isUserSaved(): Boolean {
         return storage.isUserSaved()

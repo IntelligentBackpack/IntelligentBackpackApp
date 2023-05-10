@@ -5,7 +5,7 @@ import com.intelligentbackpack.accessdomain.entities.User
 /**
  * AccessLocalDataStorage is the interface for access to the local data storage.
  */
-interface AccessLocalDataStorage {
+interface AccessLocalDataSource {
 
     /**
      * Checks if the user is saved.

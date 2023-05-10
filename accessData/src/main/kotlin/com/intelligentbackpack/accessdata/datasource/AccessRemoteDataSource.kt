@@ -5,7 +5,7 @@ import com.intelligentbackpack.accessdomain.entities.User
 /**
  * AccessRemoteDataStorage is the interface for access to the remote data storage.
  */
-interface AccessRemoteDataStorage {
+interface AccessRemoteDataSource {
 
     /**
      * Creates a user.
