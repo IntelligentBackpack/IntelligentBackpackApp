@@ -1,5 +1,7 @@
 package com.intelligentbackpack.accessdomain.entities
 
+import com.intelligentbackpack.accessdomain.exceptions.InvalidEmailException
+import com.intelligentbackpack.accessdomain.exceptions.InvalidPasswordException
 import com.intelligentbackpack.accessdomain.policies.EmailFormatPolicy
 import com.intelligentbackpack.accessdomain.policies.PasswordFormatPolicy
 import com.intelligentbackpack.accessdomain.policies.Policy
@@ -139,13 +141,13 @@ interface User {
                                     role = role
                                 )
                             else
-                                throw IllegalArgumentException("Password not valid")
+                                throw InvalidPasswordException()
                         else
                             throw IllegalArgumentException("Surname not valid")
                     else
                         throw IllegalArgumentException("Name not valid")
                 else
-                    throw IllegalArgumentException("Email not valid")
+                    throw InvalidEmailException()
             }
     }
 }
