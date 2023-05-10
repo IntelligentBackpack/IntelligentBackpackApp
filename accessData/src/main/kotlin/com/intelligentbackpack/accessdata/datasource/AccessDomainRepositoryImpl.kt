@@ -5,12 +5,12 @@ import com.intelligentbackpack.accessdomain.repository.AccessDomainRepository
 
 /**
  * AccessDomainRepositoryImpl is the implementation of the AccessDomainRepository.
- * @param accessLocalDataStorage is the local data storage.
- * @param accessRemoteDataStorage is the remote data storage.
+ * @param accessLocalDataSource is the local data storage.
+ * @param accessRemoteDataSource is the remote data storage.
  */
 class AccessDomainRepositoryImpl(
-    private val accessLocalDataStorage: AccessLocalDataStorage,
-    private val accessRemoteDataStorage: AccessRemoteDataStorage
+    private val accessLocalDataSource: AccessLocalDataSource,
+    private val accessRemoteDataSource: AccessRemoteDataSource
 ) : AccessDomainRepository {
 
     /**
@@ -25,8 +25,8 @@ class AccessDomainRepositoryImpl(
     override fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
             success(
-                accessRemoteDataStorage.createUser(user)
-                    .also { accessLocalDataStorage.saveUser(it) }
+                accessRemoteDataSource.createUser(user)
+                    .also { accessLocalDataSource.saveUser(it) }
             )
         } catch (e: Exception) {
             error(e)
@@ -44,7 +44,7 @@ class AccessDomainRepositoryImpl(
      */
     override fun isUserLogged(success: (Boolean) -> Unit, error: (Exception) -> Unit) {
         try {
-            success(accessLocalDataStorage.isUserSaved())
+            success(accessLocalDataSource.isUserSaved())
         } catch (e: Exception) {
             error(e)
         }
@@ -63,8 +63,8 @@ class AccessDomainRepositoryImpl(
     override fun loginWithData(email: String, password: String, success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
             success(
-                accessRemoteDataStorage.accessWithData(email, password)
-                    .also { accessLocalDataStorage.saveUser(it) }
+                accessRemoteDataSource.accessWithData(email, password)
+                    .also { accessLocalDataSource.saveUser(it) }
             )
         } catch (e: Exception) {
             error(e)
@@ -81,7 +81,7 @@ class AccessDomainRepositoryImpl(
      */
     override fun automaticLogin(success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
-            success(accessLocalDataStorage.getUser())
+            success(accessLocalDataSource.getUser())
         } catch (e: Exception) {
             error(e)
         }
@@ -97,7 +97,9 @@ class AccessDomainRepositoryImpl(
      */
     override fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
-            success(accessLocalDataStorage.getUser())
+            val user = accessLocalDataSource.getUser()
+            accessLocalDataSource.deleteUser()
+            success(user)
         } catch (e: Exception) {
             error(e)
         }
@@ -113,9 +115,9 @@ class AccessDomainRepositoryImpl(
      */
     override fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
-            val user = accessLocalDataStorage.getUser()
-            accessRemoteDataStorage.deleteUser(user)
-            accessLocalDataStorage.deleteUser()
+            val user = accessLocalDataSource.getUser()
+            accessRemoteDataSource.deleteUser(user)
+            accessLocalDataSource.deleteUser()
             success(user)
         } catch (e: Exception) {
             error(e)
