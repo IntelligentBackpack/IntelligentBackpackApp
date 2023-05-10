@@ -1,5 +1,7 @@
 package com.intelligentbackpack.desktopdomain.entities
 
+import java.util.Locale
+
 /**
  * Object that contains all the subjects that are available by default (only All).
  */
@@ -13,7 +15,13 @@ object Subjects {
     /**
      * Creates a subject.
      */
-    fun create(subject: Subject): Subject = subject
+    fun create(subject: String): Subject =
+        subject
+            .trim()
+            .lowercase()
+            .replaceFirstChar {
+                it.titlecase(Locale.ROOT)
+            }
 }
 
 /**
