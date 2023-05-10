@@ -9,38 +9,52 @@ interface AccessDomainRepository {
 
     /**
      * Creates a new user.
+     *
      * @param user is the user to create.
-     * @return the created user.
+     * @param success is the success callback.
+     * @param error is the error callback.
      */
-    fun createUser(user: User): User
+    fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Checks if a user is logged.
-     * @return true if the user is logged, false otherwise.
+     *
+     * @param success is the success callback.
+     * @param error is the error callback.
      */
-    fun isUserLogged(): Boolean
+    fun isUserLogged(success: (Boolean) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Logs a user using email and password.
+     *
      * @param email is the user email.
      * @param password is the user password.
-     * @return the logged user.
+     * @param success is the success callback.
+     * @param error is the error callback.
      */
-    fun loginWithData(email: String, password: String): User
+    fun loginWithData(email: String, password: String, success: (User) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Logs the saved user.
-     * @return the logged user.
+     *
+     * @param success is the success callback.
+     * @param error is the error callback.
      */
-    fun automaticLogin(): User
+    fun automaticLogin(success: (User) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Logs out the user.
+     *
+     * @param success is the success callback.
+     * @param error is the error callback.
      */
-    fun logoutUser()
+    fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Deletes the user.
+     *
+     * @param success is the success callback.
+     * @param error is the error callback.
      */
-    fun deleteUser()
+    fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit)
 }

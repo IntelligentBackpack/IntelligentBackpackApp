@@ -31,13 +31,13 @@ class LoginViewModel(
         error: (error: String) -> Unit
     ) {
         viewModelScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    userImpl.postValue(accessUseCase.loginWithData(email, password))
-                }
-                success(userImpl.value!!)
-            } catch (e: Exception) {
-                error(e.message ?: "Unknown error")
+            withContext(Dispatchers.IO) {
+                accessUseCase.loginWithData(email, password, {
+                    userImpl.postValue(it)
+                    success(it)
+                }, {
+                    error(it.message ?: "Unknown error")
+                })
             }
         }
     }
@@ -46,12 +46,20 @@ class LoginViewModel(
         success: (user: User) -> Unit,
     ) {
         viewModelScope.launch {
-            if (accessUseCase.isUserLogged()) {
-                withContext(Dispatchers.IO) {
-                    userImpl.postValue(accessUseCase.automaticLogin())
+            accessUseCase.isUserLogged({ logged ->
+                if (logged) {
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            accessUseCase.automaticLogin({
+                                userImpl.postValue(it)
+                                success(it)
+                            }, {
+                            })
+                        }
+                    }
                 }
-                success(userImpl.value!!)
-            }
+            }, {
+            })
         }
     }
 
@@ -61,41 +69,46 @@ class LoginViewModel(
         error: (error: String) -> Unit
     ) {
         viewModelScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    userImpl.postValue(accessUseCase.createUser(
-                        User.build {
-                            email = data.email
-                            password = data.password
-                            name = data.name
-                            surname = data.surname
-                        }
-                    ))
-                }
-                success(userImpl.value!!)
-            } catch (e: Exception) {
-                error(e.message ?: "Unknown error")
+            withContext(Dispatchers.IO) {
+                accessUseCase.createUser(
+                    User.build {
+                        email = data.email
+                        password = data.password
+                        name = data.name
+                        surname = data.surname
+                    }, {
+                        userImpl.postValue(it)
+                        success(it)
+                    }, {
+                        error(it.message ?: "Unknown error")
+                    }
+                )
             }
         }
     }
 
+
     fun logout(success: () -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                accessUseCase.logoutUser()
+                accessUseCase.logoutUser({
+                    userImpl.postValue(null)
+                    success()
+                }, {
+                })
             }
-            userImpl.postValue(null)
-            success()
         }
     }
 
     fun deleteUser(success: () -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                accessUseCase.deleteUser()
+                accessUseCase.deleteUser({
+                    userImpl.postValue(null)
+                    success()
+                }, {
+                })
             }
-            userImpl.postValue(null)
-            success()
         }
     }
 
