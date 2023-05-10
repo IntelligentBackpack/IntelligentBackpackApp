@@ -2,6 +2,8 @@ package com.intelligentbackpack.accessdomain
 
 import com.intelligentbackpack.accessdomain.entities.Role
 import com.intelligentbackpack.accessdomain.entities.User
+import com.intelligentbackpack.accessdomain.exceptions.InvalidEmailException
+import com.intelligentbackpack.accessdomain.exceptions.InvalidPasswordException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -51,7 +53,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "test"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidEmailException> {
             User.build {
                 this.email = email
                 this.name = name
@@ -66,7 +68,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "test"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidEmailException> {
             User.build {
                 this.email = email
                 this.name = name
@@ -81,7 +83,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "test"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidEmailException> {
             User.build {
                 this.email = email
                 this.name = name
@@ -96,7 +98,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "test"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidEmailException> {
             User.build {
                 this.email = email
                 this.name = name
@@ -111,7 +113,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "test"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidEmailException> {
             User.build {
                 this.email = email
                 this.name = name
@@ -126,7 +128,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "test#1234"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidPasswordException> {
             User.build {
                 this.email = email
                 this.name = name
@@ -141,7 +143,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "TEST#1234"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidPasswordException> {
             User.build {
                 this.email = email
                 this.name = name
@@ -156,7 +158,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "Test#"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidPasswordException> {
             User.build {
                 this.email = email
                 this.name = name
@@ -171,7 +173,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "Test1234"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidPasswordException> {
             User.build {
                 this.email = email
                 this.name = name
@@ -186,7 +188,7 @@ class UserTests : StringSpec({
         val name = "Test"
         val surname = "Test"
         val password = "Te#1"
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<InvalidPasswordException> {
             User.build {
                 this.email = email
                 this.name = name
