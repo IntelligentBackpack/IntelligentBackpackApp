@@ -38,3 +38,4 @@ rootProject.name = "IntelligentBackpackApp"
 include(":app")
 include(":accessDomain")
 include(":accessData")
+include(":desktopDomain")
