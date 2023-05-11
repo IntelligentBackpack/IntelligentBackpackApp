@@ -1,5 +1,6 @@
 package com.intelligentbackpack.desktopdomain
 
+import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyTypes
@@ -10,11 +11,18 @@ import io.kotest.matchers.shouldBe
 
 class TestDesktop : StringSpec({
 
-    val bookCopy = BookCopy.build() {
-        isbn = "978885152159X"
-        rfidCode = "FF:24:3E:C1"
-        title = "The Lord of the Rings"
-        authors = listOf("J. R. R. Tolkien")
+    val title = "The Lord of the Rings"
+    val authors = setOf("J. R. R. Tolkien")
+    val rfidCode = "FF:24:3E:C1"
+    val isbn = "978885152159X"
+    val book = Book.build {
+        this.isbn = isbn
+        this.title = title
+        this.authors = authors
+    }
+    val bookCopy = BookCopy.build {
+        this.rfidCode = rfidCode
+        this.book = book
     }
 
     "Create a Desktop" {
@@ -26,11 +34,9 @@ class TestDesktop : StringSpec({
 
     "Add a School Supply to Desktop" {
         val desktop = Desktop.create(setOf(bookCopy))
-        val bookCopy2 = BookCopy.build() {
-            isbn = "978885152159X"
-            rfidCode = "FF:24:3E:C2"
-            title = "The Lord of the Rings"
-            authors = listOf("J. R. R. Tolkien")
+        val bookCopy2 = BookCopy.build {
+            this.rfidCode = "FF:24:3E:C2"
+            this.book = book
         }
         val newDesktop = desktop.addSchoolSupply(bookCopy2)
         desktop.schoolSupplies.size shouldBe 1

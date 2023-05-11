@@ -1,5 +1,6 @@
 package com.intelligentbackpack.desktopdomain
 
+import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.exception.ISBNException
 import io.kotest.assertions.throwables.shouldThrow
@@ -9,35 +10,35 @@ import io.kotest.matchers.shouldBe
 class TestBookCopy : StringSpec({
 
     val title = "The Lord of the Rings"
-    val authors = listOf("J. R. R. Tolkien")
+    val authors = setOf("J. R. R. Tolkien")
     val rfidCode = "FF:24:3E:C1"
     val isbn = "978885152159X"
+    val book = Book.build {
+        this.isbn = isbn
+        this.title = title
+        this.authors = authors
+    }
 
     "Create a book copy with a valid ISBN" {
-        val bookCopy = BookCopy.build() {
-            this.isbn = isbn
+        val bookCopy = BookCopy.build {
             this.rfidCode = rfidCode
-            this.title = title
-            this.authors = authors
+            this.book = book
         }
-        bookCopy.isbn shouldBe isbn
+        bookCopy.book.isbn shouldBe isbn
     }
 
     "Create a book copy with a valid RFID code" {
         val bookCopy = BookCopy.build {
-            this.isbn = isbn
             this.rfidCode = rfidCode
-            this.title = title
-            this.authors = authors
+            this.book = book
         }
         bookCopy.rfidCode shouldBe rfidCode
     }
 
     "Create a book with a not valid ISBN missing a digit" {
         shouldThrow<ISBNException> {
-            BookCopy.build {
+            Book.build {
                 this.isbn = "978885152159"
-                this.rfidCode = rfidCode
                 this.title = title
                 this.authors = authors
             }
@@ -46,9 +47,8 @@ class TestBookCopy : StringSpec({
 
     "Create a book with a not valid ISBN with a letter, not X at the end" {
         shouldThrow<ISBNException> {
-            BookCopy.build {
-                this.isbn = "9788851521599"
-                this.rfidCode = rfidCode
+            Book.build {
+                this.isbn = "978885152159A"
                 this.title = title
                 this.authors = authors
             }
@@ -57,9 +57,8 @@ class TestBookCopy : StringSpec({
 
     "Create a book with a not valid ISBN with wrong check digit" {
         shouldThrow<ISBNException> {
-            BookCopy.build {
-                this.isbn = "97888515215A0"
-                this.rfidCode = rfidCode
+            Book.build {
+                this.isbn = "9788851521591"
                 this.title = title
                 this.authors = authors
             }
@@ -68,9 +67,8 @@ class TestBookCopy : StringSpec({
 
     "Create a book with an missing title" {
         shouldThrow<IllegalStateException> {
-            BookCopy.build() {
-                this.isbn = isbn
-                this.rfidCode = rfidCode
+            Book.build {
+                this.isbn = "978885152159"
                 this.authors = authors
             }
         }
@@ -78,19 +76,27 @@ class TestBookCopy : StringSpec({
 
     "Create a book with an missing author" {
         shouldThrow<IllegalStateException> {
-            BookCopy.build {
-                this.isbn = isbn
-                this.rfidCode = rfidCode
+            Book.build {
+                this.isbn = "978885152159"
                 this.title = title
             }
         }
     }
 
+    "Create a book with an empty author" {
+        val anonymousBook = Book.build {
+            this.isbn = isbn
+            this.title = title
+            this.authors = setOf()
+        }
+        anonymousBook.authors shouldBe setOf()
+    }
+
     "Create a book with an empty title" {
         shouldThrow<IllegalStateException> {
-            BookCopy.build() {
+            Book.build {
                 this.isbn = isbn
-                this.rfidCode = rfidCode
+                this.title = ""
                 this.authors = authors
             }
         }
