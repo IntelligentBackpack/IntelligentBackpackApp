@@ -1,5 +1,6 @@
 package com.intelligentbackpack.desktopdomain.usecase
 
+import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
 import com.intelligentbackpack.desktopdomain.repository.DesktopDomainRepository
@@ -30,6 +31,9 @@ class DesktopUseCase(private val repository: DesktopDomainRepository) {
         error: (Exception) -> Unit
     ) =
         repository.addSchoolSupply(schoolSupply, success, error)
+
+    suspend fun getBook(isbn: String, success: (Book?) -> Unit, error: (Exception) -> Unit) =
+        repository.getBook(isbn, success, error)
 
     /**
      * Gets the school supply given the rfid.

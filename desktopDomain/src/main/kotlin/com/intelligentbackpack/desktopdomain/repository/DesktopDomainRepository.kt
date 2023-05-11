@@ -1,5 +1,6 @@
 package com.intelligentbackpack.desktopdomain.repository
 
+import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
 
@@ -24,6 +25,15 @@ interface DesktopDomainRepository {
      * @param error The error callback.
      */
     fun addSchoolSupply(schoolSupply: SchoolSupply, success: (Set<SchoolSupply>) -> Unit, error: (Exception) -> Unit)
+
+    /**
+     * Gets a book by its ISBN.
+     *
+     * @param isbn The ISBN of the book.
+     * @param success The success callback with the book if it exists.
+     * @param error The error callback.
+     */
+    fun getBook(isbn: String, success: (Book?) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Gets a school supply by its RFID.
