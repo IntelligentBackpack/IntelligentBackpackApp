@@ -14,10 +14,9 @@ import com.intelligentbackpack.app.App
 import com.intelligentbackpack.app.viewdata.UserView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class LoginViewModel(
-    private val accessUseCase: AccessUseCase,
+    private val accessUseCase: AccessUseCase
 ) : ViewModel() {
 
     val user: LiveData<User?>
@@ -30,32 +29,39 @@ class LoginViewModel(
         success: (user: User) -> Unit,
         error: (error: String) -> Unit
     ) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                accessUseCase.loginWithData(email, password, {
+        viewModelScope.launch(Dispatchers.IO) {
+            accessUseCase.loginWithData(email, password, {
+                viewModelScope.launch(Dispatchers.Main) {
                     userImpl.postValue(it)
                     success(it)
-                }, {
+                }
+            }, {
+                viewModelScope.launch(Dispatchers.Main) {
                     error(it.message ?: "Unknown error")
-                })
-            }
+                }
+            })
         }
     }
 
     fun tryAutomaticLogin(
         success: (user: User) -> Unit,
+        error: () -> Unit
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             accessUseCase.isUserLogged({ logged ->
                 if (logged) {
-                    viewModelScope.launch {
-                        withContext(Dispatchers.IO) {
-                            accessUseCase.automaticLogin({
+                    viewModelScope.launch(Dispatchers.IO) {
+                        accessUseCase.automaticLogin({
+                            viewModelScope.launch(Dispatchers.Main) {
                                 userImpl.postValue(it)
                                 success(it)
-                            }, {
-                            })
-                        }
+                            }
+                        }, {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                error()
+                            }
+                        })
+
                     }
                 }
             }, {
@@ -68,48 +74,51 @@ class LoginViewModel(
             (user: User) -> Unit,
         error: (error: String) -> Unit
     ) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                accessUseCase.createUser(
-                    User.build {
-                        email = data.email
-                        password = data.password
-                        name = data.name
-                        surname = data.surname
-                    }, {
+        viewModelScope.launch(Dispatchers.IO) {
+            accessUseCase.createUser(
+                User.build {
+                    email = data.email
+                    password = data.password
+                    name = data.name
+                    surname = data.surname
+                }, {
+                    viewModelScope.launch(Dispatchers.Main) {
                         userImpl.postValue(it)
                         success(it)
-                    }, {
+                    }
+                }, {
+                    viewModelScope.launch(Dispatchers.Main) {
                         error(it.message ?: "Unknown error")
                     }
-                )
-            }
+                }
+            )
         }
     }
 
 
     fun logout(success: () -> Unit) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                accessUseCase.logoutUser({
+        viewModelScope.launch(Dispatchers.IO) {
+            accessUseCase.logoutUser({
+                viewModelScope.launch(Dispatchers.Main) {
                     userImpl.postValue(null)
                     success()
-                }, {
-                })
-            }
+                }
+            }, {
+            })
         }
     }
 
     fun deleteUser(success: () -> Unit) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                accessUseCase.deleteUser({
+        viewModelScope.launch(Dispatchers.IO) {
+            accessUseCase.deleteUser({
+                viewModelScope.launch(Dispatchers.Main) {
                     userImpl.postValue(null)
                     success()
-                }, {
-                })
-            }
+                }
+            }, {
+            })
         }
+
     }
 
     companion object {
@@ -119,7 +128,7 @@ class LoginViewModel(
                 // Get the Application object from extras
                 val application = checkNotNull(this[APPLICATION_KEY])
                 LoginViewModel(
-                    (application as App).accessUseCase,
+                    (application as App).accessUseCase
                 )
             }
         }
