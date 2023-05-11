@@ -4,27 +4,13 @@ import com.intelligentbackpack.desktopdomain.entities.implementations.BookCopyIm
 import com.intelligentbackpack.desktopdomain.exception.ISBNException
 import com.intelligentbackpack.desktopdomain.exception.RFIDFormatException
 import com.intelligentbackpack.desktopdomain.exception.TypeException
-import com.intelligentbackpack.desktopdomain.policies.ISBNPolicy
 import com.intelligentbackpack.desktopdomain.policies.RFIDPolicy
 
 /**
  * Interface for a book copy.
  */
 interface BookCopy : SchoolSupply {
-    /**
-     * The ISBN of the book.
-     */
-    val isbn: String
-
-    /**
-     * The title of the book.
-     */
-    val title: String
-
-    /**
-     * The authors of the book.
-     */
-    val authors: List<String>
+    val book: Book
 
     companion object {
 
@@ -34,7 +20,6 @@ interface BookCopy : SchoolSupply {
          * @param block The builder block.
          * @return The book copy built.
          * @throws IllegalArgumentException If the book copy is invalid
-         * ( the [isbn] doesn't match with the [ISBNPolicy],
          * the [rfidCode] doesn't match with the [RFIDPolicy],
          * @throws IllegalStateException If not all the properties are initialized.
          */
@@ -47,8 +32,6 @@ interface BookCopy : SchoolSupply {
      * Builder for a book copy.
      * The [type] is automatically set to [SchoolSupplyTypes.BOOK].
      *
-     * @property checkSubjects The subjects that are available.
-     *
      */
     class Builder {
 
@@ -58,19 +41,9 @@ interface BookCopy : SchoolSupply {
         lateinit var rfidCode: String
 
         /**
-         * The ISBN of the book.
+         * The book of the copy.
          */
-        lateinit var isbn: String
-
-        /**
-         * The title of the book.
-         */
-        lateinit var title: String
-
-        /**
-         * The authors of the book.
-         */
-        lateinit var authors: List<String>
+        lateinit var book: Book
 
         /**
          * The type of the school supply.
@@ -84,43 +57,27 @@ interface BookCopy : SchoolSupply {
          * @throws IllegalStateException If not all properties are initialized.
          * @throws TypeException If the type of the school supply is not valid.
          * @throws RFIDFormatException If the RFID code of the school supply is not valid.
-         * @throws IllegalArgumentException for any other reason.
          * @throws ISBNException If the ISBN of the book is not valid.
          */
         @Throws(
             IllegalStateException::class,
             TypeException::class,
-            RFIDFormatException::class,
-            IllegalArgumentException::class
+            RFIDFormatException::class
         )
         fun build(): BookCopy =
             if (this::rfidCode.isInitialized &&
-                this::isbn.isInitialized &&
-                this::title.isInitialized &&
-                this::authors.isInitialized
+                this::book.isInitialized
             )
-                if (title.isNotBlank() &&
-                    authors.isNotEmpty() &&
-                    authors.all { it.isNotBlank() }
-                )
-                    if (type == SchoolSupplyTypes.BOOK)
-                        if (RFIDPolicy.isValid(rfidCode))
-
-                            if (ISBNPolicy.isValid(isbn)) {
-                                BookCopyImpl(
-                                    rfidCode = rfidCode,
-                                    isbn = isbn,
-                                    title = title,
-                                    authors = authors
-                                )
-                            } else
-                                throw ISBNException()
-                        else
-                            throw RFIDFormatException()
+                if (type == SchoolSupplyTypes.BOOK)
+                    if (RFIDPolicy.isValid(rfidCode))
+                        BookCopyImpl(
+                            rfidCode = rfidCode,
+                            book = book
+                        )
                     else
-                        throw TypeException(type)
+                        throw RFIDFormatException()
                 else
-                    throw IllegalStateException("Not all properties are initialized")
+                    throw TypeException(type)
             else
                 throw IllegalStateException("Not all properties are initialized")
     }

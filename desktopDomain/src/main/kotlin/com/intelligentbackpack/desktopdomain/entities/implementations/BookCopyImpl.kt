@@ -1,5 +1,6 @@
 package com.intelligentbackpack.desktopdomain.entities.implementations
 
+import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyType
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyTypes
@@ -8,31 +9,21 @@ import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyTypes
  * Implementation of a book copy.
  *
  * @property rfidCode The RFID code of the book copy.
- * @property isbn The ISBN of the book copy.
- * @property title The title of the book copy.
- * @property authors The authors of the book copy.
+ * @property book The book of the copy.
  * @property type is automatically set to [SchoolSupplyTypes.BOOK].
  */
 internal data class BookCopyImpl(
     override val rfidCode: String,
 ) : BookCopy {
 
-    override lateinit var isbn: String
-        private set
-    override lateinit var title: String
-        private set
-    override lateinit var authors: List<String>
+    override lateinit var book: Book
         private set
 
     constructor(
         rfidCode: String,
-        isbn: String,
-        title: String,
-        authors: List<String>,
+        book: Book
     ) : this(rfidCode) {
-        this.isbn = isbn
-        this.title = title
-        this.authors = authors
+        this.book = book
     }
 
     override val type: SchoolSupplyType = SchoolSupplyTypes.BOOK
