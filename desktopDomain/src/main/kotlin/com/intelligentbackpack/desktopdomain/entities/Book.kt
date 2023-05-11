@@ -4,6 +4,9 @@ import com.intelligentbackpack.desktopdomain.entities.implementations.BookImpl
 import com.intelligentbackpack.desktopdomain.exception.ISBNException
 import com.intelligentbackpack.desktopdomain.policies.ISBNPolicy
 
+/**
+ * Interface for a book.
+ */
 interface Book {
     /**
      * The ISBN of the book.
@@ -36,6 +39,9 @@ interface Book {
         ): Book = Builder().apply(block).build()
     }
 
+    /**
+     * Builder for a book.
+     */
     class Builder {
 
         /**

@@ -17,6 +17,14 @@ internal data class DesktopImpl(
     override val schoolSupplyTypes: Set<SchoolSupplyType>,
 ) : Desktop {
 
+    /**
+     * Add a school supply to the desktop.
+     *
+     * @param schoolSupply The school supply to add.
+     * @return A new desktop with the added school supply.
+     * @throws TypeException If the type of the school supply is not in the desktop.
+     * @throws DuplicateRFIDException If the RFID code of the school supply is already in the desktop.
+     */
     override fun addSchoolSupply(schoolSupply: SchoolSupply): Desktop =
         if (!schoolSupplyTypes.contains(schoolSupply.type))
             throw TypeException(schoolSupply.type)
