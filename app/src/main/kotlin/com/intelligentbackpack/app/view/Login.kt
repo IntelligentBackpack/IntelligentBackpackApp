@@ -50,8 +50,12 @@ fun Login(
     )
 ) {
     LaunchedEffect(Unit) {
-        loginViewModel.tryAutomaticLogin {
+        loginViewModel.tryAutomaticLogin({
             navController.navigate(MainNavigation.home)
+        }) {
+            loginViewModel.logout {
+                navController.navigate(MainNavigation.login)
+            }
         }
     }
     LoginPage(navController, loginViewModel::login)
