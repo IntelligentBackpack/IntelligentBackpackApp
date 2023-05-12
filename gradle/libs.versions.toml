@@ -6,6 +6,7 @@ espressoCore = "3.5.1"
 firebaseCrashlyticsGradle = "2.9.5"
 googleServices = "4.3.15"
 grpc-protobuf = "1.45.1"
+json = "20230227"
 junit-junit = "4.13.2"
 lifecycleRuntimeKtx = "2.6.1"
 navigationCompose = "2.5.3"
@@ -45,6 +46,7 @@ gradle-plugin = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.r
 grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc-protobuf" }
 grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc-protobuf" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junit" }
+json = { module = "org.json:json", version.ref = "json" }
 junit = { module = "junit:junit", version.ref = "junit-junit" }
 kotest-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
