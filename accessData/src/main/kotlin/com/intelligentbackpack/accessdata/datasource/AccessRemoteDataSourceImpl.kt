@@ -1,12 +1,12 @@
 package com.intelligentbackpack.accessdata.datasource
 
 import com.intelligentbackpack.accessdata.adapter.Adapter.fromDomainToRemote
-import com.intelligentbackpack.accessdata.api.AccessApi
-import com.intelligentbackpack.accessdata.api.RetrofitHelper
-import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.accessdata.adapter.Adapter.fromRemoteToDomain
-import com.intelligentbackpack.accessdata.exception.DownloadException
-import org.json.JSONObject
+import com.intelligentbackpack.accessdata.api.AccessApi
+import com.intelligentbackpack.accessdomain.entities.User
+import com.intelligentbackpack.networkutility.DownloadException
+import com.intelligentbackpack.networkutility.ErrorHandler.getError
+import com.intelligentbackpack.networkutility.RetrofitHelper
 
 /**
  * AccessRemoteDataStorageImpl is the implementation of AccessRemoteDataStorage.
@@ -67,10 +67,5 @@ class AccessRemoteDataSourceImpl(baseUrl: String) : AccessRemoteDataSource {
             val error = getError(response)
             throw DownloadException(error)
         }
-    }
-
-    private fun getError(response: retrofit2.Response<*>): String {
-        val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
-        return jsonObj.getString("message")
     }
 }

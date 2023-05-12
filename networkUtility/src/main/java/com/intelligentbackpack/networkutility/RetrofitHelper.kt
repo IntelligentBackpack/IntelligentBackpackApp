@@ -1,4 +1,4 @@
-package com.intelligentbackpack.accessdata.api
+package com.intelligentbackpack.networkutility
 
 import io.github.andreabrighi.converter.RetrofitJsonConverterFactory
 import okhttp3.OkHttpClient
