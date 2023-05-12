@@ -4,6 +4,8 @@ import com.intelligentbackpack.desktopdomain.entities.implementations.BookImpl
 import com.intelligentbackpack.desktopdomain.exception.ISBNException
 import com.intelligentbackpack.desktopdomain.policies.ISBNPolicy
 
+typealias Author = String
+
 /**
  * Interface for a book.
  */
@@ -21,7 +23,7 @@ interface Book {
     /**
      * The authors of the book.
      */
-    val authors: Set<String>
+    val authors: Set<Author>
 
     companion object {
 
@@ -57,7 +59,7 @@ interface Book {
         /**
          * The authors of the book.
          */
-        lateinit var authors: Set<String>
+        lateinit var authors: Set<Author>
 
         /**
          * Builds the school supply.
