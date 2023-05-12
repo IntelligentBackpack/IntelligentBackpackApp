@@ -3,6 +3,7 @@ package com.intelligentbackpack.desktopdomain.repository
 import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface for the desktop domain repository.
@@ -45,10 +46,36 @@ interface DesktopDomainRepository {
     fun getSchoolSupply(rfid: String, success: (SchoolSupply) -> Unit, error: (Exception) -> Unit)
 
     /**
+     * Puts a school supply in the backpack.
+     *
+     * @param rfid The RFID of the school supply.
+     * @param success The success callback with the new desktop.
+     * @param error The error callback.
+     */
+    fun putSchoolSupplyInBackpack(rfid: String, success: (Desktop) -> Unit, error: (Exception) -> Unit)
+
+    /**
+     * Takes a school supply from the backpack.
+     *
+     * @param rfid The RFID of the school supply.
+     * @param success The success callback with the new desktop.
+     * @param error The error callback.
+     */
+    fun takeSchoolSupplyFromBackpack(rfid: String, success: (Desktop) -> Unit, error: (Exception) -> Unit)
+
+    /**
      * Deletes the desktop and all its school supplies.
      *
      * @param success The success callback.
      * @param error The error callback.
      */
     fun deleteDesktop(success: () -> Unit, error: (Exception) -> Unit)
+
+    /**
+     * Subscribes to the backpack.
+     *
+     * @param success The success callback with a [Flow] of the school supplies in backpack
+     * @param error The error callback.
+     */
+    fun subscribeToBackpack(success: (Flow<Set<SchoolSupply>>) -> Unit, error: (Exception) -> Unit)
 }

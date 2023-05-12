@@ -4,6 +4,7 @@ import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
 import com.intelligentbackpack.desktopdomain.repository.DesktopDomainRepository
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Use case for the desktop domain.
@@ -46,11 +47,42 @@ class DesktopUseCase(private val repository: DesktopDomainRepository) {
         repository.getSchoolSupply(rfid, success, error)
 
     /**
+     * Puts a school supply in the backpack.
+     *
+     * @param rfid The RFID of the school supply.
+     * @param success The success callback with the new desktop.
+     * @param error The error callback.
+     */
+    suspend fun putSchoolSupplyInBackpack(rfid: String, success: (Desktop) -> Unit, error: (Exception) -> Unit) =
+        repository.putSchoolSupplyInBackpack(rfid, success, error)
+
+    /**
+     * Takes a school supply from the backpack.
+     *
+     * @param rfid The RFID of the school supply.
+     * @param success The success callback with the new desktop.
+     * @param error The error callback.
+     */
+    suspend fun takeSchoolSupplyFromBackpack(rfid: String, success: (Desktop) -> Unit, error: (Exception) -> Unit) =
+        repository.takeSchoolSupplyFromBackpack(rfid, success, error)
+
+    /**
+     * Subscribes to the backpack.
+     *
+     * @param success The success callback with a [Flow] of the school supplies in backpack
+     * @param error The error callback.
+     */
+    suspend fun subscribeToBackpack(success: (Flow<Set<SchoolSupply>>) -> Unit, error: (Exception) -> Unit) =
+        repository.subscribeToBackpack(success, error)
+
+    /**
      * Delete the desktop.
      *
      * @param success The success callback.
      * @param error The error callback.
      */
-    suspend fun deleteDesktop(success: () -> Unit, error: (Exception) -> Unit) =
+    suspend
+
+    fun deleteDesktop(success: () -> Unit, error: (Exception) -> Unit) =
         repository.deleteDesktop(success, error)
 }
