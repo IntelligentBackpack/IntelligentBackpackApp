@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.bundles.retrofit)
     implementation(libs.bundles.protobuf)
     implementation(libs.bundles.grpc)
+    implementation(project(":networkUtility"))
     implementation(project(":accessDomain"))
     testImplementation(gradleTestKit())
     testImplementation(libs.bundles.kotlin.testing)
