@@ -4,7 +4,9 @@ import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyTypes
+import com.intelligentbackpack.desktopdomain.exception.AlreadyInBackpackException
 import com.intelligentbackpack.desktopdomain.exception.DuplicateRFIDException
+import com.intelligentbackpack.desktopdomain.exception.SchoolSupplyNotFoundException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -49,6 +51,47 @@ class TestDesktop : StringSpec({
         val desktop = Desktop.create(setOf(bookCopy))
         shouldThrow<DuplicateRFIDException> {
             desktop.addSchoolSupply(bookCopy)
+        }
+    }
+
+    "Put a School Supply in Backpack" {
+        val desktop = Desktop.create(setOf(bookCopy))
+        val newDesktop = desktop.putSchoolSupplyInBackpack(bookCopy)
+        desktop.schoolSuppliesInBackpack.size shouldBe 0
+        newDesktop.schoolSuppliesInBackpack.size shouldBe 1
+        newDesktop.schoolSupplies shouldBe setOf(bookCopy)
+    }
+
+    "Put a School Supply not in Desktop in Backpack" {
+        val desktop = Desktop.create(setOf(bookCopy))
+        val bookCopy2 = BookCopy.build {
+            this.rfidCode = "FF:24:3E:C2"
+            this.book = book
+        }
+        shouldThrow<SchoolSupplyNotFoundException> {
+            desktop.putSchoolSupplyInBackpack(bookCopy2)
+        }
+    }
+
+    "Put a School Supply already in Backpack in Backpack" {
+        val desktop = Desktop.create(setOf(bookCopy), setOf(bookCopy))
+        shouldThrow<AlreadyInBackpackException> {
+            desktop.putSchoolSupplyInBackpack(bookCopy)
+        }
+    }
+
+    "Take a School Supply from Backpack" {
+        val desktop = Desktop.create(setOf(bookCopy), setOf(bookCopy))
+        val newDesktop = desktop.takeSchoolSupplyFromBackpack(bookCopy)
+        desktop.schoolSuppliesInBackpack.size shouldBe 1
+        newDesktop.schoolSuppliesInBackpack.size shouldBe 0
+        newDesktop.schoolSupplies shouldBe setOf(bookCopy)
+    }
+
+    "Take a School Supply not in Backpack from Backpack" {
+        val desktop = Desktop.create(setOf(bookCopy))
+        shouldThrow<SchoolSupplyNotFoundException> {
+            desktop.takeSchoolSupplyFromBackpack(bookCopy)
         }
     }
 })
