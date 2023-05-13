@@ -1,11 +1,15 @@
 [versions]
+accompanistPermissionsVersion = "0.23.1"
 accompanistSystemuicontroller = "0.27.0"
 activityCompose = "1.7.1"
+barcodeScanning = "17.1.0"
+cameraLifecycle = "1.3.0-alpha06"
 coreKtx = "1.10.0"
 espressoCore = "3.5.1"
 firebaseCrashlyticsGradle = "2.9.5"
 googleServices = "4.3.15"
 grpc-protobuf = "1.45.1"
+guava = "31.0.1-android"
 json = "20230227"
 junit-junit = "4.13.2"
 lifecycleRuntimeKtx = "2.6.1"
@@ -33,21 +37,27 @@ material = "1.9.0"
 securityCrypto = "1.1.0-alpha06"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissionsVersion" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraLifecycle" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraLifecycle" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraLifecycle" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomKtx" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
-build-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle" }
+barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
+build-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
-gradle-plugin = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc-protobuf" }
 grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc-protobuf" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junit" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
 json = { module = "org.json:json", version.ref = "json" }
 junit = { module = "junit:junit", version.ref = "junit-junit" }
 kotest-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
@@ -112,13 +122,26 @@ room = [
     "androidx-room-runtime"
 ]
 
+camera-view = [
+    "androidx-camera-camera2",
+    "androidx-camera-view",
+    "androidx-camera-lifecycle",
+    "accompanist-permissions"
+]
+
+barcode-scanning = [
+    "androidx-camera-view",
+    "barcode-scanning",
+    "guava"
+]
+
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = "org.jetbrains.dokka:1.8.20"
 android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-application = {id = "com.android.application", version.ref = "gradle" }
-library = {id = "com.android.library", version.ref = "gradle" }
+application = { id = "com.android.application", version.ref = "gradle" }
+library = { id = "com.android.library", version.ref = "gradle" }
 kotlin-qa = { id = "org.danilopianini.gradle-kotlin-qa", version = "0.29.2" }
 taskTree = { id = "com.dorongold.task-tree", version = "2.1.1" }
 protobuf-plugin = { id = "com.google.protobuf", version = "0.9.0" }
-sem-ver = {id = "io.github.andreabrighi.android-git-sensitive-semantic-versioning-gradle-plugin", version = "1.0.2" }
+sem-ver = { id = "io.github.andreabrighi.android-git-sensitive-semantic-versioning-gradle-plugin", version = "1.0.2" }
