@@ -9,6 +9,8 @@ grpc-protobuf = "1.45.1"
 json = "20230227"
 junit-junit = "4.13.2"
 lifecycleRuntimeKtx = "2.6.1"
+mockk = "1.12.4"
+mockkJvm = "1.13.1"
 navigationCompose = "2.5.3"
 orgJacocoCore = "0.8.8"
 protobuf-compiler = "3.22.3"
@@ -55,6 +57,8 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-jvm = { module = "io.mockk:mockk-jvm", version.ref = "mockkJvm" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 orchestrator = { module = "androidx.test:orchestrator", version.ref = "orchestrator" }
 org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "orgJacocoCore" }
@@ -70,7 +74,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 kotlin-testing = [
     "kotest-junit5-jvm",
     "kotest-assertions-core",
-    "kotest-assertions-core-jvm"
+    "kotest-assertions-core-jvm",
+    "mockk",
+    "mockk-jvm",
 ]
 
 grpc = [
