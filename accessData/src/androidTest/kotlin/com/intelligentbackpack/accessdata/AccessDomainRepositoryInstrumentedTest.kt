@@ -70,14 +70,9 @@ class AccessDomainRepositoryInstrumentedTest {
         accessLocalDataSource.saveUser(expectedUser)
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataSource, accessRemoteDataSource)
         assertTrue(accessLocalDataSource.isUserSaved())
-        accessDomainRepository.isUserLogged({
-            assertTrue(it)
-            accessDomainRepository.automaticLogin({ user ->
-                verify(accessRemoteDataSource, never()).accessWithData("test@gmail.com", "Test#1234")
-                assertEquals(expectedUser, user)
-            }, {
-                assert(false)
-            })
+        accessDomainRepository.automaticLogin({ user ->
+            verify(accessRemoteDataSource, never()).accessWithData("test@gmail.com", "Test#1234")
+            assertEquals(expectedUser, user)
         }, {
             assert(false)
         })
@@ -110,19 +105,9 @@ class AccessDomainRepositoryInstrumentedTest {
         val accessLocalDataSource = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         accessLocalDataSource.saveUser(expectedUser)
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataSource, accessRemoteDataSource)
-        accessDomainRepository.isUserLogged({ logged ->
-            assertTrue(logged)
-            accessDomainRepository.logoutUser({ user ->
-                assertEquals(expectedUser, user)
-                accessDomainRepository.isUserLogged({ loggedAfterLogout ->
-                    assertFalse(loggedAfterLogout)
-                    assertFalse(accessLocalDataSource.isUserSaved())
-                }, {
-                    assert(false)
-                })
-            }, {
-                assert(false)
-            })
+        accessDomainRepository.logoutUser({ user ->
+            assertEquals(expectedUser, user)
+            assertFalse(accessLocalDataSource.isUserSaved())
         }, {
             assert(false)
         })
