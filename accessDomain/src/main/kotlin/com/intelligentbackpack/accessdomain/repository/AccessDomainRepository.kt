@@ -17,14 +17,6 @@ interface AccessDomainRepository {
     fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit)
 
     /**
-     * Checks if a user is logged.
-     *
-     * @param success is the success callback.
-     * @param error is the error callback.
-     */
-    fun isUserLogged(success: (Boolean) -> Unit, error: (Exception) -> Unit)
-
-    /**
      * Logs a user using email and password.
      *
      * @param email is the user email.

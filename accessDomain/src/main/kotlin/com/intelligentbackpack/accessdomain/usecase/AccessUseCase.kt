@@ -1,6 +1,7 @@
 package com.intelligentbackpack.accessdomain.usecase
 
 import com.intelligentbackpack.accessdomain.entities.User
+import com.intelligentbackpack.accessdomain.exceptions.UserAlreadyLogged
 import com.intelligentbackpack.accessdomain.repository.AccessDomainRepository
 
 /**
@@ -9,6 +10,8 @@ import com.intelligentbackpack.accessdomain.repository.AccessDomainRepository
  */
 class AccessUseCase(private val repository: AccessDomainRepository) {
 
+    private var user: User? = null
+
     /**
      * Creates a new user.
      * @param user is the user to create.
@@ -16,16 +19,20 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
      * @param error is the error callback.
      */
     suspend fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit) =
-        repository.createUser(user, success, error)
+        if (this.user != null)
+            error(UserAlreadyLogged(user.email))
+        else {
+            repository.createUser(user = user, error = error, success = {
+                this.user = it
+                success(it)
+            })
+        }
 
     /**
      * Checks if a user is logged.
-     *
-     * @param success is the success callback with true if the user is logged, false otherwise.
-     * @param error is the error callback.
      */
-    suspend fun isUserLogged(success: (Boolean) -> Unit, error: (Exception) -> Unit) =
-        repository.isUserLogged(success, error)
+    val isUserLogged
+        get() = user != null
 
     /**
      * Logs a user using email and password.
@@ -36,7 +43,10 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
      * @param error is the error callback.
      */
     suspend fun loginWithData(email: String, password: String, success: (User) -> Unit, error: (Exception) -> Unit) =
-        repository.loginWithData(email, password, success, error)
+        repository.loginWithData(email, password, error = error, success = {
+            user = it
+            success(it)
+        })
 
     /**
      * Logs the saved user.
@@ -45,7 +55,11 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
      * @param error is the error callback.
      */
     suspend fun automaticLogin(success: (User) -> Unit, error: (Exception) -> Unit) =
-        repository.automaticLogin(success, error)
+        user?.let { success(it) }
+            ?: repository.automaticLogin(error = error, success = {
+                user = it
+                success(it)
+            })
 
     /**
      * Logs out the user.
@@ -53,7 +67,11 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
      * @param success is the success callback.
      * @param error is the error callback.
      */
-    suspend fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit) = repository.logoutUser(success, error)
+    suspend fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit) =
+        repository.logoutUser(error = error, success = {
+            user = null
+            success(it)
+        })
 
     /**
      * Deletes the user.
@@ -61,5 +79,8 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
      * @param success is the success callback.
      * @param error is the error callback.
      */
-    suspend fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit) = repository.deleteUser(success, error)
+    suspend fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit) = repository.deleteUser({
+        user = null
+        success(it)
+    }, error)
 }

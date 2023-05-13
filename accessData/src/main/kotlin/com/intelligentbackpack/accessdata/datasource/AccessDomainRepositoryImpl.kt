@@ -24,27 +24,9 @@ class AccessDomainRepositoryImpl(
      */
     override fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
-            success(
-                accessRemoteDataSource.createUser(user)
-                    .also { accessLocalDataSource.saveUser(it) }
-            )
-        } catch (e: Exception) {
-            error(e)
-        }
-    }
-
-
-    /**
-     * Checks if a user is logged.
-     *
-     * @param success is the success callback with true if the user is logged, false otherwise.
-     * @param error is the error callback.
-     *
-     * The user is checked in the local data storage.
-     */
-    override fun isUserLogged(success: (Boolean) -> Unit, error: (Exception) -> Unit) {
-        try {
-            success(accessLocalDataSource.isUserSaved())
+            accessRemoteDataSource.createUser(user)
+                .also { accessLocalDataSource.saveUser(it) }
+                .let(success)
         } catch (e: Exception) {
             error(e)
         }
@@ -62,10 +44,9 @@ class AccessDomainRepositoryImpl(
      */
     override fun loginWithData(email: String, password: String, success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
-            success(
-                accessRemoteDataSource.accessWithData(email, password)
-                    .also { accessLocalDataSource.saveUser(it) }
-            )
+            accessRemoteDataSource.accessWithData(email, password)
+                .also { accessLocalDataSource.saveUser(it) }
+                .let(success)
         } catch (e: Exception) {
             error(e)
         }
@@ -81,7 +62,8 @@ class AccessDomainRepositoryImpl(
      */
     override fun automaticLogin(success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
-            success(accessLocalDataSource.getUser())
+            accessLocalDataSource.getUser()
+                .let(success)
         } catch (e: Exception) {
             error(e)
         }
@@ -97,9 +79,9 @@ class AccessDomainRepositoryImpl(
      */
     override fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
-            val user = accessLocalDataSource.getUser()
-            accessLocalDataSource.deleteUser()
-            success(user)
+            accessLocalDataSource.getUser()
+                .also { accessLocalDataSource.deleteUser() }
+                .let(success)
         } catch (e: Exception) {
             error(e)
         }
@@ -115,10 +97,10 @@ class AccessDomainRepositoryImpl(
      */
     override fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
-            val user = accessLocalDataSource.getUser()
-            accessRemoteDataSource.deleteUser(user)
-            accessLocalDataSource.deleteUser()
-            success(user)
+            accessLocalDataSource.getUser()
+                .also { accessRemoteDataSource.deleteUser(it) }
+                .also { accessLocalDataSource.deleteUser() }
+                .let(success)
         } catch (e: Exception) {
             error(e)
         }
