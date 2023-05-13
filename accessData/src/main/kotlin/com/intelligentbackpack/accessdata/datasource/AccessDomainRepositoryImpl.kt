@@ -22,7 +22,7 @@ class AccessDomainRepositoryImpl(
      *
      * The user is created in the remote data storage and then saved in the local data storage.
      */
-    override fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit) {
+    override suspend fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
             accessRemoteDataSource.createUser(user)
                 .also { accessLocalDataSource.saveUser(it) }
@@ -42,7 +42,7 @@ class AccessDomainRepositoryImpl(
      *
      * The user is logged in the remote data storage and then saved in the local data storage.
      */
-    override fun loginWithData(email: String, password: String, success: (User) -> Unit, error: (Exception) -> Unit) {
+    override suspend fun loginWithData(email: String, password: String, success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
             accessRemoteDataSource.accessWithData(email, password)
                 .also { accessLocalDataSource.saveUser(it) }
@@ -60,7 +60,7 @@ class AccessDomainRepositoryImpl(
      *
      * The user is logged in the remote data storage.
      */
-    override fun automaticLogin(success: (User) -> Unit, error: (Exception) -> Unit) {
+    override suspend fun automaticLogin(success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
             accessLocalDataSource.getUser()
                 .let(success)
@@ -77,7 +77,7 @@ class AccessDomainRepositoryImpl(
      *
      * The user is deleted in the local data storage.
      */
-    override fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit) {
+    override suspend fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
             accessLocalDataSource.getUser()
                 .also { accessLocalDataSource.deleteUser() }
@@ -95,7 +95,7 @@ class AccessDomainRepositoryImpl(
      *
      * The user is deleted in the remote data storage and then in the local data storage.
      */
-    override fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit) {
+    override suspend fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit) {
         try {
             accessLocalDataSource.getUser()
                 .also { accessRemoteDataSource.deleteUser(it) }

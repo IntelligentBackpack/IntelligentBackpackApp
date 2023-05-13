@@ -14,7 +14,7 @@ interface AccessDomainRepository {
      * @param success is the success callback.
      * @param error is the error callback.
      */
-    fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Logs a user using email and password.
@@ -24,7 +24,7 @@ interface AccessDomainRepository {
      * @param success is the success callback.
      * @param error is the error callback.
      */
-    fun loginWithData(email: String, password: String, success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun loginWithData(email: String, password: String, success: (User) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Logs the saved user.
@@ -32,7 +32,7 @@ interface AccessDomainRepository {
      * @param success is the success callback.
      * @param error is the error callback.
      */
-    fun automaticLogin(success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun automaticLogin(success: (User) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Logs out the user.
@@ -40,7 +40,7 @@ interface AccessDomainRepository {
      * @param success is the success callback.
      * @param error is the error callback.
      */
-    fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Deletes the user.
@@ -48,5 +48,5 @@ interface AccessDomainRepository {
      * @param success is the success callback.
      * @param error is the error callback.
      */
-    fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit)
 }
