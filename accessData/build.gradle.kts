@@ -62,8 +62,6 @@ dependencies {
     implementation(libs.bundles.grpc)
     implementation(project(":networkUtility"))
     implementation(project(":accessDomain"))
-    testImplementation(gradleTestKit())
-    testImplementation(libs.bundles.kotlin.testing)
     androidTestImplementation(libs.bundles.androidTest)
     androidTestImplementation(libs.mockito.android)
     androidTestUtil(libs.orchestrator)
