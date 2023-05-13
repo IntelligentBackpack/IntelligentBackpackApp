@@ -8,9 +8,10 @@ import com.intelligentbackpack.accessdata.datasource.AccessRemoteDataSource
 import com.intelligentbackpack.accessdata.exception.MissingUserException
 import com.intelligentbackpack.accessdata.storage.UserStorageImpl
 import com.intelligentbackpack.accessdomain.entities.User
-import org.junit.Assert.assertTrue
-import org.junit.Assert.assertFalse
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
@@ -34,7 +35,7 @@ class AccessDomainRepositoryInstrumentedTest {
     }
 
     @Test
-    fun loginWithData() {
+    fun loginWithData() = runBlocking {
         val appContext =
             InstrumentationRegistry
                 .getInstrumentation()
@@ -60,7 +61,7 @@ class AccessDomainRepositoryInstrumentedTest {
     }
 
     @Test
-    fun automaticLoginWithUserSaved() {
+    fun automaticLoginWithUserSaved() = runBlocking {
         val appContext =
             InstrumentationRegistry
                 .getInstrumentation()
@@ -79,7 +80,7 @@ class AccessDomainRepositoryInstrumentedTest {
     }
 
     @Test
-    fun automaticLoginWithoutUserSavedCreateException() {
+    fun automaticLoginWithoutUserSavedCreateException() = runBlocking {
         val appContext =
             InstrumentationRegistry
                 .getInstrumentation()
@@ -96,7 +97,7 @@ class AccessDomainRepositoryInstrumentedTest {
     }
 
     @Test
-    fun logout() {
+    fun logout() = runBlocking {
         val appContext =
             InstrumentationRegistry
                 .getInstrumentation()
