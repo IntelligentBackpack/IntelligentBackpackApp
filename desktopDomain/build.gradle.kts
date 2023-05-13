@@ -27,6 +27,7 @@ tasks {
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines.core)
     testImplementation(gradleTestKit())
     testImplementation(libs.bundles.kotlin.testing)
 }
