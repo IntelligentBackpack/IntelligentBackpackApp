@@ -50,7 +50,7 @@ class UseCaseTest : StringSpec({
         val func = slot<(User) -> Unit>()
         val login = slot<(User) -> Unit>()
         coEvery {
-            repository.loginWithData(any(), any(), success = capture(login), error = {})
+            repository.loginWithData(any(), any(), success = capture(login), error = any())
         } answers {
             thirdArg<(User) -> Unit>().invoke(user)
         }
