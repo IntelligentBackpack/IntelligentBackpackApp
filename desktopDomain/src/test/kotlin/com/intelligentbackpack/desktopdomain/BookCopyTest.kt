@@ -7,7 +7,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-class TestBookCopy : StringSpec({
+class BookCopyTest : StringSpec({
 
     val title = "The Lord of the Rings"
     val authors = setOf("J. R. R. Tolkien")
