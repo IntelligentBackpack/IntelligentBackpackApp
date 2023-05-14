@@ -1,4 +1,4 @@
-package com.intelligentbackpack.app.utility
+package com.intelligentbackpack.app.ui.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

@@ -14,11 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Backpack
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Announcement
+import androidx.compose.material.icons.outlined.Backpack
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material3.Divider
@@ -37,11 +38,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,10 +55,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.app.ui.navigation.MainNavigation
-import com.intelligentbackpack.app.utility.NavigationItem
+import com.intelligentbackpack.app.ui.navigation.NavigationItem
 import com.intelligentbackpack.app.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
@@ -96,23 +101,29 @@ fun HomePage(
     version: String,
     versionCode: Long,
 ) {
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by rememberSaveable { mutableStateOf(0) }
     val tabs = listOf(
         NavigationItem(
             title = "Items",
-            icon = Icons.Default.Book
+            icon = Icons.Outlined.Book
         ) {
             //navController.navigate(MainNavigation.items)
         },
         NavigationItem(
             title = "Calendar",
-            icon = Icons.Default.CalendarToday
+            icon = Icons.Outlined.CalendarToday
         ) {
             //navController.navigate(MainNavigation.calendar)
         },
         NavigationItem(
             title = "Backpack",
-            icon = Icons.Default.Backpack
+            icon = Icons.Outlined.Backpack
+        ) {
+            //navController.navigate(MainNavigation.backpack)
+        },
+        NavigationItem(
+            title = "Forget",
+            icon = Icons.Outlined.Announcement
         ) {
             //navController.navigate(MainNavigation.backpack)
         }
@@ -224,37 +235,46 @@ fun HomePage(
                         .fillMaxSize(),
                     Alignment.BottomStart
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        val viewModelStoreOwner = LocalViewModelStoreOwner.current!!
-                        val itemsNavController = rememberNavController()
-                        /*NavHost(itemsNavController, startDestination = "test") {
-                            composable("test") {
-                                CompositionLocalProvider(
-                                    LocalViewModelStoreOwner provides viewModelStoreOwner
-                                ) {
-                                    //Login(navController)
+                    Scaffold(
+                        bottomBar = {
+                            NavigationBar {
+                                tabs.forEachIndexed { index, item ->
+                                    NavigationBarItem(
+                                        icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
+                                        label = { Text(item.title) },
+                                        selected = selectedTab == index,
+                                        onClick = {
+                                            selectedTab = index
+                                            item.action()
+                                        }
+                                    )
                                 }
                             }
-                        }*/
-                        Text(text = if (drawerState.isClosed) ">>> Swipe >>>" else "<<< Swipe <<<")
-                        Spacer(Modifier.height(20.dp))
-                    }
-                    NavigationBar {
-                        tabs.forEachIndexed { index, item ->
-                            NavigationBarItem(
-                                icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
-                                label = { Text(item.title) },
-                                selected = selectedTab == index,
-                                onClick = {
-                                    selectedTab = index
-                                    item.action()
+                        }
+                    ) { contentPadding ->
+                        Box(
+                            modifier = Modifier
+                                .padding(contentPadding)
+                                .fillMaxSize(),
+                            Alignment.BottomStart
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                val viewModelStoreOwner = LocalViewModelStoreOwner.current!!
+                                val itemsNavController = rememberNavController()
+                                NavHost(itemsNavController, startDestination = "test") {
+                                    composable("test") {
+                                        CompositionLocalProvider(
+                                            LocalViewModelStoreOwner provides viewModelStoreOwner
+                                        ) {
+
+                                        }
+                                    }
                                 }
-                            )
+                            }
                         }
                     }
                 }
