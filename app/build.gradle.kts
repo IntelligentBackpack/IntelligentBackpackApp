@@ -86,6 +86,7 @@ dependencies {
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
+    implementation(libs.bundles.camera.view)
     implementation(libs.bundles.barcode.scanning)
     implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")

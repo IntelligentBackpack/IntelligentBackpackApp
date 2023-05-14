@@ -130,7 +130,6 @@ camera-view = [
 ]
 
 barcode-scanning = [
-    "androidx-camera-view",
     "barcode-scanning",
     "guava"
 ]
