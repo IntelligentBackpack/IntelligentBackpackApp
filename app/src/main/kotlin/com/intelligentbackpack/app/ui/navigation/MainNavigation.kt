@@ -13,4 +13,15 @@ object MainNavigation {
         }
 
     const val user = "user"
+
+    const val schoolSupplyParam = "rfid"
+    const val schoolSupply = "schoolSupply?$schoolSupplyParam={$schoolSupplyParam}"
+    fun schoolSupply(rfid: String?) =
+        rfid?.let {
+            if (rfid.isBlank()) {
+                "schoolSupply"
+            } else {
+                "schoolSupply?$schoolSupplyParam=$rfid"
+            }
+        } ?: "schoolSupply"
 }
