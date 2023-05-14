@@ -12,7 +12,7 @@ class TestBookCopy : StringSpec({
     val title = "The Lord of the Rings"
     val authors = setOf("J. R. R. Tolkien")
     val rfidCode = "FF:24:3E:C1"
-    val isbn = "978885152159X"
+    val isbn = "9788843025343"
     val book = Book.build {
         this.isbn = isbn
         this.title = title
@@ -45,7 +45,7 @@ class TestBookCopy : StringSpec({
         }
     }
 
-    "Create a book with a not valid ISBN with a letter, not X at the end" {
+    "Create a book with a not valid ISBN with a letter" {
         shouldThrow<ISBNException> {
             Book.build {
                 this.isbn = "978885152159A"
@@ -68,7 +68,7 @@ class TestBookCopy : StringSpec({
     "Create a book with an missing title" {
         shouldThrow<IllegalStateException> {
             Book.build {
-                this.isbn = "978885152159"
+                this.isbn = isbn
                 this.authors = authors
             }
         }
@@ -77,7 +77,7 @@ class TestBookCopy : StringSpec({
     "Create a book with an missing author" {
         shouldThrow<IllegalStateException> {
             Book.build {
-                this.isbn = "978885152159"
+                this.isbn = isbn
                 this.title = title
             }
         }

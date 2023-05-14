@@ -5,7 +5,7 @@ package com.intelligentbackpack.desktopdomain.policies
  */
 object ISBNPolicy {
 
-    private val ISBN_REGEX = Regex("(97(8|9))\\d{9}(\\d|X)")
+    private val ISBN_REGEX = Regex("(97(8|9))\\d{10}")
 
     /**
      * Checks whether the ISBN is valid.
@@ -23,18 +23,10 @@ object ISBNPolicy {
     }
 
     private fun isValidCheckDigit(isbn: String): Boolean {
-        val checkDigit = isbn[isbn.length - 1].toString()
-        val isbnWithoutCheckDigit = isbn.substring(3, isbn.length - 1)
-        val checkDigitCalculated = calculateCheckDigit(isbnWithoutCheckDigit)
-        return checkDigit == checkDigitCalculated
-    }
-
-    private fun calculateCheckDigit(isbnWithoutCheckDigit: String): String {
-        val sum = isbnWithoutCheckDigit.mapIndexed { index, c ->
+        val sum = isbn.mapIndexed { index, c ->
             val digit = Character.getNumericValue(c)
-            (10 - index) * digit
+            (if (index % 2 == 0) 1 else 3) * digit
         }.sum()
-        val check = sum % 11
-        return if (check == 0) "0" else if (11 - check == 10) "X" else (11 - check).toString()
+        return sum % 10 == 0
     }
 }

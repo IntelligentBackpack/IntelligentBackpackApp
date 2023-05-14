@@ -16,7 +16,7 @@ class TestDesktop : StringSpec({
     val title = "The Lord of the Rings"
     val authors = setOf("J. R. R. Tolkien")
     val rfidCode = "FF:24:3E:C1"
-    val isbn = "978885152159X"
+    val isbn = "9788843025343"
     val book = Book.build {
         this.isbn = isbn
         this.title = title
