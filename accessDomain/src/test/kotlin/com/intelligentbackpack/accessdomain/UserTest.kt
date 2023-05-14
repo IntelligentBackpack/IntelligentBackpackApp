@@ -9,7 +9,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.lang.IllegalArgumentException
 
-class UserTests : StringSpec({
+class UserTest : StringSpec({
     "Create a user" {
         val email = "test@mail.com"
         val name = "Test"

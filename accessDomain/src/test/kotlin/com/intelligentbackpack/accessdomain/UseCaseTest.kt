@@ -58,6 +58,6 @@ class UseCaseTest : StringSpec({
         coEvery { repository.automaticLogin(capture(func), any()) } answers { func.captured(user) }
         useCase.automaticLogin(success = {
             it shouldBe user
-        }, error = {})
+        }, error = { assert(false) })
     }
 })
