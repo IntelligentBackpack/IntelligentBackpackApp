@@ -48,23 +48,15 @@ class LoginViewModel(
         error: () -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            accessUseCase.isUserLogged({ logged ->
-                if (logged) {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        accessUseCase.automaticLogin({
-                            viewModelScope.launch(Dispatchers.Main) {
-                                userImpl.postValue(it)
-                                success(it)
-                            }
-                        }, {
-                            viewModelScope.launch(Dispatchers.Main) {
-                                error()
-                            }
-                        })
-
-                    }
+            accessUseCase.automaticLogin({
+                viewModelScope.launch(Dispatchers.Main) {
+                    userImpl.postValue(it)
+                    success(it)
                 }
             }, {
+                viewModelScope.launch(Dispatchers.Main) {
+                    error()
+                }
             })
         }
     }
