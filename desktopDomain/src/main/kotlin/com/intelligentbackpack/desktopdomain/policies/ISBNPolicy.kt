@@ -11,9 +11,9 @@ object ISBNPolicy {
      * Checks whether the ISBN is valid.
      * An ISBN is valid if it is a string of 13 digits that starts with 978 or 979 ends with a check digit.
      * The check digit is calculated as follows:
-     * - multiply each digit by 10 minus its position in the string (skipping the first 3 digits) from right to left;
-     * - sum all the results;
-     * - the check digit is the number that must be added to the sum to make it divisible by 11.
+     * - Multiply each digit by 1 or 3 depending on the position of the digit (even or odd).
+     * - Sum all the results.
+     * - The check digit is the number that must be added to the sum to make it divisible by 10.
      *
      * @param isbn the ISBN to check.
      * @return true if the ISBN is valid, false otherwise.
