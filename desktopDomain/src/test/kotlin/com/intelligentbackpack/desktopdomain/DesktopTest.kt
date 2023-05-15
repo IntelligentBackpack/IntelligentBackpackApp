@@ -5,6 +5,7 @@ import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyTypes
 import com.intelligentbackpack.desktopdomain.exception.AlreadyInBackpackException
+import com.intelligentbackpack.desktopdomain.exception.BackpackAlreadyAssociatedException
 import com.intelligentbackpack.desktopdomain.exception.DuplicateRFIDException
 import com.intelligentbackpack.desktopdomain.exception.SchoolSupplyNotFoundException
 import io.kotest.assertions.throwables.shouldThrow
@@ -89,6 +90,20 @@ class DesktopTest : StringSpec({
         val desktop = Desktop.create(setOf(bookCopy))
         shouldThrow<SchoolSupplyNotFoundException> {
             desktop.takeSchoolSupplyFromBackpack(bookCopy)
+        }
+    }
+
+    "Associate backpack" {
+        val desktop = Desktop.create(setOf(bookCopy))
+        desktop.backpackAssociated shouldBe false
+        desktop.associateBackpack()
+        desktop.backpackAssociated shouldBe true
+    }
+
+    "Associate a backpack to a desktop already with a backpack associated" {
+        val desktop = Desktop.create(setOf(bookCopy), backpackAssociated = true)
+        shouldThrow<BackpackAlreadyAssociatedException> {
+            desktop.associateBackpack()
         }
     }
 })
