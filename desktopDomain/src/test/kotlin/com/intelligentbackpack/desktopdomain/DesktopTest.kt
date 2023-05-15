@@ -40,11 +40,10 @@ class DesktopTest : StringSpec({
             this.rfidCode = "FF:24:3E:C2"
             this.book = book
         }
-        val newDesktop = desktop.addSchoolSupply(bookCopy2)
-        desktop.schoolSupplies.size shouldBe 1
-        newDesktop.schoolSupplies.size shouldBe 2
-        newDesktop.schoolSupplyTypes.size shouldBe 1
-        newDesktop.schoolSupplyTypes shouldBe setOf(SchoolSupplyTypes.BOOK)
+        desktop.addSchoolSupply(bookCopy2)
+        desktop.schoolSupplies.size shouldBe 2
+        desktop.schoolSupplyTypes.size shouldBe 1
+        desktop.schoolSupplyTypes shouldBe setOf(SchoolSupplyTypes.BOOK)
     }
 
     "Add an already present School Supply to Desktop" {
@@ -56,10 +55,9 @@ class DesktopTest : StringSpec({
 
     "Put a School Supply in Backpack" {
         val desktop = Desktop.create(setOf(bookCopy))
-        val newDesktop = desktop.putSchoolSupplyInBackpack(bookCopy)
-        desktop.schoolSuppliesInBackpack.size shouldBe 0
-        newDesktop.schoolSuppliesInBackpack.size shouldBe 1
-        newDesktop.schoolSupplies shouldBe setOf(bookCopy)
+        desktop.putSchoolSupplyInBackpack(bookCopy)
+        desktop.schoolSuppliesInBackpack.size shouldBe 1
+        desktop.schoolSupplies shouldBe setOf(bookCopy)
     }
 
     "Put a School Supply not in Desktop in Backpack" {
@@ -82,10 +80,9 @@ class DesktopTest : StringSpec({
 
     "Take a School Supply from Backpack" {
         val desktop = Desktop.create(setOf(bookCopy), setOf(bookCopy))
-        val newDesktop = desktop.takeSchoolSupplyFromBackpack(bookCopy)
-        desktop.schoolSuppliesInBackpack.size shouldBe 1
-        newDesktop.schoolSuppliesInBackpack.size shouldBe 0
-        newDesktop.schoolSupplies shouldBe setOf(bookCopy)
+        desktop.takeSchoolSupplyFromBackpack(bookCopy)
+        desktop.schoolSuppliesInBackpack.size shouldBe 0
+        desktop.schoolSupplies shouldBe setOf(bookCopy)
     }
 
     "Take a School Supply not in Backpack from Backpack" {
