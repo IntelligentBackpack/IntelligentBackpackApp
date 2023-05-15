@@ -221,6 +221,11 @@ class UseCaseTest : StringSpec({
         } answers {
             desktopSlot.captured(desktop)
         }
+        useCase.getDesktop({
+            it shouldBe desktop
+        }, {
+            assert(false)
+        })
         coEvery {
             repository.deleteDesktop(any(), any(), any())
         } answers {
@@ -235,6 +240,41 @@ class UseCaseTest : StringSpec({
             runBlocking {
                 useCase.getDesktop({
                     it.schoolSupplies shouldBe setOf()
+                }, {
+                    assert(false)
+                })
+            }
+        }, {
+            assert(false)
+        })
+    }
+
+    "Associate backpack" {
+        val desktop = Desktop.create(
+            schoolSupplies = setOf(bookCopy1, bookCopy2),
+            schoolSuppliesInBackpack = setOf()
+        )
+        coEvery {
+            accessUseCase.automaticLogin(any(), any())
+        } answers {
+            firstArg<(User) -> Unit>().invoke(user)
+        }
+        val useCase = DesktopUseCase(accessUseCase, repository)
+        val desktopSlot = slot<(Desktop) -> Unit>()
+        coEvery {
+            repository.getDesktop(any(), capture(desktopSlot), any())
+        } answers {
+            desktopSlot.captured(desktop)
+        }
+        coEvery {
+            repository.associateBackpack(any(), any(), any(), any())
+        } answers {
+            thirdArg<() -> Unit>().invoke()
+        }
+        useCase.associateBackpack("1234", {
+            runBlocking {
+                useCase.getDesktop({
+                    it.backpackAssociated shouldBe true
                 }, {
                     assert(false)
                 })
