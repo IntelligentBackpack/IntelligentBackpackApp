@@ -283,4 +283,33 @@ class UseCaseTest : StringSpec({
             assert(false)
         })
     }
+
+    "Associate backpack with error" {
+        val desktop = Desktop.create(
+            schoolSupplies = setOf(bookCopy1, bookCopy2),
+            schoolSuppliesInBackpack = setOf()
+        )
+        coEvery {
+            accessUseCase.automaticLogin(any(), any())
+        } answers {
+            firstArg<(User) -> Unit>().invoke(user)
+        }
+        val useCase = DesktopUseCase(accessUseCase, repository)
+        val desktopSlot = slot<(Desktop) -> Unit>()
+        coEvery {
+            repository.getDesktop(any(), capture(desktopSlot), any())
+        } answers {
+            desktopSlot.captured(desktop)
+        }
+        coEvery {
+            repository.associateBackpack(any(), any(), any(), any())
+        } answers {
+            lastArg<() -> Unit>().invoke()
+        }
+        useCase.associateBackpack("1234", {
+            assert(false)
+        }, {
+            desktop.backpackAssociated shouldBe false
+        })
+    }
 })
