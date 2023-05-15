@@ -3,6 +3,9 @@ package com.intelligentbackpack.app.viewdata
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+/**
+ * View data class for a user.
+ */
 @Parcelize
 data class UserView(
     val email: String = "",
