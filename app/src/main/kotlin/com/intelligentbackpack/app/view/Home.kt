@@ -96,7 +96,7 @@ fun Home(
 @Composable
 fun HomePage(
     navController: NavHostController,
-    user: User,
+    user: UserView,
     logout: () -> Unit,
     version: String,
     versionCode: Long,
@@ -294,11 +294,11 @@ fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): Pa
 @Composable
 fun HomePreview() {
     val navController = rememberNavController()
-    val user = User.build {
-        name = "John"
-        surname = "Doe"
-        email = "JohnDoe@gmail.com"
+    val user = UserView(
+        name = "John",
+        surname = "Doe",
+        email = "JohnDoe@gmail.com",
         password = "Test#1234"
-    }
+    )
     HomePage(navController, user, {}, "1.0.0", 1)
 }

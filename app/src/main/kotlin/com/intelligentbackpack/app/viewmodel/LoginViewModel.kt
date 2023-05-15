@@ -12,6 +12,8 @@ import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.app.App
 import com.intelligentbackpack.app.viewdata.UserView
+import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromDomainToView
+import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromViewToDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -19,10 +21,10 @@ class LoginViewModel(
     private val accessUseCase: AccessUseCase
 ) : ViewModel() {
 
-    val user: LiveData<User?>
+    val user: LiveData<UserView?>
         get() = userImpl
 
-    private val userImpl = MutableLiveData<User?>()
+    private val userImpl = MutableLiveData<UserView?>()
     fun login(
         email: String,
         password: String,
@@ -32,7 +34,7 @@ class LoginViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             accessUseCase.loginWithData(email, password, {
                 viewModelScope.launch(Dispatchers.Main) {
-                    userImpl.postValue(it)
+                    userImpl.postValue(it.fromDomainToView())
                     success(it)
                 }
             }, {
@@ -50,7 +52,7 @@ class LoginViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             accessUseCase.automaticLogin({
                 viewModelScope.launch(Dispatchers.Main) {
-                    userImpl.postValue(it)
+                    userImpl.postValue(it.fromDomainToView())
                     success(it)
                 }
             }, {
@@ -68,14 +70,10 @@ class LoginViewModel(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             accessUseCase.createUser(
-                User.build {
-                    email = data.email
-                    password = data.password
-                    name = data.name
-                    surname = data.surname
-                }, {
+                data.fromViewToDomain(),
+                {
                     viewModelScope.launch(Dispatchers.Main) {
-                        userImpl.postValue(it)
+                        userImpl.postValue(it.fromDomainToView())
                         success(it)
                     }
                 }, {
@@ -117,7 +115,6 @@ class LoginViewModel(
 
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                // Get the Application object from extras
                 val application = checkNotNull(this[APPLICATION_KEY])
                 LoginViewModel(
                     (application as App).accessUseCase

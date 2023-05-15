@@ -28,8 +28,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.intelligentbackpack.accessdomain.entities.Role
-import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.app.ui.navigation.MainNavigation
+import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewmodel.LoginViewModel
 
 
@@ -61,7 +61,7 @@ fun UserDetails(
 }
 
 @Composable
-fun UserDetailsPage(navController: NavHostController, user: User, logout: () -> Unit, delete: () -> Unit) {
+fun UserDetailsPage(navController: NavHostController, user: UserView, logout: () -> Unit, delete: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -100,7 +100,7 @@ fun UserDetailsPage(navController: NavHostController, user: User, logout: () -> 
             Spacer(Modifier.height(12.dp))
             Text(text = "Email: ${user.email}", style = MaterialTheme.typography.bodyMedium)
             Spacer(Modifier.height(12.dp))
-            Text(text = "Role: ${user.role.toText()}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Role: ${user.role}", style = MaterialTheme.typography.bodyMedium)
         }
         Button(
             onClick = delete,
@@ -150,11 +150,12 @@ fun Role.toText(): String {
 @Preview
 fun UserDetailsPreview() {
     val navController = rememberNavController()
-    val user = User.build {
-        name = "John"
-        surname = "Doe"
-        email = "JohnDoe@gmail.com"
-        password = "Test#1234"
-    }
+    val user = UserView(
+        name = "John",
+        surname = "Doe",
+        email = "JohnDoe@gmail.com",
+        password = "Test#1234",
+        role = Role.USER.toText()
+    )
     UserDetailsPage(navController, user, {}) {}
 }
