@@ -107,6 +107,29 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
     }
 
     /**
+     * associate the backpack.
+     *
+     * @param hash The hash of the backpack.
+     * @param success The success callback with the desktop.
+     * @param error The error callback.
+     */
+    suspend fun associateBackpack(hash: String, success: (Desktop) -> Unit, error: (Exception) -> Unit) {
+        val connectBackpack: (User, Desktop) -> Unit = { user, internalBackpack ->
+            try {
+                internalBackpack.associateBackpack()
+                runBlocking {
+                    repository.associateBackpack(user, hash, {
+                        success(internalBackpack)
+                    }, error)
+                }
+            } catch (e: Exception) {
+                error(e)
+            }
+        }
+        getDesktop(connectBackpack, error)
+    }
+
+    /**
      * Subscribes to the backpack.
      * The states of the backpack are a [Flow] of [Set] of [SchoolSupply].
      * The [Flow] emits the [Set] of [SchoolSupply] when the backpack changes.

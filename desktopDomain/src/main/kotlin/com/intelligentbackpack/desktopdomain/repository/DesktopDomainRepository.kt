@@ -70,4 +70,11 @@ interface DesktopDomainRepository {
      * @param rfid the set of rfid of school supplies to take from the backpack
      */
     suspend fun takeSchoolSuppliesFromBackpack(rfid: Set<String>)
+
+    /**
+     * Associate the backpack to the desktop
+     *
+     * @param user the user that connect the backpack
+     */
+    suspend fun associateBackpack(user: User, hash: String, success: () -> Unit, error: (Exception) -> Unit)
 }

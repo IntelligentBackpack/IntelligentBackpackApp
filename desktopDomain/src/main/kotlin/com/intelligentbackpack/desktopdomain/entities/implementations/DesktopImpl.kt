@@ -4,6 +4,7 @@ import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyType
 import com.intelligentbackpack.desktopdomain.exception.AlreadyInBackpackException
+import com.intelligentbackpack.desktopdomain.exception.BackpackAlreadyAssociatedException
 import com.intelligentbackpack.desktopdomain.exception.DuplicateRFIDException
 import com.intelligentbackpack.desktopdomain.exception.SchoolSupplyNotFoundException
 import com.intelligentbackpack.desktopdomain.exception.TypeException
@@ -18,7 +19,8 @@ import kotlin.jvm.Throws
 internal class DesktopImpl(
     schoolSupplies: Set<SchoolSupply>,
     schoolSupplyTypes: Set<SchoolSupplyType>,
-    schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet()
+    schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet(),
+    backpackAssociated: Boolean
 ) : Desktop {
 
     override var schoolSupplies: Set<SchoolSupply> = schoolSupplies
@@ -26,6 +28,8 @@ internal class DesktopImpl(
     override var schoolSupplyTypes: Set<SchoolSupplyType> = schoolSupplyTypes
         private set
     override var schoolSuppliesInBackpack: Set<SchoolSupply> = schoolSuppliesInBackpack
+        private set
+    override var backpackAssociated: Boolean = backpackAssociated
         private set
 
     /**
@@ -62,6 +66,18 @@ internal class DesktopImpl(
             else
                 schoolSuppliesInBackpack = schoolSuppliesInBackpack + schoolSupply
         }
+    }
+
+    /**
+     * Connects the backpack for the desktop's user.
+     *
+     * @throws BackpackAlreadyAssociatedException If a backpack is already connected.
+     */
+    override fun associateBackpack() {
+        if (backpackAssociated)
+            throw BackpackAlreadyAssociatedException()
+        else
+            backpackAssociated = true
     }
 
     /**
