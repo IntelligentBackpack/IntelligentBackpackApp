@@ -1,5 +1,7 @@
 package com.intelligentbackpack.desktopdomain.usecase
 
+import com.intelligentbackpack.accessdomain.entities.User
+import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.Desktop
@@ -14,9 +16,25 @@ import kotlinx.coroutines.runBlocking
 /**
  * Use case for the desktop domain.
  */
-class DesktopUseCase(private val repository: DesktopDomainRepository) {
+class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repository: DesktopDomainRepository) {
 
     private var desktop: Desktop? = null
+
+    private suspend fun getDesktop(success: (User, Desktop) -> Unit, error: (Exception) -> Unit) {
+        accessUseCase.automaticLogin({ user ->
+            desktop?.let {
+                success(user, it)
+            } ?: runBlocking {
+                repository.getDesktop(
+                    user,
+                    {
+                        desktop = it
+                        success(user, it)
+                    }, error
+                )
+            }
+        }, error)
+    }
 
     /**
      * Gets the desktop.
@@ -25,14 +43,7 @@ class DesktopUseCase(private val repository: DesktopDomainRepository) {
      * @param error the error callback.
      */
     suspend fun getDesktop(success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        desktop?.let {
-            success(it)
-        } ?: repository.getDesktop(
-            {
-                desktop = it
-                success(it)
-            }, error
-        )
+        getDesktop({ _, desktop -> success(desktop) }, error)
     }
 
     /**
@@ -47,11 +58,11 @@ class DesktopUseCase(private val repository: DesktopDomainRepository) {
         success: (Desktop) -> Unit,
         error: (Exception) -> Unit
     ) {
-        val addSupply: (Desktop) -> Unit = {
+        val addSupply: (User, Desktop) -> Unit = { user, it ->
             try {
                 it.addSchoolSupply(schoolSupply)
                 runBlocking {
-                    repository.addSchoolSupply(schoolSupply, {
+                    repository.addSchoolSupply(user, schoolSupply, {
                         success(desktop!!)
                     }, error)
                 }
@@ -108,7 +119,6 @@ class DesktopUseCase(private val repository: DesktopDomainRepository) {
      * @param error The error callback.
      */
     suspend fun subscribeToBackpack(success: (Flow<Set<SchoolSupply>>) -> Unit, error: (Exception) -> Unit) {
-
         val putSchoolSuppliesInBackpack = { backpack: Set<SchoolSupply> ->
             val newAdd = backpack - desktop?.schoolSuppliesInBackpack.orEmpty()
             desktop?.putSchoolSuppliesInBackpack(newAdd)
@@ -144,19 +154,18 @@ class DesktopUseCase(private val repository: DesktopDomainRepository) {
                 ?.toSet() ?: emptySet()
         }
 
-        getDesktop({
+        getDesktop({ user, _ ->
             runBlocking {
-                repository.subscribeToBackpack({
-                    success(
-                        it.conflate()
-                            .map { backpackRfid ->
-                                getSupplyInBackpack(backpackRfid)
-                                    .also { backpack ->
-                                        updateBackpack(backpack)
-                                    }
-                            }
-                    )
-                }, error)
+                success(
+                    repository.subscribeToBackpack(user)
+                        .conflate()
+                        .map { backpackRfid ->
+                            getSupplyInBackpack(backpackRfid)
+                                .also { backpack ->
+                                    updateBackpack(backpack)
+                                }
+                        }
+                )
             }
         }, error)
     }
@@ -169,6 +178,10 @@ class DesktopUseCase(private val repository: DesktopDomainRepository) {
      */
     suspend fun deleteDesktop(success: () -> Unit, error: (Exception) -> Unit) {
         desktop = null
-        repository.deleteDesktop(success, error)
+        accessUseCase.automaticLogin({ user ->
+            runBlocking {
+                repository.deleteDesktop(user, success, error)
+            }
+        }, error)
     }
 }
