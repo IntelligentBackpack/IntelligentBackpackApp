@@ -1,5 +1,7 @@
 package com.intelligentbackpack.desktopdomain
 
+import com.intelligentbackpack.accessdomain.entities.User
+import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.Desktop
@@ -12,7 +14,6 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
@@ -20,6 +21,12 @@ import kotlinx.coroutines.runBlocking
 
 class UseCaseTest : StringSpec({
 
+    val user = User.build {
+        this.name = "test"
+        this.surname = "test"
+        this.email = "test@gmail.com"
+        this.password = "Test#1234"
+    }
     val title = "The Lord of the Rings"
     val authors = setOf("J. R. R. Tolkien")
     val rfidCode1 = "FF:24:3E:C1"
@@ -40,16 +47,22 @@ class UseCaseTest : StringSpec({
     }
 
     val repository = mockk<DesktopDomainRepository>(relaxed = true)
+    val accessUseCase = mockk<AccessUseCase>(relaxed = true)
 
     "Get Desktop" {
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1),
             schoolSuppliesInBackpack = setOf()
         )
-        val useCase = DesktopUseCase(repository)
+        coEvery {
+            accessUseCase.automaticLogin(any(), any())
+        } answers {
+            firstArg<(User) -> Unit>().invoke(user)
+        }
+        val useCase = DesktopUseCase(accessUseCase, repository)
         val desktopSlot = slot<(Desktop) -> Unit>()
         coEvery {
-            repository.getDesktop(capture(desktopSlot), any())
+            repository.getDesktop(any(), capture(desktopSlot), any())
         } answers {
             desktopSlot.captured(desktop)
         }
@@ -65,32 +78,36 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1),
             schoolSuppliesInBackpack = setOf()
         )
-        runBlocking {
-            val useCase = DesktopUseCase(repository)
-            val schoolSupply = slot<(Set<SchoolSupply>) -> Unit>()
-            val desktopSlot = slot<(Desktop) -> Unit>()
-            coEvery {
-                repository.getDesktop(success = capture(desktopSlot), error = any())
-            } answers {
-                firstArg<(Desktop) -> Unit>().invoke(desktop)
-            }
-            coEvery {
-                repository.addSchoolSupply(
-                    schoolSupply = any(),
-                    success = capture(schoolSupply),
-                    error = any()
-                )
-            } answers {
-                schoolSupply.captured(desktop.schoolSupplies + bookCopy2)
-            }
-            useCase.addSchoolSupply(
-                schoolSupply = bookCopy2,
-                success = {
-                    it.schoolSupplies shouldBe setOf(bookCopy1, bookCopy2)
-                },
-                error = { assert(false) }
-            )
+        coEvery {
+            accessUseCase.automaticLogin(any(), any())
+        } answers {
+            firstArg<(User) -> Unit>().invoke(user)
         }
+        val useCase = DesktopUseCase(accessUseCase, repository)
+        val schoolSupply = slot<(Set<SchoolSupply>) -> Unit>()
+        val desktopSlot = slot<(Desktop) -> Unit>()
+        coEvery {
+            repository.getDesktop(any(), success = capture(desktopSlot), error = any())
+        } answers {
+            secondArg<(Desktop) -> Unit>().invoke(desktop)
+        }
+        coEvery {
+            repository.addSchoolSupply(
+                user = any(),
+                schoolSupply = any(),
+                success = capture(schoolSupply),
+                error = any()
+            )
+        } answers {
+            schoolSupply.captured(desktop.schoolSupplies + bookCopy2)
+        }
+        useCase.addSchoolSupply(
+            schoolSupply = bookCopy2,
+            success = {
+                it.schoolSupplies shouldBe setOf(bookCopy1, bookCopy2)
+            },
+            error = { assert(false) }
+        )
     }
 
     "Get School Supplies in Desktop" {
@@ -98,11 +115,16 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1),
             schoolSuppliesInBackpack = setOf()
         )
-        val useCase = DesktopUseCase(repository)
         coEvery {
-            repository.getDesktop(any(), error = any())
+            accessUseCase.automaticLogin(any(), any())
         } answers {
-            firstArg<(Desktop) -> Unit>().invoke(desktop)
+            firstArg<(User) -> Unit>().invoke(user)
+        }
+        val useCase = DesktopUseCase(accessUseCase, repository)
+        coEvery {
+            repository.getDesktop(any(), any(), error = any())
+        } answers {
+            secondArg<(Desktop) -> Unit>().invoke(desktop)
         }
         useCase.getSchoolSupply(
             rfid = rfidCode1,
@@ -120,11 +142,16 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1),
             schoolSuppliesInBackpack = setOf()
         )
-        val useCase = DesktopUseCase(repository)
         coEvery {
-            repository.getDesktop(any(), error = any())
+            accessUseCase.automaticLogin(any(), any())
         } answers {
-            firstArg<(Desktop) -> Unit>().invoke(desktop)
+            firstArg<(User) -> Unit>().invoke(user)
+        }
+        val useCase = DesktopUseCase(accessUseCase, repository)
+        coEvery {
+            repository.getDesktop(any(), any(), error = any())
+        } answers {
+            secondArg<(Desktop) -> Unit>().invoke(desktop)
         }
         useCase.getSchoolSupply(
             rfid = rfidCode2,
@@ -142,7 +169,12 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1, bookCopy2),
             schoolSuppliesInBackpack = setOf()
         )
-        val useCase = DesktopUseCase(repository)
+        coEvery {
+            accessUseCase.automaticLogin(any(), any())
+        } answers {
+            firstArg<(User) -> Unit>().invoke(user)
+        }
+        val useCase = DesktopUseCase(accessUseCase, repository)
         val desktopSlot = slot<(Desktop) -> Unit>()
         val order: List<Set<SchoolSupply>> =
             listOf(setOf(bookCopy1), setOf(), setOf(bookCopy2), setOf(), setOf(bookCopy1, bookCopy2))
@@ -153,16 +185,14 @@ class UseCaseTest : StringSpec({
             }
         }
         coEvery {
-            repository.getDesktop(capture(desktopSlot), any())
+            repository.getDesktop(any(), capture(desktopSlot), any())
         } answers {
             desktopSlot.captured(desktop)
         }
         coEvery {
-            repository.subscribeToBackpack(any(), any())
+            repository.subscribeToBackpack(any())
         } answers {
-            firstArg<(Flow<Set<String>>) -> Unit>().invoke(
-                rfidFlow
-            )
+            rfidFlow
         }
         useCase.subscribeToBackpack({ flow ->
             runBlocking {
@@ -179,20 +209,25 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1, bookCopy2),
             schoolSuppliesInBackpack = setOf()
         )
-        val useCase = DesktopUseCase(repository)
+        coEvery {
+            accessUseCase.automaticLogin(any(), any())
+        } answers {
+            firstArg<(User) -> Unit>().invoke(user)
+        }
+        val useCase = DesktopUseCase(accessUseCase, repository)
         val desktopSlot = slot<(Desktop) -> Unit>()
         coEvery {
-            repository.getDesktop(capture(desktopSlot), any())
+            repository.getDesktop(any(), capture(desktopSlot), any())
         } answers {
             desktopSlot.captured(desktop)
         }
         coEvery {
-            repository.deleteDesktop(any(), any())
+            repository.deleteDesktop(any(), any(), any())
         } answers {
-            firstArg<() -> Unit>().invoke()
+            secondArg<() -> Unit>().invoke()
         }
         coEvery {
-            repository.getDesktop(capture(desktopSlot), any())
+            repository.getDesktop(any(), capture(desktopSlot), any())
         } answers {
             desktopSlot.captured(Desktop.create())
         }
