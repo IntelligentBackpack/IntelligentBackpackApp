@@ -28,6 +28,7 @@ tasks {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    implementation(project(":accessDomain"))
     testImplementation(gradleTestKit())
     testImplementation(libs.bundles.kotlin.testing)
 }
