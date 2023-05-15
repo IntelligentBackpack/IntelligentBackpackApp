@@ -34,7 +34,7 @@ interface Desktop {
      * @throws DuplicateRFIDException If the school supply RFID code is already present.
      */
     @Throws(TypeException::class, DuplicateRFIDException::class)
-    fun addSchoolSupply(schoolSupply: SchoolSupply): Desktop
+    fun addSchoolSupply(schoolSupply: SchoolSupply)
 
     /**
      * Adds a school supply in the backpack.
@@ -42,15 +42,33 @@ interface Desktop {
      * @param schoolSupply The school supply to add.
      * @return The desktop with the school supply added.
      */
-    fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply): Desktop
+    fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply)
 
     /**
-     * Extract a school supply from the backpack.
+     * Adds a set of school supplies in the backpack.
+     *
+     * @param schoolSupplies The school supplies to add.
+     * @return The desktop with the school supply added.
+     */
+    fun putSchoolSuppliesInBackpack(schoolSupplies: Set<SchoolSupply>) =
+        schoolSupplies.forEach { putSchoolSupplyInBackpack(it) }
+
+    /**
+     * Extract a school supplies from the backpack.
      *
      * @param schoolSupply The school supply to extract.
      * @return The desktop with the school supply removed.
      */
-    fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply): Desktop
+    fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply)
+
+    /**
+     * Extract a set of school supply from the backpack.
+     *
+     * @param schoolSupplies The school supplies to extract.
+     * @return The desktop with the school supply removed.
+     */
+    fun takeSchoolSuppliesFromBackpack(schoolSupplies: Set<SchoolSupply>) =
+        schoolSupplies.forEach { takeSchoolSupplyFromBackpack(it) }
 
     companion object {
         /**

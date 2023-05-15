@@ -15,54 +15,52 @@ import kotlin.jvm.Throws
  * @property schoolSupplies The school supplies of the desktop.
  * @property schoolSupplyTypes The types of the school supplies of the desktop.
  */
-internal data class DesktopImpl(
-    override val schoolSupplies: Set<SchoolSupply>,
-    override val schoolSupplyTypes: Set<SchoolSupplyType>,
-    override val schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet()
+internal class DesktopImpl(
+    schoolSupplies: Set<SchoolSupply>,
+    schoolSupplyTypes: Set<SchoolSupplyType>,
+    schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet()
 ) : Desktop {
+
+    override var schoolSupplies: Set<SchoolSupply> = schoolSupplies
+        private set
+    override var schoolSupplyTypes: Set<SchoolSupplyType> = schoolSupplyTypes
+        private set
+    override var schoolSuppliesInBackpack: Set<SchoolSupply> = schoolSuppliesInBackpack
+        private set
 
     /**
      * Add a school supply to the desktop.
      *
      * @param schoolSupply The school supply to add.
-     * @return A new desktop with the added school supply.
      * @throws TypeException If the type of the school supply is not in the desktop.
      * @throws DuplicateRFIDException If the RFID code of the school supply is already in the desktop.
      */
-    override fun addSchoolSupply(schoolSupply: SchoolSupply): Desktop =
+    override fun addSchoolSupply(schoolSupply: SchoolSupply) =
         if (!schoolSupplyTypes.contains(schoolSupply.type))
             throw TypeException(schoolSupply.type)
         else {
             if (schoolSupplies.map { it.rfidCode }.contains(schoolSupply.rfidCode))
                 throw DuplicateRFIDException()
             else
-                DesktopImpl(
-                    schoolSupplies = schoolSupplies + schoolSupply,
-                    schoolSupplyTypes = schoolSupplyTypes,
-                )
+                schoolSupplies = schoolSupplies + schoolSupply
         }
 
     /**
      * Put a school supply in the backpack.
      *
      * @param schoolSupply The school supply to put in the backpack.
-     * @return A new desktop with the school supply in the backpack.
      * @throws SchoolSupplyNotFoundException If the school supply is not in the desktop.
      * @throws AlreadyInBackpackException If the school supply is already in the backpack.
      */
     @Throws(SchoolSupplyNotFoundException::class)
-    override fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply): Desktop {
+    override fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply) {
         if (!schoolSupplies.contains(schoolSupply))
             throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
         else {
             if (schoolSuppliesInBackpack.contains(schoolSupply))
                 throw AlreadyInBackpackException(schoolSupply)
             else
-                return DesktopImpl(
-                    schoolSupplies = schoolSupplies,
-                    schoolSupplyTypes = schoolSupplyTypes,
-                    schoolSuppliesInBackpack = schoolSuppliesInBackpack + schoolSupply
-                )
+                schoolSuppliesInBackpack = schoolSuppliesInBackpack + schoolSupply
         }
     }
 
@@ -70,18 +68,13 @@ internal data class DesktopImpl(
      * Take a school supply from the backpack.
      *
      * @param schoolSupply The school supply to take.
-     * @return A new desktop with the school supply taken from the backpack.
      * @throws SchoolSupplyNotFoundException If the school supply is not in the backpack.
      */
     @Throws(SchoolSupplyNotFoundException::class)
-    override fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply): Desktop {
+    override fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply) {
         if (!schoolSuppliesInBackpack.contains(schoolSupply))
             throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
         else
-            return DesktopImpl(
-                schoolSupplies = schoolSupplies,
-                schoolSupplyTypes = schoolSupplyTypes,
-                schoolSuppliesInBackpack = schoolSuppliesInBackpack - schoolSupply
-            )
+            schoolSuppliesInBackpack = schoolSuppliesInBackpack - schoolSupply
     }
 }
