@@ -16,7 +16,7 @@ interface DesktopDomainRepository {
      * @param success The success callback.
      * @param error The error callback.
      */
-    fun getDesktop(success: (Desktop) -> Unit, error: (Exception) -> Unit)
+    suspend fun getDesktop(success: (Desktop) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Adds a school supply to the desktop.
@@ -25,7 +25,11 @@ interface DesktopDomainRepository {
      * @param success The success callback with all the school supplies.
      * @param error The error callback.
      */
-    fun addSchoolSupply(schoolSupply: SchoolSupply, success: (Set<SchoolSupply>) -> Unit, error: (Exception) -> Unit)
+    suspend fun addSchoolSupply(
+        schoolSupply: SchoolSupply,
+        success: (Set<SchoolSupply>) -> Unit,
+        error: (Exception) -> Unit
+    )
 
     /**
      * Gets a book by its ISBN.
@@ -34,7 +38,7 @@ interface DesktopDomainRepository {
      * @param success The success callback with the book if it exists.
      * @param error The error callback.
      */
-    fun getBook(isbn: String, success: (Book?) -> Unit, error: (Exception) -> Unit)
+    suspend fun getBook(isbn: String, success: (Book?) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Gets a school supply by its RFID.
@@ -43,25 +47,7 @@ interface DesktopDomainRepository {
      * @param success The success callback with the school supply.
      * @param error The error callback.
      */
-    fun getSchoolSupply(rfid: String, success: (SchoolSupply) -> Unit, error: (Exception) -> Unit)
-
-    /**
-     * Puts a school supply in the backpack.
-     *
-     * @param rfid The RFID of the school supply.
-     * @param success The success callback with the new desktop.
-     * @param error The error callback.
-     */
-    fun putSchoolSupplyInBackpack(rfid: String, success: (Desktop) -> Unit, error: (Exception) -> Unit)
-
-    /**
-     * Takes a school supply from the backpack.
-     *
-     * @param rfid The RFID of the school supply.
-     * @param success The success callback with the new desktop.
-     * @param error The error callback.
-     */
-    fun takeSchoolSupplyFromBackpack(rfid: String, success: (Desktop) -> Unit, error: (Exception) -> Unit)
+    suspend fun getSchoolSupply(rfid: String, success: (SchoolSupply) -> Unit, error: (Exception) -> Unit)
 
     /**
      * Deletes the desktop and all its school supplies.
@@ -69,13 +55,27 @@ interface DesktopDomainRepository {
      * @param success The success callback.
      * @param error The error callback.
      */
-    fun deleteDesktop(success: () -> Unit, error: (Exception) -> Unit)
+    suspend fun deleteDesktop(success: () -> Unit, error: (Exception) -> Unit)
 
     /**
      * Subscribes to the backpack.
      *
-     * @param success The success callback with a [Flow] of the school supplies in backpack
+     * @param success The success callback with a [Flow] of the rfid of school supplies in backpack
      * @param error The error callback.
      */
-    fun subscribeToBackpack(success: (Flow<Set<SchoolSupply>>) -> Unit, error: (Exception) -> Unit)
+    suspend fun subscribeToBackpack(success: (Flow<Set<String>>) -> Unit, error: (Exception) -> Unit)
+
+    /**
+     * Put a set of school supplies in the backpack
+     *
+     * @param rfid the set of rfid of school supplies to put in the backpack
+     */
+    suspend fun putSchoolSuppliesInBackpack(rfid: Set<String>)
+
+    /**
+     * Take a set of school supplies from the backpack
+     *
+     * @param rfid the set of rfid of school supplies to take from the backpack
+     */
+    suspend fun takeSchoolSuppliesFromBackpack(rfid: Set<String>)
 }
