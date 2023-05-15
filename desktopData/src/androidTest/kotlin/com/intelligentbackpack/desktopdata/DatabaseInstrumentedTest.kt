@@ -85,10 +85,9 @@ class DatabaseInstrumentedTest {
         val db = DesktopDatabaseHelper.getDatabase(appContext)
         insertSchoolSupply(db)
         val schoolSupplyQuery = db.desktopDao().getBookCopy(schoolSupply.rfid)
-        assertEquals(1, schoolSupplyQuery.size)
-        assertEquals(2, schoolSupplyQuery[0].authors.size)
-        assertEquals(book.isbn, schoolSupplyQuery[0].bookCopy.isbn)
-        assertEquals(schoolSupply.rfid, schoolSupplyQuery[0].bookCopy.rfid)
+        assertEquals(2, schoolSupplyQuery?.authors?.size)
+        assertEquals(book.isbn, schoolSupplyQuery?.bookCopy?.isbn)
+        assertEquals(schoolSupply.rfid, schoolSupplyQuery?.bookCopy?.rfid)
     }
 
     @Test
@@ -121,7 +120,7 @@ class DatabaseInstrumentedTest {
         insertSchoolSupply(db)
         db.desktopDao().putSchoolSuppliesInBackpack(setOf(schoolSupply.rfid))
         val bookCopy = db.desktopDao().getBookCopy(schoolSupply.rfid)
-        assert(bookCopy.first().bookCopy.inBackpack)
+        assert(bookCopy?.bookCopy?.inBackpack ?: false)
     }
 
     @Test
@@ -131,9 +130,9 @@ class DatabaseInstrumentedTest {
         insertSchoolSupply(db)
         db.desktopDao().putSchoolSuppliesInBackpack(setOf(schoolSupply.rfid))
         val bookCopy = db.desktopDao().getBookCopy(schoolSupply.rfid)
-        assert(bookCopy.first().bookCopy.inBackpack)
+        assert(bookCopy?.bookCopy?.inBackpack ?: false)
         db.desktopDao().takeSchoolSuppliesFromBackpack(setOf(schoolSupply.rfid))
         val bookCopy2 = db.desktopDao().getBookCopy(schoolSupply.rfid)
-        assert(!bookCopy2.first().bookCopy.inBackpack)
+        assert(!(bookCopy2?.bookCopy?.inBackpack ?: true))
     }
 }
