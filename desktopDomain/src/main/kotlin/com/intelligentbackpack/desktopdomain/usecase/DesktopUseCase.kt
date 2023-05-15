@@ -116,9 +116,9 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
     suspend fun associateBackpack(hash: String, success: (Desktop) -> Unit, error: (Exception) -> Unit) {
         val connectBackpack: (User, Desktop) -> Unit = { user, internalBackpack ->
             try {
-                internalBackpack.associateBackpack()
                 runBlocking {
                     repository.associateBackpack(user, hash, {
+                        internalBackpack.associateBackpack()
                         success(internalBackpack)
                     }, error)
                 }
