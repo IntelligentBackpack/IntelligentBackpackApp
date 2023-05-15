@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.bundles.grpc)
     implementation(libs.bundles.room)
     kapt(libs.androidx.room.compiler)
+    implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
+    implementation("com.google.firebase:firebase-database-ktx")
     implementation(project(":networkUtility"))
     implementation(project(":desktopDomain"))
     implementation(project(":accessDomain"))
