@@ -12,12 +12,16 @@ import com.intelligentbackpack.desktopdata.db.entities.SchoolSupplyType
 import com.intelligentbackpack.desktopdata.db.entities.Wrote
 import com.intelligentbackpack.desktopdata.db.relations.BookCopyWithAuthors
 import com.intelligentbackpack.desktopdata.db.relations.BookWithAuthors
+import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyTypes
 
 /**
  * Desktop DAO to access database
  */
 @Dao
 internal interface DesktopDAO {
+
+    @Query("INSERT INTO School_supply_types (type_id, type) VALUES (0, :defaultType)")
+    fun insertDefaultType(defaultType: String = SchoolSupplyTypes.BOOK)
 
     /**
      * Get an author id from the author name
