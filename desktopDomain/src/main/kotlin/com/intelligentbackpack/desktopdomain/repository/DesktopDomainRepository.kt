@@ -43,15 +43,6 @@ interface DesktopDomainRepository {
     suspend fun getBook(isbn: String, success: (Book?) -> Unit, error: (Exception) -> Unit)
 
     /**
-     * Gets a school supply by its RFID.
-     *
-     * @param rfid The RFID of the school supply.
-     * @param success The success callback with the school supply.
-     * @param error The error callback.
-     */
-    suspend fun getSchoolSupply(user: User, rfid: String, success: (SchoolSupply) -> Unit, error: (Exception) -> Unit)
-
-    /**
      * Deletes the desktop and all its school supplies.
      *
      * @param success The success callback.
