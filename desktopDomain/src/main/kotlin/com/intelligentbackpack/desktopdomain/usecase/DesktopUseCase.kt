@@ -7,6 +7,7 @@ import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyTypes
+import com.intelligentbackpack.desktopdomain.exception.BackpackNotAssociatedException
 import com.intelligentbackpack.desktopdomain.repository.DesktopDomainRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
@@ -20,6 +21,12 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
 
     private var desktop: Desktop? = null
 
+    /**
+     * Gets the desktop.
+     *
+     * @param success the success callback with the user and the desktop.
+     * @param error the error callback.
+     */
     private suspend fun getDesktop(success: (User, Desktop) -> Unit, error: (Exception) -> Unit) {
         accessUseCase.automaticLogin({ user ->
             desktop?.let {
@@ -73,6 +80,13 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
         getDesktop(addSupply, error)
     }
 
+    /**
+     * Get the book given the isbn.
+     *
+     * @param isbn The isbn.
+     * @param success The success callback with the book.
+     * @param error The error callback.
+     */
     suspend fun getBook(isbn: String, success: (Book?) -> Unit, error: (Exception) -> Unit) {
         val getBook: (Desktop) -> Unit = {
             try {
@@ -206,5 +220,36 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
                 repository.logoutDesktop(user, success, error)
             }
         }, error)
+    }
+
+    /**
+     * Disassociate a backpack from the desktop.
+     *
+     * @param hash The hash of the backpack.
+     * @param success The success callback.
+     * @param error The error callback.
+     */
+    suspend fun disassociateBackpack(hash: String, success: () -> Unit, error: (Exception) -> Unit) {
+        val disassociateBackpack: (User, Desktop) -> Unit = { user, internalDesktop ->
+            internalDesktop.backpack?.let {
+                if (it == hash) {
+                    try {
+                        runBlocking {
+                            repository.disassociateBackpack(user, hash, { deleted ->
+                                internalDesktop.disassociateBackpack(deleted)
+                                success()
+                            }, error)
+                        }
+                    } catch (e: Exception) {
+                        error(e)
+                    }
+                } else {
+                    error(BackpackNotAssociatedException())
+                }
+            } ?: run {
+                error(BackpackNotAssociatedException())
+            }
+        }
+        getDesktop(disassociateBackpack, error)
     }
 }

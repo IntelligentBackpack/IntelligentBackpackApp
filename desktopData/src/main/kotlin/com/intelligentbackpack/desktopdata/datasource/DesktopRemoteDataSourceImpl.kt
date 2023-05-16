@@ -150,4 +150,11 @@ class DesktopRemoteDataSourceImpl(
             throw DownloadException(getError(response))
         }
     }
+
+    override fun disassociateBackpack(user: User, hash: String) {
+        val response = backpackApi.disassociateBackpack(user.email, hash).execute()
+        if (!response.isSuccessful) {
+            throw DownloadException(getError(response))
+        }
+    }
 }

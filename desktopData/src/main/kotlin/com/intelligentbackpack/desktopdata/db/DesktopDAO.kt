@@ -181,4 +181,10 @@ internal interface DesktopDAO {
     @Query("SELECT rfid FROM School_supplies")
     fun getAllSchoolSupplyRfid(): List<String>
 
+    /**
+     * Remove all school supplies from the backpack
+     */
+    @Query("UPDATE School_supplies SET in_backpack = 0 WHERE in_backpack = 1")
+    fun removeAllSchoolSuppliesFromBackpack()
+
 }

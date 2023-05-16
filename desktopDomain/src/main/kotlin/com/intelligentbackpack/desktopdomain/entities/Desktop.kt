@@ -46,8 +46,6 @@ interface Desktop {
      * Adds a school supply to the desktop.
      *
      * @param schoolSupply The school supply to add.
-     * @return The desktop with the school supply added.
-     *
      * @throws TypeException If the school supply type is not present.
      * @throws DuplicateRFIDException If the school supply RFID code is already present.
      */
@@ -66,7 +64,6 @@ interface Desktop {
      * Adds a school supply in the backpack.
      *
      * @param schoolSupply The school supply to add.
-     * @return The desktop with the school supply added.
      */
     fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply)
 
@@ -74,7 +71,6 @@ interface Desktop {
      * Adds a set of school supplies in the backpack.
      *
      * @param schoolSupplies The school supplies to add.
-     * @return The desktop with the school supply added.
      */
     fun putSchoolSuppliesInBackpack(schoolSupplies: Set<SchoolSupply>) =
         schoolSupplies.forEach { putSchoolSupplyInBackpack(it) }
@@ -83,7 +79,6 @@ interface Desktop {
      * Extract a school supplies from the backpack.
      *
      * @param schoolSupply The school supply to extract.
-     * @return The desktop with the school supply removed.
      */
     fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply)
 
@@ -91,10 +86,16 @@ interface Desktop {
      * Extract a set of school supply from the backpack.
      *
      * @param schoolSupplies The school supplies to extract.
-     * @return The desktop with the school supply removed.
      */
     fun takeSchoolSuppliesFromBackpack(schoolSupplies: Set<SchoolSupply>) =
         schoolSupplies.forEach { takeSchoolSupplyFromBackpack(it) }
+
+    /**
+     * Disassociates the backpack from the user.
+     *
+     * @param hash the hash of the backpack to disassociate
+     */
+    fun disassociateBackpack(hash: String)
 
     companion object {
         /**

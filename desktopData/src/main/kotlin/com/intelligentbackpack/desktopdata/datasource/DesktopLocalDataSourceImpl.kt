@@ -99,4 +99,12 @@ class DesktopLocalDataSourceImpl(
         storage.deleteBackpack()
         database.desktopDao().insertSchoolSupplyType(SchoolSupplyType(0, SchoolSupplyTypes.BOOK))
     }
+
+    override fun disassociateBackpack() {
+        storage.deleteBackpack()
+    }
+
+    override fun removeAllSchoolSuppliesFromBackpack() {
+        database.desktopDao().removeAllSchoolSuppliesFromBackpack()
+    }
 }

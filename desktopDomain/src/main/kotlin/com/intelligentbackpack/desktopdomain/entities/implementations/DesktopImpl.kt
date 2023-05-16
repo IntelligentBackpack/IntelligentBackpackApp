@@ -44,6 +44,7 @@ internal class DesktopImpl(
      * @throws TypeException If the type of the school supply is not in the desktop.
      * @throws DuplicateRFIDException If the RFID code of the school supply is already in the desktop.
      */
+    @Throws(TypeException::class, DuplicateRFIDException::class)
     override fun addSchoolSupply(schoolSupply: SchoolSupply) =
         if (!schoolSupplyTypes.contains(schoolSupply.type))
             throw TypeException(schoolSupply.type)
@@ -82,6 +83,7 @@ internal class DesktopImpl(
      *
      * @throws BackpackAlreadyAssociatedException If a backpack is already connected.
      */
+    @Throws(BackpackAlreadyAssociatedException::class)
     override fun associateBackpack(backpack: Backpack) {
         if (isBackpackAssociated)
             throw BackpackAlreadyAssociatedException()
@@ -104,6 +106,22 @@ internal class DesktopImpl(
                 throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
             else
                 schoolSuppliesInBackpack = schoolSuppliesInBackpack - schoolSupply
+        }
+    }
+
+    /**
+     * Disconnects the backpack for the desktop's user.
+     *
+     * @param hash The hash of the backpack to disconnect.
+     * @throws BackpackNotAssociatedException If no backpack is connected.
+     */
+    @Throws(BackpackNotAssociatedException::class)
+    override fun disassociateBackpack(hash: String) {
+        if (isBackpackAssociated && backpack!! == hash) {
+            backpack = null
+            schoolSuppliesInBackpack = emptySet()
+        } else {
+            throw BackpackNotAssociatedException()
         }
     }
 }

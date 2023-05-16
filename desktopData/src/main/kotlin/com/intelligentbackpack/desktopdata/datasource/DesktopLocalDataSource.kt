@@ -73,4 +73,15 @@ interface DesktopLocalDataSource {
      * Delete the desktop and all its school supplies
      */
     fun deleteDesktop()
+
+    /**
+     * Disassociate the backpack from the desktop
+     *
+     */
+    fun disassociateBackpack()
+
+    /**
+     * Remove all school supplies from the backpack
+     */
+    fun removeAllSchoolSuppliesFromBackpack()
 }

@@ -80,4 +80,14 @@ interface DesktopDomainRepository {
      * @param error The error callback.
      */
     suspend fun associateBackpack(user: User, hash: String, success: (String) -> Unit, error: (Exception) -> Unit)
+
+    /**
+     * Disassociate the backpack from the desktop
+     *
+     * @param user the user that disconnect the backpack
+     * @param hash the hash of the backpack to disassociate
+     * @param success The success callback with the backpack hash.
+     * @param error The error callback.
+     */
+    suspend fun disassociateBackpack(user: User, hash: String, success: (String) -> Unit, error: (Exception) -> Unit)
 }

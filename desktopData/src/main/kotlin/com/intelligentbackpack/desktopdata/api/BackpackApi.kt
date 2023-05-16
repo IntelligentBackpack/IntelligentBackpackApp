@@ -1,6 +1,7 @@
 package com.intelligentbackpack.desktopdata.api
 
 import retrofit2.Call
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -13,4 +14,10 @@ interface BackpackApi {
      */
     @GET("/register")
     fun associateBackpack(@Query("email") email: String, @Query("hash") hash: String): Call<Void>
+
+    /**
+     * Disassociates a backpack from an email.
+     */
+    @DELETE("/unregister")
+    fun disassociateBackpack(@Query("email") email: String, @Query("hash") hash: String): Call<Void>
 }

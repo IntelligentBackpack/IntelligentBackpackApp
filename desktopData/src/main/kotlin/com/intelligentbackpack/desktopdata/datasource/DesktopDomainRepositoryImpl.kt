@@ -115,4 +115,20 @@ class DesktopDomainRepositoryImpl(
             error(e)
         }
     }
+
+    override suspend fun disassociateBackpack(
+        user: User,
+        hash: String,
+        success: (String) -> Unit,
+        error: (Exception) -> Unit
+    ) {
+        try {
+            desktopRemoteDataSource.disassociateBackpack(user, hash)
+            desktopLocalDataSource.disassociateBackpack()
+            desktopLocalDataSource.removeAllSchoolSuppliesFromBackpack()
+            success(hash)
+        } catch (e: Exception) {
+            error(e)
+        }
+    }
 }
