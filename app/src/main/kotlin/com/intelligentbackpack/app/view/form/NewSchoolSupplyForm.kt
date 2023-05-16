@@ -102,12 +102,14 @@ fun NewSchoolSupplyForm(
             }
             BookDetails(it)
         } ?: error?.let {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start)
-            ) {
-                Text(text = it)
-                Icon(imageVector = Icons.Outlined.ErrorOutline, "")
+            if (it.isNotBlank()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start)
+                ) {
+                    Text(text = it)
+                    Icon(imageVector = Icons.Outlined.ErrorOutline, "")
+                }
             }
         }
         Column(
