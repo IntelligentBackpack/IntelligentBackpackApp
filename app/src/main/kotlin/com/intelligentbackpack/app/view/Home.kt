@@ -58,9 +58,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.app.ui.navigation.MainNavigation
 import com.intelligentbackpack.app.ui.navigation.NavigationItem
+import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
