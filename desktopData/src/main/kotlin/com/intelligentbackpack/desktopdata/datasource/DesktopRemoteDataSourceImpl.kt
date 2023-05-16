@@ -23,6 +23,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 
 class DesktopRemoteDataSourceImpl(
     baseUrl: String,
@@ -60,19 +61,33 @@ class DesktopRemoteDataSourceImpl(
                 ?.map { it.fromRemoteToDomain(books) }
                 ?.toSet()
                 ?: emptySet()
-            val backpacks = getUserBackpackFirebaseReference(user)
-                .get().result
-            val hasBackpack = backpacks.key != null
-            val supplyInBackpack = backpacks.children
+            val firebaseRequest = getUserBackpackFirebaseReference(user).get()
+            runBlocking {
+                firebaseRequest.await()
+            }
+            val result = firebaseRequest.result
+            val backpacks = result.children.asSequence().map { it.key }.filterNotNull().toSet()
+            val supplyInBackpack = result.children
                 .asSequence()
-                .mapNotNull { it.getValue(String::class.java) }
-                .map { it.uppercase() }
-                .filter { RFIDPolicy.isValid(it) }
-                .toSet()
+                .map { it.key to it.value }
+                .filter { it.first != null }
+                .filter { it.second is Map<*, *> }
+                .map { it.first to it.second as Map<*, *> }
+                .map { it.first to it.second.keys }
+                .map {
+                    it.first to it.second
+                        .map { rfid -> rfid as String }
+                        .map { rfid -> rfid.uppercase() }
+                        .filter { rfid -> RFIDPolicy.isValid(rfid) }
+                }
+                .filter { it.first != null }
+                .associate { it.first!! to it.second }
             return Desktop.create(
                 schoolSupplies = copies,
-                schoolSuppliesInBackpack = copies.filter { it.rfidCode in supplyInBackpack }.toSet(),
-                backpackAssociated = hasBackpack,
+                schoolSuppliesInBackpack = copies
+                    .filter { it.rfidCode in supplyInBackpack.values.flatten() }
+                    .toSet(),
+                backpack = backpacks.firstOrNull(),
             )
         } else {
             throw DownloadException(getError(response))
