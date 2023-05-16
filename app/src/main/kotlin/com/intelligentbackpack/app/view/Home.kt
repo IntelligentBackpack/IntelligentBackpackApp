@@ -22,6 +22,8 @@ import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,6 +62,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.intelligentbackpack.app.ui.navigation.MainNavigation
 import com.intelligentbackpack.app.ui.navigation.NavigationItem
+import com.intelligentbackpack.app.ui.navigation.TabNavigation
 import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
@@ -101,31 +104,36 @@ fun HomePage(
     version: String,
     versionCode: Long,
 ) {
+    val itemsNavController = rememberNavController()
     var selectedTab by rememberSaveable { mutableStateOf(0) }
     val tabs = listOf(
         NavigationItem(
-            title = "Items",
+            title = "Books",
+            route = TabNavigation.schoolSupplies,
             icon = Icons.Outlined.Book
         ) {
-            //navController.navigate(MainNavigation.items)
+            itemsNavController.navigate(TabNavigation.schoolSupplies)
         },
         NavigationItem(
             title = "Calendar",
+            route = TabNavigation.calendar,
             icon = Icons.Outlined.CalendarToday
         ) {
-            //navController.navigate(MainNavigation.calendar)
+            itemsNavController.navigate(TabNavigation.calendar)
         },
         NavigationItem(
             title = "Backpack",
+            route = TabNavigation.backpack,
             icon = Icons.Outlined.Backpack
         ) {
-            //navController.navigate(MainNavigation.backpack)
+            itemsNavController.navigate(TabNavigation.backpack)
         },
         NavigationItem(
             title = "Forget",
+            route = TabNavigation.forget,
             icon = Icons.Outlined.Announcement
         ) {
-            //navController.navigate(MainNavigation.backpack)
+            itemsNavController.navigate(TabNavigation.forget)
         }
     )
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -214,64 +222,92 @@ fun HomePage(
                     Spacer(Modifier.height(12.dp))
                 }
             }
-        },
-        content = {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        navigationIcon = {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(imageVector = Icons.Outlined.Menu, contentDescription = "Menu")
-                            }
-                        },
-                        title = { Text("") },
-                        backgroundColor = MaterialTheme.colorScheme.primary,
-                    )
-                },
-            ) { contentPadding ->
-                Box(
-                    modifier = Modifier
-                        .padding(contentPadding)
-                        .fillMaxSize(),
-                    Alignment.BottomStart
-                ) {
-                    Scaffold(
-                        bottomBar = {
-                            NavigationBar {
-                                tabs.forEachIndexed { index, item ->
-                                    NavigationBarItem(
-                                        icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
-                                        label = { Text(item.title) },
-                                        selected = selectedTab == index,
-                                        onClick = {
-                                            selectedTab = index
-                                            item.action()
-                                        }
-                                    )
-                                }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(imageVector = Icons.Outlined.Menu, contentDescription = "Menu")
+                        }
+                    },
+                    title = { Text("") },
+                    backgroundColor = MaterialTheme.colorScheme.primary,
+                )
+            },
+        ) { contentPadding ->
+            Box(
+                modifier = Modifier
+                    .padding(contentPadding)
+                    .fillMaxSize(),
+                Alignment.BottomStart
+            ) {
+                Scaffold(
+                    bottomBar = {
+                        NavigationBar {
+                            tabs.forEachIndexed { index, item ->
+                                NavigationBarItem(
+                                    icon = {
+                                        if (item.route == TabNavigation.forget)
+                                            BadgedBox(
+                                                badge = { Badge { Text("5") } },
+                                            ) {
+                                                Icon(imageVector = item.icon, contentDescription = item.title)
+                                            }
+                                        else
+                                            Icon(imageVector = item.icon, contentDescription = item.title)
+                                    },
+                                    label = { Text(item.title) },
+                                    selected = selectedTab == index,
+                                    onClick = {
+                                        selectedTab = index
+                                        item.action()
+                                    }
+                                )
                             }
                         }
-                    ) { contentPadding ->
-                        Box(
+                    }
+                ) { contentPadding ->
+                    Box(
+                        modifier = Modifier
+                            .padding(contentPadding)
+                            .fillMaxSize(),
+                        Alignment.BottomStart
+                    ) {
+                        Column(
                             modifier = Modifier
-                                .padding(contentPadding)
-                                .fillMaxSize(),
-                            Alignment.BottomStart
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                val viewModelStoreOwner = LocalViewModelStoreOwner.current!!
-                                val itemsNavController = rememberNavController()
-                                NavHost(itemsNavController, startDestination = "test") {
-                                    composable("test") {
-                                        CompositionLocalProvider(
-                                            LocalViewModelStoreOwner provides viewModelStoreOwner
-                                        ) {
-
-                                        }
+                            val viewModelStoreOwner = LocalViewModelStoreOwner.current!!
+                            NavHost(itemsNavController, startDestination = tabs[selectedTab].route) {
+                                composable(TabNavigation.schoolSupplies) {
+                                    CompositionLocalProvider(
+                                        LocalViewModelStoreOwner provides viewModelStoreOwner
+                                    ) {
+                                        SchoolSupplies(navController = navController)
+                                    }
+                                }
+                                composable(TabNavigation.calendar) {
+                                    CompositionLocalProvider(
+                                        LocalViewModelStoreOwner provides viewModelStoreOwner
+                                    ) {
+                                        Text(text = "Calendar")
+                                    }
+                                }
+                                composable(TabNavigation.backpack) {
+                                    CompositionLocalProvider(
+                                        LocalViewModelStoreOwner provides viewModelStoreOwner
+                                    ) {
+                                        Text(text = "Backpack")
+                                    }
+                                }
+                                composable(TabNavigation.forget) {
+                                    CompositionLocalProvider(
+                                        LocalViewModelStoreOwner provides viewModelStoreOwner
+                                    ) {
+                                        Text(text = "Forget")
                                     }
                                 }
                             }
@@ -280,7 +316,7 @@ fun HomePage(
                 }
             }
         }
-    )
+    }
 }
 
 fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): PackageInfo =
