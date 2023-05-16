@@ -25,6 +25,20 @@ class DesktopDomainRepositoryImpl(
                             desktopLocalDataSource.getSchoolSupplyInBackpack()
                         )
                     }.also { desktop ->
+                        desktop.backpack?.let { backpack ->
+                            desktopLocalDataSource
+                                .putSchoolSuppliesInBackpack(
+                                    desktop.schoolSuppliesInBackpack.map { it.rfidCode }
+                                        .toSet()
+                                )
+                            desktopLocalDataSource
+                                .takeSchoolSuppliesFromBackpack(
+                                    (desktop.schoolSupplies - desktop.schoolSuppliesInBackpack)
+                                        .map { it.rfidCode }
+                                        .toSet()
+                                )
+                            desktopLocalDataSource.associateBackpack(backpack)
+                        }
                         success(desktop)
                     }
                 }
