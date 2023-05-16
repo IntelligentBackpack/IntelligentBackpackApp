@@ -21,25 +21,52 @@ class SchoolSupplyViewModel(
     private val desktopUseCase: DesktopUseCase
 ) : ViewModel() {
 
+    val schoolSupplies: LiveData<Set<SchoolSupplyView>>
+        get() = schoolSuppliesImpl
+
+    private val schoolSuppliesImpl = MutableLiveData<Set<SchoolSupplyView>>()
+
     val schoolSupply: LiveData<SchoolSupplyView?>
         get() = schoolSupplyImpl
 
     private val schoolSupplyImpl = MutableLiveData<SchoolSupplyView?>()
 
-    fun getSchoolSupply(
-        rfid: String,
-        success: (book: SchoolSupplyView?) -> Unit,
+    fun getSchoolSupplies(
         error: (error: String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+            desktopUseCase.getDesktop(
+                { desktop ->
+                    viewModelScope.launch(Dispatchers.Main) {
+                        schoolSuppliesImpl.postValue(desktop.schoolSupplies.map { it.fromDomainToView() }.toSet())
+                    }
+                }
+            ) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    error(it.message ?: "Unknown error")
+                }
+            }
+        }
+    }
+
+    fun getSchoolSupply(
+        rfid: String,
+        error: (error: String) -> Unit
+    ) {
+        schoolSupplies.value?.firstOrNull { it.rfidCode == rfid }?.let {
+            schoolSupplyImpl.postValue(it)
+        } ?: viewModelScope.launch(Dispatchers.IO) {
             desktopUseCase.getSchoolSupply(
                 rfid,
                 {
-                    schoolSupplyImpl.postValue(it?.fromDomainToView())
-                    success(it?.fromDomainToView())
+                    viewModelScope.launch(Dispatchers.Main) {
+                        schoolSupplyImpl.postValue(it?.fromDomainToView())
+                    }
                 }
             ) {
-                error(it.message ?: "Unknown error")
+                viewModelScope.launch(Dispatchers.Main) {
+                    error(it.message ?: "Unknown error")
+                }
             }
         }
     }

@@ -76,7 +76,7 @@ fun SchoolSupplyDetails(
         }
         rfid?.let {
             val schoolSupplyView = schoolSupplyViewModel.schoolSupply.observeAsState()
-            schoolSupplyViewModel.getSchoolSupply(rfid, {}, {})
+            schoolSupplyViewModel.getSchoolSupply(rfid) {}
             schoolSupplyView.value?.let { schoolSupply ->
                 SchoolSupplyDetailsForm(
                     schoolSupply,
