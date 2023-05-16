@@ -7,6 +7,12 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 
+/**
+ * Barcode analyser
+ *
+ * @param onBarcodeFound Callback for when a barcode is found
+ * @param options Barcode scanner options
+ */
 @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
 class BarcodeAnalyser(
     val onBarcodeFound: (String) -> Unit,

@@ -8,13 +8,24 @@ import java.io.IOException
 
 import java.nio.charset.Charset
 
-
+/**
+ * NFC Tag class
+ *
+ * @property rfidId RFID ID
+ * @property rfidData RFID data
+ */
 data class NFCTag(val rfidId: String, val rfidData: String?) {
 
     companion object {
 
         private const val TAG = "NFCTag"
 
+        /**
+         * Detect tag data
+         *
+         * @param tag Tag
+         * @return NFC tag data
+         */
         fun detectTagData(tag: Tag): NFCTag {
             val sb = StringBuilder()
             val id = tag.id
