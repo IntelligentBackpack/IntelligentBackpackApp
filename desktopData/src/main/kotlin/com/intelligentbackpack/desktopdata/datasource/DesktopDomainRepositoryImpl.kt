@@ -76,9 +76,8 @@ class DesktopDomainRepositoryImpl(
     }
 
     override fun subscribeToBackpack(user: User): Flow<Set<String>> {
-        val email = user.email
         val backpack = desktopLocalDataSource.getBackpack()
-        return desktopRemoteDataSource.subscribeToBackpackChanges(email, backpack).map { it.getOrDefault(setOf()) }
+        return desktopRemoteDataSource.subscribeToBackpackChanges(user, backpack).map { it.getOrDefault(setOf()) }
     }
 
     override suspend fun putSchoolSuppliesInBackpack(

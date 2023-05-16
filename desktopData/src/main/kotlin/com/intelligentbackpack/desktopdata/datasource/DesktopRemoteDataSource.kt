@@ -1,6 +1,5 @@
 package com.intelligentbackpack.desktopdata.datasource
 
-import com.intelligentbackpack.accessdomain.entities.Email
 import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.Desktop
@@ -38,11 +37,11 @@ interface DesktopRemoteDataSource {
     /**
      * Subscribes to the backpack.
      *
-     * @param email the email that subscribe to the backpack
+     * @param user the user that owns the backpack
      * @param backpack the backpack to subscribe
      * @return a [Flow] with the set of rfid of school supplies in the backpack
      */
-    fun subscribeToBackpackChanges(email: Email, backpack: String): Flow<Result<Set<String>>>
+    fun subscribeToBackpackChanges(user: User, backpack: String): Flow<Result<Set<String>>>
 
     /**
      * Associates a backpack to a user.

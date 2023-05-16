@@ -5,7 +5,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.intelligentbackpack.accessdomain.entities.Email
 import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.desktopdata.adapter.BookAdapter.fromRemoteToDomain
 import com.intelligentbackpack.desktopdata.adapter.SchoolSupplyAdapter.fromDomainToRemote
@@ -34,6 +33,11 @@ class DesktopRemoteDataSourceImpl(
     private val desktopApi = RetrofitHelper.getInstance(baseUrl).create(DesktopApi::class.java)
     private val backpackApi = RetrofitHelper.getInstance(backpackUrl).create(BackpackApi::class.java)
     private val database = Firebase.database(realtimeUrl)
+
+    private fun getUserBackpackFirebaseReference(user: User) =
+        database.reference
+            .child(user.email.replace(".", "-"))
+
     override fun getBook(isbn: String): Book? {
         val response = desktopApi.getBook(isbn).execute()
         if (response.isSuccessful) {
@@ -56,8 +60,7 @@ class DesktopRemoteDataSourceImpl(
                 ?.map { it.fromRemoteToDomain(books) }
                 ?.toSet()
                 ?: emptySet()
-            val backpacks = database.reference
-                .child(user.email)
+            val backpacks = getUserBackpackFirebaseReference(user)
                 .get().result
             val hasBackpack = backpacks.key != null
             val supplyInBackpack = backpacks.children
@@ -89,7 +92,7 @@ class DesktopRemoteDataSourceImpl(
     }
 
     @ExperimentalCoroutinesApi
-    override fun subscribeToBackpackChanges(email: Email, backpack: String) =
+    override fun subscribeToBackpackChanges(user: User, backpack: String) =
         callbackFlow<Result<Set<String>>> {
             val postListener = object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -113,14 +116,12 @@ class DesktopRemoteDataSourceImpl(
                     }
                 }
             }
-            database.reference
-                .child(email)
+            getUserBackpackFirebaseReference(user)
                 .child(backpack)
                 .addValueEventListener(postListener)
 
             awaitClose {
-                database.reference
-                    .child(email)
+                getUserBackpackFirebaseReference(user)
                     .child(backpack)
                     .removeEventListener(postListener)
             }
