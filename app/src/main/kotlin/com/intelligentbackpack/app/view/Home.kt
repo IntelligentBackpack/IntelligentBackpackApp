@@ -76,22 +76,23 @@ fun Home(
     )
 ) {
     val user = loginViewModel.user.observeAsState()
-    if (user.value == null) {
-        navController.navigate(MainNavigation.login)
-    }
     val context = LocalContext.current
     val pInfo: PackageInfo = context.packageManager.getPackageInfoCompat(context.packageName, 0)
     val version = pInfo.versionName
     val versionCode = pInfo.longVersionCode
-    HomePage(
-        navController = navController, user = user.value!!,
-        logout = {
-            loginViewModel.logout {
-                navController.navigate(MainNavigation.login)
-            }
-        },
-        version = version, versionCode = versionCode
-    )
+    user.value?.let {
+        HomePage(
+            navController = navController, user = it,
+            logout = {
+                loginViewModel.logout {
+                    navController.navigate(MainNavigation.login)
+                }
+            },
+            version = version, versionCode = versionCode
+        )
+    } ?: run {
+        navController.navigate(MainNavigation.login)
+    }
 
 }
 
