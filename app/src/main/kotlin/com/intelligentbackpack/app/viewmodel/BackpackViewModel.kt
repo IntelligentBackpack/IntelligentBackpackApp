@@ -16,18 +16,32 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+/**
+ * View model for the backpack.
+ */
 class BackpackViewModel(
     private val desktopUseCase: DesktopUseCase
 ) : ViewModel() {
 
     private val backpackImpl = MutableLiveData<Set<SchoolSupplyView>>()
 
+    /**
+     * Live data with representing the backpack.
+     */
     val backpack: LiveData<Set<SchoolSupplyView>> = backpackImpl
 
     private val isBackpackAssociatedImpl = MutableLiveData<Boolean>()
 
+    /**
+     * Live data with representing if the backpack is associated.
+     */
     val isBackpackAssociated: LiveData<Boolean> = isBackpackAssociatedImpl
 
+    /**
+     * updates the livedata isBackpackAssociated.
+     *
+     * @param error the error callback.
+     */
     fun getBackpackAssociated(
         error: (error: String) -> Unit
     ) {
@@ -44,6 +58,13 @@ class BackpackViewModel(
         }
     }
 
+    /**
+     * Associates a new backpack.
+     *
+     * @param hash the hash of the backpack.
+     * @param success the success callback.
+     * @param error the error callback.
+     */
     fun associateBackpack(
         hash: String,
         success: () -> Unit,
@@ -63,6 +84,12 @@ class BackpackViewModel(
         }
     }
 
+    /**
+     * Disassociates a backpack.
+     *
+     * @param success the success callback.
+     * @param error the error callback.
+     */
     fun disassociateBackpack(
         success: () -> Unit,
         error: (error: String) -> Unit
@@ -91,6 +118,11 @@ class BackpackViewModel(
         }
     }
 
+    /**
+     * Subscribes to the backpack updates.
+     *
+     * @param error the error callback.
+     */
     fun subscribe(
         error: (error: String) -> Unit
     ) {
@@ -120,6 +152,9 @@ class BackpackViewModel(
 
     companion object {
 
+        /**
+         * Factory for the view model.
+         */
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 // Get the Application object from extras
