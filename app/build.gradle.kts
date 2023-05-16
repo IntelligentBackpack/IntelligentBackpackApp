@@ -77,6 +77,7 @@ android {
 dependencies {
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.activity.compose)
     implementation(libs.navigation.compose)
     implementation(platform("androidx.compose:compose-bom:2023.01.00"))
