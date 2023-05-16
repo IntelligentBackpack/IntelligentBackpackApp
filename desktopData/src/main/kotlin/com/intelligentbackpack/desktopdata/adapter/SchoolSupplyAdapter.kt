@@ -1,10 +1,11 @@
 package com.intelligentbackpack.desktopdata.adapter
 
 import com.intelligentbackpack.desktopdata.adapter.AuthorAdapter.fromDBToDomain
-import com.intelligentbackpack.desktopdata.db.entities.SchoolSupply as SchoolSupplyDB
 import com.intelligentbackpack.desktopdata.db.relations.BookCopyWithAuthors
 import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.BookCopy
+import book.communication.Copy as CopyRemote
+import com.intelligentbackpack.desktopdata.db.entities.SchoolSupply as SchoolSupplyDB
 import com.intelligentbackpack.desktopdomain.entities.BookCopy as BookCopyDomain
 
 /**
@@ -36,4 +37,19 @@ internal object SchoolSupplyAdapter {
             type = type,
             inBackpack = inBackpack
         )
+
+    /**
+     * Convert from remote book copy to domain book copy
+     *
+     * @param books Set of books
+     * @return Book copy
+     * @throws IllegalArgumentException if book is not found
+     */
+    fun CopyRemote.fromRemoteToDomain(books: Set<Book>): BookCopyDomain =
+        books.find { it.isbn == this@fromRemoteToDomain.isbn }?.let {
+            return BookCopyDomain.build {
+                this.rfidCode = this@fromRemoteToDomain.rfid
+                this.book = it
+            }
+        } ?: throw IllegalArgumentException("Book not found")
 }
