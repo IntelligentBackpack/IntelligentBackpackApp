@@ -3,7 +3,13 @@ package com.intelligentbackpack.desktopdomain.entities
 import com.intelligentbackpack.desktopdomain.entities.implementations.DesktopImpl
 import com.intelligentbackpack.desktopdomain.exception.BackpackAlreadyAssociatedException
 import com.intelligentbackpack.desktopdomain.exception.DuplicateRFIDException
+import com.intelligentbackpack.desktopdomain.exception.BackpackNotAssociatedException
 import com.intelligentbackpack.desktopdomain.exception.TypeException
+
+/**
+ * Type alias for backpack.
+ */
+typealias Backpack = String
 
 /**
  * Interface for the desktop of the user.
@@ -26,9 +32,15 @@ interface Desktop {
     val schoolSuppliesInBackpack: Set<SchoolSupply>
 
     /**
+     * The backpack of the user.
+     */
+    val backpack: Backpack?
+
+    /**
      * True if the backpack is connected for the user, false otherwise.
      */
-    val backpackAssociated: Boolean
+    val isBackpackAssociated: Boolean
+        get() = backpack != null
 
     /**
      * Adds a school supply to the desktop.
@@ -48,7 +60,7 @@ interface Desktop {
      * @throws BackpackAlreadyAssociatedException If a backpack is already connected.
      */
     @Throws(BackpackAlreadyAssociatedException::class)
-    fun associateBackpack()
+    fun associateBackpack(backpack: Backpack)
 
     /**
      * Adds a school supply in the backpack.
@@ -90,19 +102,21 @@ interface Desktop {
          *
          * @param schoolSupplies The school supplies of the desktop.
          * @param schoolSuppliesInBackpack The school supplies in the backpack.
-         * @param backpackAssociated true if the backpack is associated for the user, false otherwise.
          * @return The desktop built.
          */
         fun create(
             schoolSupplies: Set<SchoolSupply> = emptySet(),
             schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet(),
-            backpackAssociated: Boolean = false
+            backpack: Backpack? = null
         ): Desktop =
-            DesktopImpl(
-                schoolSupplies,
-                setOf(SchoolSupplyTypes.BOOK),
-                schoolSuppliesInBackpack,
-                backpackAssociated
-            )
+            if (backpack == null && schoolSuppliesInBackpack.isNotEmpty())
+                throw BackpackNotAssociatedException()
+            else
+                DesktopImpl(
+                    schoolSupplies,
+                    setOf(SchoolSupplyTypes.BOOK),
+                    schoolSuppliesInBackpack,
+                    backpack
+                )
     }
 }

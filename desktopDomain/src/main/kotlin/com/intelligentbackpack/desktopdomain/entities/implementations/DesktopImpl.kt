@@ -1,10 +1,12 @@
 package com.intelligentbackpack.desktopdomain.entities.implementations
 
+import com.intelligentbackpack.desktopdomain.entities.Backpack
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyType
 import com.intelligentbackpack.desktopdomain.exception.AlreadyInBackpackException
 import com.intelligentbackpack.desktopdomain.exception.BackpackAlreadyAssociatedException
+import com.intelligentbackpack.desktopdomain.exception.BackpackNotAssociatedException
 import com.intelligentbackpack.desktopdomain.exception.DuplicateRFIDException
 import com.intelligentbackpack.desktopdomain.exception.SchoolSupplyNotFoundException
 import com.intelligentbackpack.desktopdomain.exception.TypeException
@@ -15,12 +17,14 @@ import kotlin.jvm.Throws
  *
  * @property schoolSupplies The school supplies of the desktop.
  * @property schoolSupplyTypes The types of the school supplies of the desktop.
+ * @property schoolSuppliesInBackpack The school supplies in the backpack.
+ * @property backpack The backpack of the user.
  */
 internal class DesktopImpl(
     schoolSupplies: Set<SchoolSupply>,
     schoolSupplyTypes: Set<SchoolSupplyType>,
     schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet(),
-    backpackAssociated: Boolean
+    backpack: Backpack? = null
 ) : Desktop {
 
     override var schoolSupplies: Set<SchoolSupply> = schoolSupplies
@@ -29,7 +33,8 @@ internal class DesktopImpl(
         private set
     override var schoolSuppliesInBackpack: Set<SchoolSupply> = schoolSuppliesInBackpack
         private set
-    override var backpackAssociated: Boolean = backpackAssociated
+
+    override var backpack: Backpack? = backpack
         private set
 
     /**
@@ -58,13 +63,17 @@ internal class DesktopImpl(
      */
     @Throws(SchoolSupplyNotFoundException::class)
     override fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply) {
-        if (!schoolSupplies.contains(schoolSupply))
-            throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
+        if (!isBackpackAssociated)
+            throw BackpackNotAssociatedException()
         else {
-            if (schoolSuppliesInBackpack.contains(schoolSupply))
-                throw AlreadyInBackpackException(schoolSupply)
-            else
-                schoolSuppliesInBackpack = schoolSuppliesInBackpack + schoolSupply
+            if (!schoolSupplies.contains(schoolSupply))
+                throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
+            else {
+                if (schoolSuppliesInBackpack.contains(schoolSupply))
+                    throw AlreadyInBackpackException(schoolSupply)
+                else
+                    schoolSuppliesInBackpack = schoolSuppliesInBackpack + schoolSupply
+            }
         }
     }
 
@@ -73,11 +82,11 @@ internal class DesktopImpl(
      *
      * @throws BackpackAlreadyAssociatedException If a backpack is already connected.
      */
-    override fun associateBackpack() {
-        if (backpackAssociated)
+    override fun associateBackpack(backpack: Backpack) {
+        if (isBackpackAssociated)
             throw BackpackAlreadyAssociatedException()
         else
-            backpackAssociated = true
+            this.backpack = backpack
     }
 
     /**
@@ -88,9 +97,13 @@ internal class DesktopImpl(
      */
     @Throws(SchoolSupplyNotFoundException::class)
     override fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply) {
-        if (!schoolSuppliesInBackpack.contains(schoolSupply))
-            throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
-        else
-            schoolSuppliesInBackpack = schoolSuppliesInBackpack - schoolSupply
+        if (!isBackpackAssociated)
+            throw BackpackNotAssociatedException()
+        else {
+            if (!schoolSuppliesInBackpack.contains(schoolSupply))
+                throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
+            else
+                schoolSuppliesInBackpack = schoolSuppliesInBackpack - schoolSupply
+        }
     }
 }
