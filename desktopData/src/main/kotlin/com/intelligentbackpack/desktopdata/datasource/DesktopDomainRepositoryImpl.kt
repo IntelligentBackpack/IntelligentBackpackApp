@@ -66,7 +66,7 @@ class DesktopDomainRepositoryImpl(
         }
     }
 
-    override suspend fun deleteDesktop(user: User, success: () -> Unit, error: (Exception) -> Unit) {
+    override suspend fun logoutDesktop(user: User, success: () -> Unit, error: (Exception) -> Unit) {
         try {
             desktopLocalDataSource.deleteDesktop()
             success()

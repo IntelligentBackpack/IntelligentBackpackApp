@@ -48,7 +48,7 @@ interface DesktopDomainRepository {
      * @param success The success callback.
      * @param error The error callback.
      */
-    suspend fun deleteDesktop(user: User, success: () -> Unit, error: (Exception) -> Unit)
+    suspend fun logoutDesktop(user: User, success: () -> Unit, error: (Exception) -> Unit)
 
     /**
      * Subscribes to the backpack.

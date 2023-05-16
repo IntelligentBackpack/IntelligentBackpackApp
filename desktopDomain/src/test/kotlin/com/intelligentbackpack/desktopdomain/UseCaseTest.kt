@@ -227,7 +227,7 @@ class UseCaseTest : StringSpec({
             assert(false)
         })
         coEvery {
-            repository.deleteDesktop(any(), any(), any())
+            repository.logoutDesktop(any(), any(), any())
         } answers {
             secondArg<() -> Unit>().invoke()
         }
@@ -236,7 +236,7 @@ class UseCaseTest : StringSpec({
         } answers {
             desktopSlot.captured(Desktop.create())
         }
-        useCase.deleteDesktop({
+        useCase.logoutDesktop({
             runBlocking {
                 useCase.getDesktop({
                     it.schoolSupplies shouldBe setOf()

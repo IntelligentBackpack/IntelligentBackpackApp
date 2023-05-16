@@ -199,11 +199,11 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      * @param success The success callback.
      * @param error The error callback.
      */
-    suspend fun deleteDesktop(success: () -> Unit, error: (Exception) -> Unit) {
+    suspend fun logoutDesktop(success: () -> Unit, error: (Exception) -> Unit) {
         desktop = null
         accessUseCase.automaticLogin({ user ->
             runBlocking {
-                repository.deleteDesktop(user, success, error)
+                repository.logoutDesktop(user, success, error)
             }
         }, error)
     }
