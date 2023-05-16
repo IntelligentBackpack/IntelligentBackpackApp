@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                             CompositionLocalProvider(
                                 LocalViewModelStoreOwner provides viewModelStoreOwner
                             ) {
-
+                                SchoolSupplyDetails(navController = navController, rfid = rfid)
                             }
                         }
                     }
