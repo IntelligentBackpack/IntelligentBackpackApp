@@ -28,6 +28,9 @@ import androidx.compose.ui.unit.dp
 import com.intelligentbackpack.app.ui.common.EmailField
 import com.intelligentbackpack.app.ui.common.PasswordField
 
+/**
+ * Form for logging in.
+ */
 @Composable
 fun LoginForm(
     login: (username: String, password: String) -> Unit,

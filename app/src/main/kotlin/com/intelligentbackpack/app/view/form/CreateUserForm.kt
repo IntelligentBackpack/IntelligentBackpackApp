@@ -34,7 +34,9 @@ import com.intelligentbackpack.app.ui.common.EmailField
 import com.intelligentbackpack.app.ui.common.PasswordField
 import com.intelligentbackpack.app.viewdata.UserView
 
-
+/**
+ * Form for creating a new user.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateUserForm(
