@@ -45,7 +45,7 @@ class UseCaseTest : StringSpec({
         this.rfidCode = rfidCode2
         this.book = book
     }
-
+    val backpack = "Backpack"
     val repository = mockk<DesktopDomainRepository>(relaxed = true)
     val accessUseCase = mockk<AccessUseCase>(relaxed = true)
 
@@ -270,9 +270,9 @@ class UseCaseTest : StringSpec({
         coEvery {
             repository.associateBackpack(any(), any(), any(), any())
         } answers {
-            thirdArg<(String) -> Unit>().invoke("1234")
+            thirdArg<(String) -> Unit>().invoke(backpack)
         }
-        useCase.associateBackpack("1234", {
+        useCase.associateBackpack(backpack, {
             runBlocking {
                 useCase.getDesktop({
                     it.isBackpackAssociated shouldBe true
@@ -307,10 +307,76 @@ class UseCaseTest : StringSpec({
         } answers {
             lastArg<() -> Unit>().invoke()
         }
-        useCase.associateBackpack("1234", {
+        useCase.associateBackpack(backpack, {
             assert(false)
         }, {
             desktop.isBackpackAssociated shouldBe false
+        })
+    }
+
+    "Disassociate backpack" {
+        val desktop = Desktop.create(
+            schoolSupplies = setOf(bookCopy1, bookCopy2),
+            schoolSuppliesInBackpack = setOf(),
+            backpack = backpack
+        )
+        coEvery {
+            accessUseCase.automaticLogin(any(), any())
+        } answers {
+            firstArg<(User) -> Unit>().invoke(user)
+        }
+        val useCase = DesktopUseCase(accessUseCase, repository)
+        val desktopSlot = slot<(Desktop) -> Unit>()
+        coEvery {
+            repository.getDesktop(any(), capture(desktopSlot), any())
+        } answers {
+            desktopSlot.captured(desktop)
+        }
+        coEvery {
+            repository.disassociateBackpack(any(), any(), any(), any())
+        } answers {
+            thirdArg<(String) -> Unit>().invoke(backpack)
+        }
+        useCase.disassociateBackpack(backpack, {
+            runBlocking {
+                useCase.getDesktop({
+                    it.isBackpackAssociated shouldBe false
+                }, {
+                    assert(false)
+                })
+            }
+        }, {
+            assert(false)
+        })
+    }
+
+    "Disassociate backpack with error" {
+        val desktop = Desktop.create(
+            schoolSupplies = setOf(bookCopy1, bookCopy2),
+            schoolSuppliesInBackpack = setOf(),
+            backpack = backpack
+        )
+        coEvery {
+            accessUseCase.automaticLogin(any(), any())
+        } answers {
+            firstArg<(User) -> Unit>().invoke(user)
+        }
+        val useCase = DesktopUseCase(accessUseCase, repository)
+        val desktopSlot = slot<(Desktop) -> Unit>()
+        coEvery {
+            repository.getDesktop(any(), capture(desktopSlot), any())
+        } answers {
+            desktopSlot.captured(desktop)
+        }
+        coEvery {
+            repository.disassociateBackpack(any(), any(), any(), any())
+        } answers {
+            lastArg<() -> Unit>().invoke()
+        }
+        useCase.disassociateBackpack(backpack, {
+            assert(false)
+        }, {
+            desktop.isBackpackAssociated shouldBe true
         })
     }
 })

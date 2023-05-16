@@ -122,4 +122,26 @@ class DesktopTest : StringSpec({
             desktop.associateBackpack("backpack2")
         }
     }
+
+    "Disassociate backpack" {
+        val desktop = Desktop.create(setOf(bookCopy), setOf(bookCopy), backpack = backpack)
+        desktop.isBackpackAssociated shouldBe true
+        desktop.disassociateBackpack(backpack)
+        desktop.isBackpackAssociated shouldBe false
+        desktop.schoolSuppliesInBackpack shouldBe emptySet()
+    }
+
+    "Disassociate a backpack from a desktop without a backpack associated" {
+        val desktop = Desktop.create(setOf(bookCopy))
+        shouldThrow<BackpackNotAssociatedException> {
+            desktop.disassociateBackpack(backpack)
+        }
+    }
+
+    "Disassociate a backpack from a desktop with a different backpack associated" {
+        val desktop = Desktop.create(setOf(bookCopy), backpack = "backpack2")
+        shouldThrow<BackpackNotAssociatedException> {
+            desktop.disassociateBackpack(backpack)
+        }
+    }
 })
