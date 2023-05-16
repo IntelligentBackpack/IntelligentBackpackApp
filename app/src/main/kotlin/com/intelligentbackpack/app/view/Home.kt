@@ -301,7 +301,7 @@ fun HomePage(
                                     CompositionLocalProvider(
                                         LocalViewModelStoreOwner provides viewModelStoreOwner
                                     ) {
-                                        Text(text = "Backpack")
+                                        BackpackContent(navController = navController)
                                     }
                                 }
                                 composable(TabNavigation.forget) {
