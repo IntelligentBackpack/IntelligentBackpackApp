@@ -274,7 +274,7 @@ class UseCaseTest : StringSpec({
         useCase.associateBackpack("1234", {
             runBlocking {
                 useCase.getDesktop({
-                    it.backpackAssociated shouldBe true
+                    it.isBackpackAssociated shouldBe true
                 }, {
                     assert(false)
                 })
@@ -309,7 +309,7 @@ class UseCaseTest : StringSpec({
         useCase.associateBackpack("1234", {
             assert(false)
         }, {
-            desktop.backpackAssociated shouldBe false
+            desktop.isBackpackAssociated shouldBe false
         })
     }
 })
