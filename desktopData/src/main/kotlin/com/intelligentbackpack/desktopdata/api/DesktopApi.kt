@@ -31,7 +31,7 @@ interface DesktopApi {
      * @param email The email of the user.
      * @return The desktop data.
      */
-    @GET("/getCopy/Email")
+    @GET("/utility/getCopy/Email")
     fun getLibrary(@Query("email") email: String): Call<Library>
 
     /**
