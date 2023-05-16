@@ -167,7 +167,8 @@ class UseCaseTest : StringSpec({
     "Subscribe to backpack" {
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1, bookCopy2),
-            schoolSuppliesInBackpack = setOf()
+            schoolSuppliesInBackpack = setOf(),
+            backpack = "backpack"
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -269,7 +270,7 @@ class UseCaseTest : StringSpec({
         coEvery {
             repository.associateBackpack(any(), any(), any(), any())
         } answers {
-            thirdArg<() -> Unit>().invoke()
+            thirdArg<(String) -> Unit>().invoke("1234")
         }
         useCase.associateBackpack("1234", {
             runBlocking {
