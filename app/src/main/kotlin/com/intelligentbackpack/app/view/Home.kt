@@ -41,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -80,6 +81,18 @@ fun Home(
     val pInfo: PackageInfo = context.packageManager.getPackageInfoCompat(context.packageName, 0)
     val version = pInfo.versionName
     val versionCode = pInfo.longVersionCode
+    LaunchedEffect(key1 = user) {
+        user.value ?: run {
+            loginViewModel.tryAutomaticLogin(
+                success = {
+                    navController.navigate(MainNavigation.home)
+                },
+                error = {
+                    navController.navigate(MainNavigation.login)
+                }
+            )
+        }
+    }
     user.value?.let {
         HomePage(
             navController = navController, user = it,
@@ -90,10 +103,7 @@ fun Home(
             },
             version = version, versionCode = versionCode
         )
-    } ?: run {
-        navController.navigate(MainNavigation.login)
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
