@@ -1,5 +1,7 @@
 package com.intelligentbackpack.desktopdata.adapter
 
+import book.communication.BuyBook
+import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.desktopdata.adapter.AuthorAdapter.fromDBToDomain
 import com.intelligentbackpack.desktopdata.db.relations.BookCopyWithAuthors
 import com.intelligentbackpack.desktopdomain.entities.Book
@@ -52,4 +54,16 @@ internal object SchoolSupplyAdapter {
                 this.book = it
             }
         } ?: throw IllegalArgumentException("Book not found")
+
+    /**
+     * Convert from domain book copy to remote book copy
+     *
+     * @return Remote book copy
+     */
+    fun BookCopy.fromDomainToRemote(user: User): BuyBook =
+        BuyBook.newBuilder().apply {
+            isbn = this@fromDomainToRemote.book.isbn
+            rfid = this@fromDomainToRemote.rfidCode
+            emailCompratore = user.email
+        }.build()
 }

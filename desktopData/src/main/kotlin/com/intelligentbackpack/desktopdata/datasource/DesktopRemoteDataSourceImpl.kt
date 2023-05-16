@@ -1,6 +1,5 @@
 package com.intelligentbackpack.desktopdata.datasource
 
-import book.communication.BuyBook
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -9,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import com.intelligentbackpack.accessdomain.entities.Email
 import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.desktopdata.adapter.BookAdapter.fromRemoteToDomain
+import com.intelligentbackpack.desktopdata.adapter.SchoolSupplyAdapter.fromDomainToRemote
 import com.intelligentbackpack.desktopdata.adapter.SchoolSupplyAdapter.fromRemoteToDomain
 import com.intelligentbackpack.desktopdata.api.BackpackApi
 import com.intelligentbackpack.desktopdata.api.DesktopApi
@@ -78,11 +78,7 @@ class DesktopRemoteDataSourceImpl(
 
     override fun addSchoolSupply(user: User, schoolSupply: SchoolSupply) {
         if (schoolSupply is BookCopy) {
-            val copy = BuyBook.newBuilder().apply {
-                isbn = schoolSupply.book.isbn
-                rfid = schoolSupply.rfidCode
-                emailCompratore = user.email
-            }.build()
+            val copy = schoolSupply.fromDomainToRemote(user)
             val response = desktopApi.addBookCopy(copy).execute()
             if (!response.isSuccessful) {
                 throw DownloadException(getError(response))
