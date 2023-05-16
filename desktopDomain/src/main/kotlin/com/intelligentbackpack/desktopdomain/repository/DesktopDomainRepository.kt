@@ -75,6 +75,9 @@ interface DesktopDomainRepository {
      * Associate the backpack to the desktop
      *
      * @param user the user that connect the backpack
+     * @param hash the hash of the backpack to associate
+     * @param success The success callback with the backpack hash.
+     * @param error The error callback.
      */
-    suspend fun associateBackpack(user: User, hash: String, success: () -> Unit, error: (Exception) -> Unit)
+    suspend fun associateBackpack(user: User, hash: String, success: (String) -> Unit, error: (Exception) -> Unit)
 }

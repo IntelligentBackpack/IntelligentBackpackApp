@@ -118,7 +118,7 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
             try {
                 runBlocking {
                     repository.associateBackpack(user, hash, {
-                        internalBackpack.associateBackpack(hash)
+                        internalBackpack.associateBackpack(it)
                         success(internalBackpack)
                     }, error)
                 }

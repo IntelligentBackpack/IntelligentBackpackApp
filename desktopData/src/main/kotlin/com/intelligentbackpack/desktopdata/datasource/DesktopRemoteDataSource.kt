@@ -48,6 +48,7 @@ interface DesktopRemoteDataSource {
      *
      * @param user the user to associate the backpack
      * @param hash the hash of the backpack to associate
+     * @return the backpack hash
      */
-    fun associateBackpack(user: User, hash: String)
+    fun associateBackpack(user: User, hash: String) : String
 }

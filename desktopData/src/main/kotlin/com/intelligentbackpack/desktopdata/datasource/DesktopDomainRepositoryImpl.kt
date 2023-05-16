@@ -106,11 +106,11 @@ class DesktopDomainRepositoryImpl(
         desktopLocalDataSource.takeSchoolSuppliesFromBackpack(rfid)
     }
 
-    override suspend fun associateBackpack(user: User, hash: String, success: () -> Unit, error: (Exception) -> Unit) {
+    override suspend fun associateBackpack(user: User, hash: String, success: (String) -> Unit, error: (Exception) -> Unit) {
         try {
-            desktopRemoteDataSource.associateBackpack(user, hash)
-            desktopLocalDataSource.associateBackpack(hash)
-            success()
+            val newHash = desktopRemoteDataSource.associateBackpack(user, hash)
+            desktopLocalDataSource.associateBackpack(newHash)
+            success(newHash)
         } catch (e: Exception) {
             error(e)
         }

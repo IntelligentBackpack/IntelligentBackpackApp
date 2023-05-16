@@ -142,9 +142,11 @@ class DesktopRemoteDataSourceImpl(
             }
         }
 
-    override fun associateBackpack(user: User, hash: String) {
+    override fun associateBackpack(user: User, hash: String): String {
         val response = backpackApi.associateBackpack(user.email, hash).execute()
-        if (!response.isSuccessful) {
+        if (response.isSuccessful) {
+            return hash
+        } else {
             throw DownloadException(getError(response))
         }
     }
