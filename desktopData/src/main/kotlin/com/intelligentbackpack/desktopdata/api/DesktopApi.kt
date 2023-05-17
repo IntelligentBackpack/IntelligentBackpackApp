@@ -23,7 +23,7 @@ interface DesktopApi {
      * @return The book data.
      */
     @GET("/utility/getBook/")
-    fun getBook(@Query("isbn") isbn: String): Call<Book>
+    fun getBook(@Query("ISBN") isbn: String): Call<Book>
 
     /**
      * Get the desktop data.
