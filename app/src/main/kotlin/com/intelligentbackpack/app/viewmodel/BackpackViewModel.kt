@@ -12,7 +12,6 @@ import com.intelligentbackpack.app.viewdata.SchoolSupplyView
 import com.intelligentbackpack.app.viewdata.adapter.SchoolSupplyAdapter.fromDomainToView
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -45,15 +44,11 @@ class BackpackViewModel(
     fun getBackpackAssociated(
         error: (error: String) -> Unit
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             desktopUseCase.getDesktop({
-                viewModelScope.launch(Dispatchers.Main) {
-                    isBackpackAssociatedImpl.postValue(it.isBackpackAssociated)
-                }
+                isBackpackAssociatedImpl.postValue(it.isBackpackAssociated)
             }, {
-                viewModelScope.launch(Dispatchers.Main) {
-                    error(it.message ?: "Unknown error")
-                }
+                error(it.message ?: "Unknown error")
             })
         }
     }
@@ -70,16 +65,12 @@ class BackpackViewModel(
         success: () -> Unit,
         error: (error: String) -> Unit
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             desktopUseCase.associateBackpack(hash, {
-                viewModelScope.launch(Dispatchers.Main) {
-                    isBackpackAssociatedImpl.postValue(true)
-                    success()
-                }
+                isBackpackAssociatedImpl.postValue(true)
+                success()
             }, {
-                viewModelScope.launch(Dispatchers.Main) {
-                    error(it.message ?: "Unknown error")
-                }
+                error(it.message ?: "Unknown error")
             })
         }
     }
@@ -94,26 +85,20 @@ class BackpackViewModel(
         success: () -> Unit,
         error: (error: String) -> Unit
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             desktopUseCase.getDesktop({ desktop ->
                 desktop.backpack?.let { backpack ->
-                    viewModelScope.launch(Dispatchers.IO) {
+                    viewModelScope.launch {
                         desktopUseCase.disassociateBackpack(backpack, {
-                            viewModelScope.launch(Dispatchers.Main) {
-                                isBackpackAssociatedImpl.postValue(false)
-                                success()
-                            }
+                            isBackpackAssociatedImpl.postValue(false)
+                            success()
                         }, {
-                            viewModelScope.launch(Dispatchers.Main) {
-                                error(it.message ?: "Unknown error")
-                            }
+                            error(it.message ?: "Unknown error")
                         })
                     }
                 }
             }, {
-                viewModelScope.launch(Dispatchers.Main) {
-                    error(it.message ?: "Unknown error")
-                }
+                error(it.message ?: "Unknown error")
             })
         }
     }
@@ -126,7 +111,7 @@ class BackpackViewModel(
     fun subscribe(
         error: (error: String) -> Unit
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             /*(1..10).asFlow().map { (0..it).toSet() }.flowOn(Dispatchers.IO).collect {
                 viewModelScope.launch(Dispatchers.Main) {
                     backpackImpl.postValue(it)
@@ -136,16 +121,14 @@ class BackpackViewModel(
                 viewModelScope.launch(Dispatchers.IO) {
                     it.map { backpack ->
                         backpack.map { schoolSupply -> schoolSupply.fromDomainToView() }.toSet()
-                    }.flowOn(Dispatchers.IO).collect {
+                    }.collect {
                         viewModelScope.launch(Dispatchers.Main) {
                             backpackImpl.postValue(it)
                         }
                     }
                 }
             }, {
-                viewModelScope.launch(Dispatchers.Main) {
-                    error(it.message ?: "Unknown error")
-                }
+                error(it.message ?: "Unknown error")
             })
         }
     }

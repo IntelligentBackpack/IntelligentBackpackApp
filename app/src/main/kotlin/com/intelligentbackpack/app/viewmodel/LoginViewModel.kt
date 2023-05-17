@@ -17,75 +17,96 @@ import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromViewToDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * View model for the login.
+ */
 class LoginViewModel(
     private val accessUseCase: AccessUseCase
 ) : ViewModel() {
 
+    /**
+     * Live data with the user.
+     */
     val user: LiveData<UserView?>
         get() = userImpl
 
     private val userImpl = MutableLiveData<UserView?>()
+
+    /**
+     * Login with the given data.
+     *
+     * @param email the email of the user.
+     * @param password the password of the user.
+     * @param success the success callback.
+     * @param error the error callback.
+     */
     fun login(
         email: String,
         password: String,
         success: (user: User) -> Unit,
         error: (error: String) -> Unit
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             accessUseCase.loginWithData(email, password, {
-                viewModelScope.launch(Dispatchers.Main) {
-                    userImpl.postValue(it.fromDomainToView())
-                    success(it)
-                }
+                userImpl.postValue(it.fromDomainToView())
+                success(it)
             }, {
-                viewModelScope.launch(Dispatchers.Main) {
-                    error(it.message ?: "Unknown error")
-                }
+                error(it.message ?: "Unknown error")
             })
         }
     }
 
+    /**
+     * Try to login automatically.
+     *
+     * @param success the success callback.
+     * @param error the error callback.
+     */
     fun tryAutomaticLogin(
         success: (user: User) -> Unit,
         error: () -> Unit
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             accessUseCase.automaticLogin({
-                viewModelScope.launch(Dispatchers.Main) {
-                    userImpl.postValue(it.fromDomainToView())
-                    success(it)
-                }
+                userImpl.postValue(it.fromDomainToView())
+                success(it)
             }, {
-                viewModelScope.launch(Dispatchers.Main) {
-                    error()
-                }
+                error()
             })
         }
     }
 
+    /**
+     * Create a new user.
+     *
+     * @param data the data of the user.
+     * @param success the success callback.
+     * @param error the error callback.
+     */
     fun createUser(
-        data: UserView, success:
-            (user: User) -> Unit,
+        data: UserView,
+        success: (user: User) -> Unit,
         error: (error: String) -> Unit
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             accessUseCase.createUser(
                 data.fromViewToDomain(),
                 {
-                    viewModelScope.launch(Dispatchers.Main) {
-                        userImpl.postValue(it.fromDomainToView())
-                        success(it)
-                    }
+                    userImpl.postValue(it.fromDomainToView())
+                    success(it)
                 }, {
-                    viewModelScope.launch(Dispatchers.Main) {
-                        error(it.message ?: "Unknown error")
-                    }
+                    error(it.message ?: "Unknown error")
                 }
             )
         }
     }
 
 
+    /**
+     * Logout the user.
+     *
+     * @param success the success callback.
+     */
     fun logout(success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             accessUseCase.logoutUser({
@@ -98,6 +119,11 @@ class LoginViewModel(
         }
     }
 
+    /**
+     * Delete the user.
+     *
+     * @param success the success callback.
+     */
     fun deleteUser(success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             accessUseCase.deleteUser({
@@ -113,6 +139,9 @@ class LoginViewModel(
 
     companion object {
 
+        /**
+         * Factory for the view model.
+         */
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY])

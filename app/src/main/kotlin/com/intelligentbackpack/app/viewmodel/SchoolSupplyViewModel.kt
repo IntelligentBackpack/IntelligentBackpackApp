@@ -14,18 +14,26 @@ import com.intelligentbackpack.app.viewdata.adapter.BookAdapter.fromDomainToView
 import com.intelligentbackpack.app.viewdata.adapter.SchoolSupplyAdapter.fromDomainToView
 import com.intelligentbackpack.desktopdomain.policies.ISBNPolicy
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * View model for the school supplies.
+ */
 class SchoolSupplyViewModel(
     private val desktopUseCase: DesktopUseCase
 ) : ViewModel() {
 
+    /**
+     * Live data with the school supplies.
+     */
     val schoolSupplies: LiveData<Set<SchoolSupplyView>>
         get() = schoolSuppliesImpl
 
     private val schoolSuppliesImpl = MutableLiveData<Set<SchoolSupplyView>>()
 
+    /**
+     * Live data with the school supply.
+     */
     val schoolSupply: LiveData<SchoolSupplyView?>
         get() = schoolSupplyImpl
 
@@ -34,60 +42,61 @@ class SchoolSupplyViewModel(
     fun getSchoolSupplies(
         error: (error: String) -> Unit
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             desktopUseCase.getDesktop(
                 { desktop ->
-                    viewModelScope.launch(Dispatchers.Main) {
-                        schoolSuppliesImpl.postValue(desktop.schoolSupplies.map { it.fromDomainToView() }.toSet())
-                    }
+                    schoolSuppliesImpl.postValue(desktop.schoolSupplies.map { it.fromDomainToView() }.toSet())
                 }
             ) {
-                viewModelScope.launch(Dispatchers.Main) {
-                    error(it.message ?: "Unknown error")
-                }
+                error(it.message ?: "Unknown error")
             }
         }
     }
 
+    /**
+     * Gets the school supply.
+     *
+     * @param rfid the rfid of the school supply.
+     * @param error the error callback.
+     */
     fun getSchoolSupply(
         rfid: String,
         error: (error: String) -> Unit
     ) {
         schoolSupplies.value?.firstOrNull { it.rfidCode == rfid }?.let {
             schoolSupplyImpl.postValue(it)
-        } ?: viewModelScope.launch(Dispatchers.IO) {
+        } ?: viewModelScope.launch {
             desktopUseCase.getSchoolSupply(
                 rfid,
                 {
-                    viewModelScope.launch(Dispatchers.Main) {
-                        schoolSupplyImpl.postValue(it?.fromDomainToView())
-                    }
+                    schoolSupplyImpl.postValue(it?.fromDomainToView())
                 }
             ) {
-                viewModelScope.launch(Dispatchers.Main) {
-                    error(it.message ?: "Unknown error")
-                }
+                error(it.message ?: "Unknown error")
             }
         }
     }
 
+    /**
+     * Gets the book.
+     *
+     * @param isbn the isbn of the book.
+     * @param success the success callback.
+     * @param error the error callback.
+     */
     fun getBook(
         isbn: String,
         success: (book: BookView) -> Unit,
         error: (error: String) -> Unit
     ) {
         if (ISBNPolicy.isValid(isbn))
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 desktopUseCase.getBook(isbn, { book ->
-                    viewModelScope.launch(Dispatchers.Main) {
-                        book?.let {
-                            success(it.fromDomainToView())
-                        } ?: error("Book not found")
-                    }
+                    book?.let {
+                        success(it.fromDomainToView())
+                    } ?: error("Book not found")
                 }, {
-                    viewModelScope.launch(Dispatchers.Main) {
-                        error(it.message ?: "Unknown error")
-                    }
+                    error(it.message ?: "Unknown error")
                 })
                 /*
             success(
@@ -104,6 +113,9 @@ class SchoolSupplyViewModel(
 
     companion object {
 
+        /**
+         * Factory for the view model.
+         */
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 // Get the Application object from extras
