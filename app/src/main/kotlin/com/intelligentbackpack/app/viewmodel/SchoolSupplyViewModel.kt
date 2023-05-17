@@ -39,6 +39,32 @@ class SchoolSupplyViewModel(
 
     private val schoolSupplyImpl = MutableLiveData<SchoolSupplyView?>()
 
+    /**
+     * Downloads the school supplies.
+     * The result is stored in the live data schoolSupplies.
+     *
+     * @param error the error callback.
+     */
+    fun downloadSchoolSupplies(
+        error: (error: String) -> Unit
+    ) {
+        viewModelScope.launch {
+            desktopUseCase.downloadDesktop(
+                { desktop ->
+                    schoolSuppliesImpl.postValue(desktop.schoolSupplies.map { it.fromDomainToView() }.toSet())
+                }
+            ) {
+                error(it.message ?: "Unknown error")
+            }
+        }
+    }
+
+    /**
+     * Gets the school supplies.
+     * The result is stored in the live data schoolSupplies.
+     *
+     * @param error the error callback.
+     */
     fun getSchoolSupplies(
         error: (error: String) -> Unit
     ) {

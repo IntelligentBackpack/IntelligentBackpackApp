@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +38,11 @@ fun SchoolSupplies(
 ) {
     val context = LocalContext.current
     val schoolSupplies = schoolSupplyViewModel.schoolSupplies.observeAsState(emptySet())
+    LaunchedEffect(Unit){
+        schoolSupplyViewModel.downloadSchoolSupplies {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+    }
     schoolSupplyViewModel.getSchoolSupplies {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
     }
