@@ -29,10 +29,10 @@ class UseCaseTest : StringSpec({
 
     "Create a user" {
         val useCase = AccessUseCase(repository)
-        val captor = slot<User>()
+        val userCapture = slot<User>()
         useCase.createUser(user = user, success = {}, error = {})
-        coVerify { repository.createUser(capture(captor), any(), any()) }
-        captor.captured shouldBe user
+        coVerify { repository.createUser(capture(userCapture)) }
+        userCapture.captured shouldBe user
     }
 
     "Login a user with email and password" {
@@ -40,22 +40,18 @@ class UseCaseTest : StringSpec({
         val emailCaptor = slot<String>()
         val passwordCaptor = slot<String>()
         useCase.loginWithData(user.email, user.password, success = {}, error = {})
-        coVerify { repository.loginWithData(capture(emailCaptor), capture(passwordCaptor), any(), any()) }
+        coVerify { repository.loginWithData(capture(emailCaptor), capture(passwordCaptor)) }
         emailCaptor.captured shouldBe user.email
         passwordCaptor.captured shouldBe user.password
     }
 
     "Login automatically a user" {
         val useCase = AccessUseCase(repository)
-        val func = slot<(User) -> Unit>()
-        val login = slot<(User) -> Unit>()
         coEvery {
-            repository.loginWithData(any(), any(), success = capture(login), error = any())
-        } answers {
-            thirdArg<(User) -> Unit>().invoke(user)
-        }
+            repository.loginWithData(any(), any())
+        } returns user
         useCase.loginWithData(user.email, user.password, success = {}, error = {})
-        coEvery { repository.automaticLogin(capture(func), any()) } answers { func.captured(user) }
+        coEvery { repository.automaticLogin() } returns user
         useCase.automaticLogin(success = {
             it shouldBe user
         }, error = { assert(false) })

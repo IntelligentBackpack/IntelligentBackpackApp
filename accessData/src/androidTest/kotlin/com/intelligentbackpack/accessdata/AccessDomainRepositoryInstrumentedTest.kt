@@ -11,6 +11,7 @@ import com.intelligentbackpack.accessdomain.entities.User
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,10 +37,9 @@ class AccessDomainRepositoryInstrumentedTest {
 
     @Test
     fun loginWithData() = runBlocking {
-        val appContext =
-            InstrumentationRegistry
-                .getInstrumentation()
-                .targetContext
+        val appContext = InstrumentationRegistry
+            .getInstrumentation()
+            .targetContext
         val accessRemoteDataSource = mock(AccessRemoteDataSource::class.java)
         `when`(
             accessRemoteDataSource.accessWithData(
@@ -50,50 +50,42 @@ class AccessDomainRepositoryInstrumentedTest {
         val localAccessDataSource = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         val accessDomainRepository = AccessDomainRepositoryImpl(localAccessDataSource, accessRemoteDataSource)
         assertFalse(localAccessDataSource.isUserSaved())
-        accessDomainRepository.loginWithData("test@gmail.com", "Test#1234", { user ->
-            verify(accessRemoteDataSource).accessWithData("test@gmail.com", "Test#1234")
-            assertEquals(expectedUser, user)
-            assertEquals(expectedUser, localAccessDataSource.getUser())
-            assertTrue(localAccessDataSource.isUserSaved())
-        }, {
-            assert(false)
-        })
+        val user = accessDomainRepository.loginWithData("test@gmail.com", "Test#1234")
+        verify(accessRemoteDataSource).accessWithData("test@gmail.com", "Test#1234")
+        assertEquals(expectedUser, user)
+        assertEquals(expectedUser, localAccessDataSource.getUser())
+        assertTrue(localAccessDataSource.isUserSaved())
     }
 
     @Test
-    fun automaticLoginWithUserSaved() = runBlocking {
-        val appContext =
-            InstrumentationRegistry
-                .getInstrumentation()
-                .targetContext
+    fun automaticLoginWithUserSaved(): Unit = runBlocking {
+        val appContext = InstrumentationRegistry
+            .getInstrumentation()
+            .targetContext
         val accessRemoteDataSource = mock(AccessRemoteDataSource::class.java)
         val accessLocalDataSource = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         accessLocalDataSource.saveUser(expectedUser)
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataSource, accessRemoteDataSource)
         assertTrue(accessLocalDataSource.isUserSaved())
-        accessDomainRepository.automaticLogin({ user ->
-            verify(accessRemoteDataSource, never()).accessWithData("test@gmail.com", "Test#1234")
-            assertEquals(expectedUser, user)
-        }, {
-            assert(false)
-        })
+        val user = accessDomainRepository.automaticLogin()
+        verify(accessRemoteDataSource, never()).accessWithData("test@gmail.com", "Test#1234")
+        assertEquals(expectedUser, user)
     }
 
     @Test
-    fun automaticLoginWithoutUserSavedCreateException() = runBlocking {
-        val appContext =
-            InstrumentationRegistry
-                .getInstrumentation()
-                .targetContext
+    fun automaticLoginWithoutUserSavedCreateException(): Unit = runBlocking {
+        val appContext = InstrumentationRegistry
+            .getInstrumentation()
+            .targetContext
         val accessRemoteDataSource = mock(AccessRemoteDataSource::class.java)
         val accessLocalDataStorage = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataStorage, accessRemoteDataSource)
         assertFalse(accessLocalDataStorage.isUserSaved())
-        accessDomainRepository.automaticLogin({
-            assert(false)
-        }, {
-            assertTrue(it is MissingUserException)
-        })
+        assertThrows(MissingUserException::class.java) {
+            runBlocking {
+                accessDomainRepository.automaticLogin()
+            }
+        }
     }
 
     @Test
@@ -106,11 +98,8 @@ class AccessDomainRepositoryInstrumentedTest {
         val accessLocalDataSource = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         accessLocalDataSource.saveUser(expectedUser)
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataSource, accessRemoteDataSource)
-        accessDomainRepository.logoutUser({ user ->
-            assertEquals(expectedUser, user)
-            assertFalse(accessLocalDataSource.isUserSaved())
-        }, {
-            assert(false)
-        })
+        val user = accessDomainRepository.logoutUser()
+        assertEquals(expectedUser, user)
+        assertFalse(accessLocalDataSource.isUserSaved())
     }
 }
