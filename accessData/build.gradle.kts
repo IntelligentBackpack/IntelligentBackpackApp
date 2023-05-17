@@ -56,6 +56,7 @@ kotlin {
 
 dependencies {
     implementation(libs.core.ktx)
+    implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.security.crypto)
     implementation(libs.bundles.retrofit)
     implementation(libs.bundles.protobuf)
