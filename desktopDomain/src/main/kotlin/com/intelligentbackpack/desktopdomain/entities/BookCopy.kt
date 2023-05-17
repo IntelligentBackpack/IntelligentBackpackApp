@@ -24,7 +24,7 @@ interface BookCopy : SchoolSupply {
          * @throws IllegalStateException If not all the properties are initialized.
          */
         inline fun build(
-            block: Builder.() -> Unit
+            block: Builder.() -> Unit,
         ): BookCopy = Builder().apply(block).build()
     }
 
@@ -62,23 +62,26 @@ interface BookCopy : SchoolSupply {
         @Throws(
             IllegalStateException::class,
             TypeException::class,
-            RFIDFormatException::class
+            RFIDFormatException::class,
         )
         fun build(): BookCopy =
             if (this::rfidCode.isInitialized &&
                 this::book.isInitialized
-            )
-                if (type == SchoolSupplyTypes.BOOK)
-                    if (RFIDPolicy.isValid(rfidCode))
+            ) {
+                if (type == SchoolSupplyTypes.BOOK) {
+                    if (RFIDPolicy.isValid(rfidCode)) {
                         BookCopyImpl(
                             rfidCode = rfidCode,
-                            book = book
+                            book = book,
                         )
-                    else
+                    } else {
                         throw RFIDFormatException()
-                else
+                    }
+                } else {
                     throw TypeException(type)
-            else
+                }
+            } else {
                 throw IllegalStateException("Not all properties are initialized")
+            }
     }
 }

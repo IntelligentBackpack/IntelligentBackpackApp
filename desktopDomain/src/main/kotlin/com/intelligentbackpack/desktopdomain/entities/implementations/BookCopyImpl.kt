@@ -35,7 +35,7 @@ internal data class BookCopyImpl(
      */
     constructor(
         rfidCode: String,
-        book: Book
+        book: Book,
     ) : this(rfidCode) {
         this.book = book
     }

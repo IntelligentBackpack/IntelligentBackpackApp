@@ -52,7 +52,7 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
     suspend fun addSchoolSupply(
         schoolSupply: SchoolSupply,
         success: (Desktop) -> Unit,
-        error: (Exception) -> Unit
+        error: (Exception) -> Unit,
     ) {
         accessUseCase.automaticLogin({ user ->
             runBlocking {

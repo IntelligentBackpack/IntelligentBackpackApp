@@ -39,7 +39,7 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
         email: String,
         password: String,
         success: (User) -> Unit,
-        error: (Exception) -> Unit
+        error: (Exception) -> Unit,
     ) =
         try {
             success(repository.loginWithData(email, password))

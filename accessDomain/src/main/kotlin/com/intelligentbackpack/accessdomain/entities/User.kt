@@ -24,7 +24,7 @@ enum class Role {
     /**
      * Student role is used to define the student's permissions.
      */
-    STUDENT
+    STUDENT,
 }
 
 /**
@@ -116,38 +116,45 @@ interface User {
         fun build(): User =
             with(this) {
                 val trimEmail = email.trim()
-                if (emailPolicies.all { it.isRespected(trimEmail) })
-                    if (name.isNotBlank())
-                        if (surname.isNotBlank())
-                            if (passwordPolicies.all { it.isRespected(password) })
+                if (emailPolicies.all { it.isRespected(trimEmail) }) {
+                    if (name.isNotBlank()) {
+                        if (surname.isNotBlank()) {
+                            if (passwordPolicies.all { it.isRespected(password) }) {
                                 UserImpl(
                                     email = trimEmail,
                                     name = name
                                         .trim()
                                         .replaceFirstChar {
-                                            if (it.isLowerCase())
+                                            if (it.isLowerCase()) {
                                                 it.titlecase(Locale.ROOT)
-                                            else
+                                            } else {
                                                 it.toString()
+                                            }
                                         },
                                     surname = surname
                                         .trim()
                                         .replaceFirstChar {
-                                            if (it.isLowerCase())
+                                            if (it.isLowerCase()) {
                                                 it.titlecase(Locale.ROOT)
-                                            else it.toString()
+                                            } else {
+                                                it.toString()
+                                            }
                                         },
                                     password = password,
-                                    role = role
+                                    role = role,
                                 )
-                            else
+                            } else {
                                 throw InvalidPasswordException()
-                        else
+                            }
+                        } else {
                             throw IllegalArgumentException("Surname not valid")
-                    else
+                        }
+                    } else {
                         throw IllegalArgumentException("Name not valid")
-                else
+                    }
+                } else {
                     throw InvalidEmailException()
+                }
             }
     }
 }
