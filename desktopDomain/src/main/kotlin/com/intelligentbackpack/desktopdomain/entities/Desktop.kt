@@ -108,16 +108,17 @@ interface Desktop {
         fun create(
             schoolSupplies: Set<SchoolSupply> = emptySet(),
             schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet(),
-            backpack: Backpack? = null
+            backpack: Backpack? = null,
         ): Desktop =
-            if (backpack == null && schoolSuppliesInBackpack.isNotEmpty())
+            if (backpack == null && schoolSuppliesInBackpack.isNotEmpty()) {
                 throw BackpackNotAssociatedException()
-            else
+            } else {
                 DesktopImpl(
                     schoolSupplies,
                     setOf(SchoolSupplyTypes.BOOK),
                     schoolSuppliesInBackpack,
-                    backpack
+                    backpack,
                 )
+            }
     }
 }

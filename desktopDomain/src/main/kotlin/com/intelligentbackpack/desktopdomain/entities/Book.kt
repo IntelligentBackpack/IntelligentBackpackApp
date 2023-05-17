@@ -37,7 +37,7 @@ interface Book {
          * @throws IllegalStateException If not all the properties are initialized.
          */
         inline fun build(
-            block: Builder.() -> Unit
+            block: Builder.() -> Unit,
         ): Book = Builder().apply(block).build()
     }
 
@@ -72,27 +72,30 @@ interface Book {
         @Throws(
             IllegalStateException::class,
             ISBNException::class,
-            IllegalArgumentException::class
+            IllegalArgumentException::class,
         )
         fun build(): Book =
             if (this::isbn.isInitialized &&
                 this::title.isInitialized &&
                 this::authors.isInitialized
-            )
+            ) {
                 if (title.isNotBlank() &&
                     authors.all { it.isNotBlank() }
-                )
+                ) {
                     if (ISBNPolicy.isValid(isbn)) {
                         BookImpl(
                             isbn = isbn,
                             title = title,
-                            authors = authors
+                            authors = authors,
                         )
-                    } else
+                    } else {
                         throw ISBNException()
-                else
+                    }
+                } else {
                     throw IllegalStateException("Not all properties are initialized")
-            else
+                }
+            } else {
                 throw IllegalStateException("Not all properties are initialized")
+            }
     }
 }

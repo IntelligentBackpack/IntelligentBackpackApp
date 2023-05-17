@@ -51,7 +51,7 @@ class UseCaseTest : StringSpec({
     "Get Desktop" {
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1),
-            schoolSuppliesInBackpack = setOf()
+            schoolSuppliesInBackpack = setOf(),
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -72,7 +72,7 @@ class UseCaseTest : StringSpec({
     "Add a School Supply to Desktop" {
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1),
-            schoolSuppliesInBackpack = setOf()
+            schoolSuppliesInBackpack = setOf(),
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -94,14 +94,14 @@ class UseCaseTest : StringSpec({
             success = {
                 it.schoolSupplies shouldBe setOf(bookCopy1, bookCopy2)
             },
-            error = { assert(false) }
+            error = { assert(false) },
         )
     }
 
     "Get School Supplies in Desktop" {
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1),
-            schoolSuppliesInBackpack = setOf()
+            schoolSuppliesInBackpack = setOf(),
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -119,14 +119,14 @@ class UseCaseTest : StringSpec({
             },
             error = {
                 assert(false)
-            }
+            },
         )
     }
 
     "Try get a School Supplies not in Desktop" {
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1),
-            schoolSuppliesInBackpack = setOf()
+            schoolSuppliesInBackpack = setOf(),
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -144,7 +144,7 @@ class UseCaseTest : StringSpec({
             },
             error = {
                 assert(false)
-            }
+            },
         )
     }
 
@@ -152,7 +152,7 @@ class UseCaseTest : StringSpec({
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1, bookCopy2),
             schoolSuppliesInBackpack = setOf(),
-            backpack = "backpack"
+            backpack = "backpack",
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -189,7 +189,7 @@ class UseCaseTest : StringSpec({
     "Delete desktop" {
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1, bookCopy2),
-            schoolSuppliesInBackpack = setOf()
+            schoolSuppliesInBackpack = setOf(),
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -227,7 +227,7 @@ class UseCaseTest : StringSpec({
     "Associate backpack" {
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1, bookCopy2),
-            schoolSuppliesInBackpack = setOf()
+            schoolSuppliesInBackpack = setOf(),
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -257,7 +257,7 @@ class UseCaseTest : StringSpec({
     "Associate backpack with error" {
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1, bookCopy2),
-            schoolSuppliesInBackpack = setOf()
+            schoolSuppliesInBackpack = setOf(),
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -282,7 +282,7 @@ class UseCaseTest : StringSpec({
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1, bookCopy2),
             schoolSuppliesInBackpack = setOf(),
-            backpack = backpack
+            backpack = backpack,
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
@@ -313,7 +313,7 @@ class UseCaseTest : StringSpec({
         val desktop = Desktop.create(
             schoolSupplies = setOf(bookCopy1, bookCopy2),
             schoolSuppliesInBackpack = setOf(),
-            backpack = backpack
+            backpack = backpack,
         )
         coEvery {
             accessUseCase.automaticLogin(any(), any())
