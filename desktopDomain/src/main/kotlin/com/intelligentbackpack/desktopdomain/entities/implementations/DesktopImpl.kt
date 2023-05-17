@@ -24,7 +24,7 @@ internal class DesktopImpl(
     schoolSupplies: Set<SchoolSupply>,
     schoolSupplyTypes: Set<SchoolSupplyType>,
     schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet(),
-    backpack: Backpack? = null
+    backpack: Backpack? = null,
 ) : Desktop {
 
     override var schoolSupplies: Set<SchoolSupply> = schoolSupplies
@@ -46,13 +46,14 @@ internal class DesktopImpl(
      */
     @Throws(TypeException::class, DuplicateRFIDException::class)
     override fun addSchoolSupply(schoolSupply: SchoolSupply) =
-        if (!schoolSupplyTypes.contains(schoolSupply.type))
+        if (!schoolSupplyTypes.contains(schoolSupply.type)) {
             throw TypeException(schoolSupply.type)
-        else {
-            if (schoolSupplies.map { it.rfidCode }.contains(schoolSupply.rfidCode))
+        } else {
+            if (schoolSupplies.map { it.rfidCode }.contains(schoolSupply.rfidCode)) {
                 throw DuplicateRFIDException()
-            else
+            } else {
                 schoolSupplies = schoolSupplies + schoolSupply
+            }
         }
 
     /**
@@ -64,16 +65,17 @@ internal class DesktopImpl(
      */
     @Throws(SchoolSupplyNotFoundException::class)
     override fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply) {
-        if (!isBackpackAssociated)
+        if (!isBackpackAssociated) {
             throw BackpackNotAssociatedException()
-        else {
-            if (!schoolSupplies.contains(schoolSupply))
+        } else {
+            if (!schoolSupplies.contains(schoolSupply)) {
                 throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
-            else {
-                if (schoolSuppliesInBackpack.contains(schoolSupply))
+            } else {
+                if (schoolSuppliesInBackpack.contains(schoolSupply)) {
                     throw AlreadyInBackpackException(schoolSupply)
-                else
+                } else {
                     schoolSuppliesInBackpack = schoolSuppliesInBackpack + schoolSupply
+                }
             }
         }
     }
@@ -85,10 +87,11 @@ internal class DesktopImpl(
      */
     @Throws(BackpackAlreadyAssociatedException::class)
     override fun associateBackpack(backpack: Backpack) {
-        if (isBackpackAssociated)
+        if (isBackpackAssociated) {
             throw BackpackAlreadyAssociatedException()
-        else
+        } else {
             this.backpack = backpack
+        }
     }
 
     /**
@@ -99,13 +102,14 @@ internal class DesktopImpl(
      */
     @Throws(SchoolSupplyNotFoundException::class)
     override fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply) {
-        if (!isBackpackAssociated)
+        if (!isBackpackAssociated) {
             throw BackpackNotAssociatedException()
-        else {
-            if (!schoolSuppliesInBackpack.contains(schoolSupply))
+        } else {
+            if (!schoolSuppliesInBackpack.contains(schoolSupply)) {
                 throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
-            else
+            } else {
                 schoolSuppliesInBackpack = schoolSuppliesInBackpack - schoolSupply
+            }
         }
     }
 

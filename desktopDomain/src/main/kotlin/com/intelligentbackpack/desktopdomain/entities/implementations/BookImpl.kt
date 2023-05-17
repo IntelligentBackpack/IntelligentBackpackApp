@@ -8,7 +8,7 @@ import com.intelligentbackpack.desktopdomain.entities.Book
  * @property isbn The ISBN of the book.
  */
 data class BookImpl(
-    override val isbn: String
+    override val isbn: String,
 ) : Book {
     /**
      * The title of the book.
