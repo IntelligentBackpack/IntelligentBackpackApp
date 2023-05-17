@@ -4,131 +4,103 @@ import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
+import com.intelligentbackpack.desktopdomain.exception.BackpackNotAssociatedException
 import com.intelligentbackpack.desktopdomain.repository.DesktopDomainRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class DesktopDomainRepositoryImpl(
     private val desktopLocalDataSource: DesktopLocalDataSource,
     private val desktopRemoteDataSource: DesktopRemoteDataSource,
 ) : DesktopDomainRepository {
 
-    override suspend fun getDesktop(user: User, success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        try {
+    private fun updateBackpackContent(rfidInsert: Set<String>) {
+        desktopLocalDataSource.putSchoolSuppliesInBackpack(rfidInsert)
+        val allSupplyRfid = desktopLocalDataSource.getAllSchoolSupplies().map { it.rfidCode }.toSet()
+        desktopLocalDataSource.takeSchoolSuppliesFromBackpack(allSupplyRfid - rfidInsert)
+    }
+
+    override suspend fun downloadDesktop(user: User): Desktop =
+        withContext(Dispatchers.IO) {
             desktopRemoteDataSource.getDesktop(user)
-                .let { remoteDesktop ->
+                .also { remoteDesktop ->
                     remoteDesktop.schoolSupplies.forEach {
                         desktopLocalDataSource.addSchoolSupply(it)
-                    }.let {
-                        Desktop.create(
-                            desktopLocalDataSource.getAllSchoolSupplies(),
-                            desktopLocalDataSource.getSchoolSupplyInBackpack()
-                        )
-                    }.also { desktop ->
-                        desktop.backpack?.let { backpack ->
-                            desktopLocalDataSource
-                                .putSchoolSuppliesInBackpack(
-                                    desktop.schoolSuppliesInBackpack.map { it.rfidCode }
-                                        .toSet()
-                                )
-                            desktopLocalDataSource
-                                .takeSchoolSuppliesFromBackpack(
-                                    (desktop.schoolSupplies - desktop.schoolSuppliesInBackpack)
-                                        .map { it.rfidCode }
-                                        .toSet()
-                                )
-                            desktopLocalDataSource.associateBackpack(backpack)
+                    }
+                    remoteDesktop.backpack?.let { backpack ->
+                        updateBackpackContent(remoteDesktop.schoolSuppliesInBackpack.map { it.rfidCode }.toSet())
+                        desktopLocalDataSource.associateBackpack(backpack)
+                    } ?: run {
+                        updateBackpackContent(emptySet())
+                        desktopLocalDataSource.getBackpack()?.let {
+                            desktopLocalDataSource.disassociateBackpack()
                         }
-                        success(desktop)
                     }
                 }
-        } catch (e: Exception) {
-            error(e)
         }
-    }
 
-    override suspend fun addSchoolSupply(
-        user: User,
-        schoolSupply: SchoolSupply,
-        success: (Set<SchoolSupply>) -> Unit,
-        error: (Exception) -> Unit
-    ) {
-        try {
+    override suspend fun getDesktop(user: User): Desktop =
+        withContext(Dispatchers.IO) {
+            Desktop.create(
+                desktopLocalDataSource.getAllSchoolSupplies(),
+                desktopLocalDataSource.getSchoolSupplyInBackpack(),
+                desktopLocalDataSource.getBackpack()
+            )
+        }
+
+
+    override suspend fun addSchoolSupply(user: User, schoolSupply: SchoolSupply) =
+        withContext(Dispatchers.IO) {
             desktopLocalDataSource.addSchoolSupply(schoolSupply)
             desktopRemoteDataSource.addSchoolSupply(user, schoolSupply)
-            success(desktopLocalDataSource.getAllSchoolSupplies())
-        } catch (e: Exception) {
-            error(e)
+            desktopLocalDataSource.getAllSchoolSupplies()
         }
-    }
 
-    override suspend fun getBook(isbn: String, success: (Book?) -> Unit, error: (Exception) -> Unit) {
-        try {
-            desktopLocalDataSource
-                .getBook(isbn)
-                ?.let { success(it) }
-                ?: run {
-                    success(
-                        desktopRemoteDataSource.getBook(isbn)
-                            ?.also { remoteBook ->
-                                desktopLocalDataSource
-                                    .addBook(remoteBook)
-                            })
-                }
-        } catch (e: Exception) {
-            error(e)
+    override suspend fun getBook(isbn: String): Book? =
+        withContext(Dispatchers.IO) {
+            desktopLocalDataSource.getBook(isbn)
+                ?: desktopRemoteDataSource.getBook(isbn)
+                    ?.also { remoteBook ->
+                        desktopLocalDataSource.addBook(remoteBook)
+                    }
         }
-    }
 
-    override suspend fun logoutDesktop(user: User, success: () -> Unit, error: (Exception) -> Unit) {
-        try {
+    override suspend fun logoutDesktop(user: User) =
+        withContext(Dispatchers.IO) {
             desktopLocalDataSource.deleteDesktop()
-            success()
-        } catch (e: Exception) {
-            error(e)
         }
-    }
 
-    override fun subscribeToBackpack(user: User): Flow<Set<String>> {
-        val backpack = desktopLocalDataSource.getBackpack()
-        return desktopRemoteDataSource.subscribeToBackpackChanges(user, backpack).map { it.getOrDefault(setOf()) }
-    }
+    override suspend fun subscribeToBackpack(user: User): Flow<Set<String>> =
+        withContext(Dispatchers.IO) {
+            desktopLocalDataSource.getBackpack()?.let { backpack ->
+                desktopRemoteDataSource.subscribeToBackpackChanges(user, backpack)
+                    .flowOn(Dispatchers.IO)
+                    .map { it.getOrDefault(setOf()) }
+                    .map { rfidCodes ->
+                        val taken = desktopLocalDataSource
+                            .getSchoolSupplyInBackpack().map { it.rfidCode }.toSet() - rfidCodes
+                        desktopLocalDataSource.putSchoolSuppliesInBackpack(rfidCodes)
+                        desktopLocalDataSource.takeSchoolSuppliesFromBackpack(taken)
+                        rfidCodes
+                    }
+            } ?: throw BackpackNotAssociatedException()
+        }
 
-    override suspend fun putSchoolSuppliesInBackpack(
-        rfid: Set<String>,
-    ) {
-        desktopLocalDataSource.putSchoolSuppliesInBackpack(rfid)
-    }
-
-    override suspend fun takeSchoolSuppliesFromBackpack(
-        rfid: Set<String>,
-    ) {
-        desktopLocalDataSource.takeSchoolSuppliesFromBackpack(rfid)
-    }
-
-    override suspend fun associateBackpack(user: User, hash: String, success: (String) -> Unit, error: (Exception) -> Unit) {
-        try {
+    override suspend fun associateBackpack(user: User, hash: String) =
+        withContext(Dispatchers.IO) {
             val newHash = desktopRemoteDataSource.associateBackpack(user, hash)
             desktopLocalDataSource.associateBackpack(newHash)
-            success(newHash)
-        } catch (e: Exception) {
-            error(e)
+            newHash
         }
-    }
 
-    override suspend fun disassociateBackpack(
-        user: User,
-        hash: String,
-        success: (String) -> Unit,
-        error: (Exception) -> Unit
-    ) {
-        try {
+    override suspend fun disassociateBackpack(user: User, hash: String) =
+        withContext(Dispatchers.IO) {
             desktopRemoteDataSource.disassociateBackpack(user, hash)
             desktopLocalDataSource.disassociateBackpack()
             desktopLocalDataSource.removeAllSchoolSuppliesFromBackpack()
-            success(hash)
-        } catch (e: Exception) {
-            error(e)
+            hash
         }
-    }
 }

@@ -12,82 +12,72 @@ import kotlinx.coroutines.flow.Flow
 interface DesktopDomainRepository {
 
     /**
+     * Downloads the desktop.
+     *
+     * @param user the user that wants the desktop
+     * @return the desktop
+     */
+
+    suspend fun downloadDesktop(user: User): Desktop
+
+    /**
      * Gets the desktop.
      *
-     * @param success The success callback.
-     * @param error The error callback.
+     * @param user the user that wants the desktop
+     * @return the desktop
      */
-    suspend fun getDesktop(user: User, success: (Desktop) -> Unit, error: (Exception) -> Unit)
+    suspend fun getDesktop(user: User): Desktop
 
     /**
      * Adds a school supply to the desktop.
      *
+     * @param user The user that adds the school supply.
      * @param schoolSupply The school supply to add.
-     * @param success The success callback with all the school supplies.
-     * @param error The error callback.
+     * @return The set of school supplies.
      */
     suspend fun addSchoolSupply(
         user: User,
         schoolSupply: SchoolSupply,
-        success: (Set<SchoolSupply>) -> Unit,
-        error: (Exception) -> Unit
-    )
+    ): Set<SchoolSupply>
 
     /**
      * Gets a book by its ISBN.
      *
      * @param isbn The ISBN of the book.
-     * @param success The success callback with the book if it exists.
-     * @param error The error callback.
+     * @return The book or null if it doesn't exist.
      */
-    suspend fun getBook(isbn: String, success: (Book?) -> Unit, error: (Exception) -> Unit)
+    suspend fun getBook(isbn: String): Book?
 
     /**
      * Deletes the desktop and all its school supplies.
      *
-     * @param success The success callback.
-     * @param error The error callback.
+     * @param user The user that logout the desktop.
      */
-    suspend fun logoutDesktop(user: User, success: () -> Unit, error: (Exception) -> Unit)
+    suspend fun logoutDesktop(user: User)
 
     /**
      * Subscribes to the backpack.
      *
      * @param user the user that subscribe to the backpack
+     * @return a [Flow] of [Set] of [String] representing the rfid of the school supplies in the backpack
      */
-    fun subscribeToBackpack(user: User): Flow<Set<String>>
-
-    /**
-     * Put a set of school supplies in the backpack
-     *
-     * @param rfid the set of rfid of school supplies to put in the backpack
-     */
-    suspend fun putSchoolSuppliesInBackpack(rfid: Set<String>)
-
-    /**
-     * Take a set of school supplies from the backpack
-     *
-     * @param rfid the set of rfid of school supplies to take from the backpack
-     */
-    suspend fun takeSchoolSuppliesFromBackpack(rfid: Set<String>)
+    suspend fun subscribeToBackpack(user: User): Flow<Set<String>>
 
     /**
      * Associate the backpack to the desktop
      *
      * @param user the user that connect the backpack
      * @param hash the hash of the backpack to associate
-     * @param success The success callback with the backpack hash.
-     * @param error The error callback.
+     * @return the hash of the backpack
      */
-    suspend fun associateBackpack(user: User, hash: String, success: (String) -> Unit, error: (Exception) -> Unit)
+    suspend fun associateBackpack(user: User, hash: String): String
 
     /**
      * Disassociate the backpack from the desktop
      *
      * @param user the user that disconnect the backpack
      * @param hash the hash of the backpack to disassociate
-     * @param success The success callback with the backpack hash.
-     * @param error The error callback.
+     * @return the hash of the backpack
      */
-    suspend fun disassociateBackpack(user: User, hash: String, success: (String) -> Unit, error: (Exception) -> Unit)
+    suspend fun disassociateBackpack(user: User, hash: String): String
 }
