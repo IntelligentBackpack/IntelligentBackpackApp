@@ -60,7 +60,7 @@ interface DesktopLocalDataSource {
     /**
      * Get the backpack hash
      */
-    fun getBackpack(): String
+    fun getBackpack(): String?
 
     /**
      * Associate the backpack to the desktop

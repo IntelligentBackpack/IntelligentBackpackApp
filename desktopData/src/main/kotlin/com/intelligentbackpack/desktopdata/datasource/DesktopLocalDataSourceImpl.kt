@@ -86,9 +86,12 @@ class DesktopLocalDataSourceImpl(
         database.desktopDao().takeSchoolSuppliesFromBackpack(rfid)
     }
 
-    override fun getBackpack(): String {
-        return storage.getBackpack()
-    }
+    override fun getBackpack(): String? =
+        if (storage.isBackpackSaved()) {
+            storage.getBackpack()
+        } else {
+            null
+        }
 
     override fun associateBackpack(hash: String) {
         storage.saveBackpack(hash)
