@@ -1,7 +1,7 @@
 package com.intelligentbackpack.accessdomain.usecase
 
 import com.intelligentbackpack.accessdomain.entities.User
-import com.intelligentbackpack.accessdomain.exceptions.UserAlreadyLogged
+import com.intelligentbackpack.accessdomain.exceptions.UserAlreadyLoggedException
 import com.intelligentbackpack.accessdomain.repository.AccessDomainRepository
 
 /**
@@ -24,7 +24,7 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
                 error(e)
             }
         } else {
-            error(UserAlreadyLogged(user))
+            error(UserAlreadyLoggedException(user))
         }
 
     /**
