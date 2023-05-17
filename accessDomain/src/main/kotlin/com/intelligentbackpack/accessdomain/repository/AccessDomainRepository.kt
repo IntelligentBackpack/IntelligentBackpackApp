@@ -8,45 +8,47 @@ import com.intelligentbackpack.accessdomain.entities.User
 interface AccessDomainRepository {
 
     /**
+     * Checks if a user is logged.
+     *
+     * @return true if a user is logged, false otherwise.
+     */
+    suspend fun isUserLogged(): Boolean
+
+    /**
      * Creates a new user.
      *
      * @param user is the user to create.
-     * @param success is the success callback.
-     * @param error is the error callback.
+     * @return the created user.
      */
-    suspend fun createUser(user: User, success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun createUser(user: User): User
 
     /**
      * Logs a user using email and password.
      *
      * @param email is the user email.
      * @param password is the user password.
-     * @param success is the success callback.
-     * @param error is the error callback.
+     * @return the logged user.
      */
-    suspend fun loginWithData(email: String, password: String, success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun loginWithData(email: String, password: String): User
 
     /**
      * Logs the saved user.
      *
-     * @param success is the success callback.
-     * @param error is the error callback.
+     * @return the logged user.
      */
-    suspend fun automaticLogin(success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun automaticLogin(): User
 
     /**
      * Logs out the user.
      *
-     * @param success is the success callback.
-     * @param error is the error callback.
+     * @return the logged out user.
      */
-    suspend fun logoutUser(success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun logoutUser(): User
 
     /**
      * Deletes the user.
      *
-     * @param success is the success callback.
-     * @param error is the error callback.
+     * @return the deleted user.
      */
-    suspend fun deleteUser(success: (User) -> Unit, error: (Exception) -> Unit)
+    suspend fun deleteUser(): User
 }
