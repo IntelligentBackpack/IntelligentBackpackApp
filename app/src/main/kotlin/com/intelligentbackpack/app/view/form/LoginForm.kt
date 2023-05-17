@@ -42,7 +42,7 @@ fun LoginForm(
             .padding(16.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
     ) {
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
@@ -53,7 +53,7 @@ fun LoginForm(
             imeAction = ImeAction.Next,
             keyboardActions = KeyboardActions(onNext = {
                 localFocusManager.moveFocus(FocusDirection.Down)
-            })
+            }),
         )
         PasswordField(
             value = password,
@@ -63,13 +63,12 @@ fun LoginForm(
                 login(email, password)
                 localFocusManager.clearFocus()
             }),
-            modifier = Modifier.fillMaxWidth(0.8f)
+            modifier = Modifier.fillMaxWidth(0.8f),
         )
         Row(
             modifier = Modifier.fillMaxWidth(0.8f),
-            horizontalArrangement = Arrangement.SpaceBetween
-        )
-        {
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
             Button(
                 onClick = {
                     openNewPage(email)
@@ -81,12 +80,11 @@ fun LoginForm(
                 enabled = true,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary
+                    contentColor = MaterialTheme.colorScheme.primary,
                 ),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 shape = MaterialTheme.shapes.medium,
-            )
-            {
+            ) {
                 Text("Create User")
             }
             Button(
@@ -100,17 +98,15 @@ fun LoginForm(
                 enabled = true,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.background
+                    contentColor = MaterialTheme.colorScheme.background,
                 ),
                 shape = MaterialTheme.shapes.medium,
-            )
-            {
+            ) {
                 Text("Login")
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

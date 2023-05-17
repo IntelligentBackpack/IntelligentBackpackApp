@@ -49,7 +49,7 @@ fun CreateUserForm(
             .padding(16.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
     ) {
         var emailRemember by rememberSaveable { mutableStateOf(email) }
         var name by rememberSaveable { mutableStateOf("") }
@@ -63,7 +63,7 @@ fun CreateUserForm(
             imeAction = ImeAction.Next,
             keyboardActions = KeyboardActions(onNext = {
                 localFocusManager.moveFocus(FocusDirection.Down)
-            })
+            }),
         )
         OutlinedTextField(
             value = name,
@@ -75,11 +75,11 @@ fun CreateUserForm(
             keyboardOptions =
             KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             keyboardActions = KeyboardActions(onNext = {
                 localFocusManager.moveFocus(FocusDirection.Down)
-            })
+            }),
         )
         OutlinedTextField(
             value = surname,
@@ -91,11 +91,11 @@ fun CreateUserForm(
             keyboardOptions =
             KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             keyboardActions = KeyboardActions(onNext = {
                 localFocusManager.moveFocus(FocusDirection.Down)
-            })
+            }),
         )
         PasswordField(
             value = password,
@@ -104,7 +104,7 @@ fun CreateUserForm(
             keyboardActions = KeyboardActions(onNext = {
                 localFocusManager.moveFocus(FocusDirection.Down)
             }),
-            modifier = Modifier.fillMaxWidth(0.8f)
+            modifier = Modifier.fillMaxWidth(0.8f),
         )
         PasswordField(
             value = passwordConfirm,
@@ -113,13 +113,12 @@ fun CreateUserForm(
             keyboardActions = KeyboardActions(onDone = {
                 localFocusManager.clearFocus()
             }),
-            modifier = Modifier.fillMaxWidth(0.8f)
+            modifier = Modifier.fillMaxWidth(0.8f),
         )
         Row(
             modifier = Modifier.fillMaxWidth(0.8f),
-            horizontalArrangement = Arrangement.SpaceAround
-        )
-        {
+            horizontalArrangement = Arrangement.SpaceAround,
+        ) {
             Button(
                 onClick = {
                     createUser(
@@ -128,7 +127,7 @@ fun CreateUserForm(
                             name = name,
                             surname = surname,
                             password = password,
-                        )
+                        ),
                     )
                     localFocusManager.clearFocus()
                 },
@@ -142,8 +141,7 @@ fun CreateUserForm(
                 ),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 shape = MaterialTheme.shapes.medium,
-            )
-            {
+            ) {
                 Text("Create User")
             }
         }

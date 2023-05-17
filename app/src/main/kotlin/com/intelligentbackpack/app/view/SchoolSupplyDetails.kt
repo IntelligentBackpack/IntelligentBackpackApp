@@ -60,9 +60,9 @@ fun SchoolSupplyDetails(
     navController: NavHostController,
     rfid: String?,
     schoolSupplyViewModel: SchoolSupplyViewModel = viewModel(
-        factory = SchoolSupplyViewModel.Factory
+        factory = SchoolSupplyViewModel.Factory,
     ),
-    context: Context = LocalContext.current
+    context: Context = LocalContext.current,
 ) {
     val nfcAdapter: NfcAdapter? = NfcAdapter.getDefaultAdapter(context)
     nfcAdapter?.let {
@@ -70,7 +70,7 @@ fun SchoolSupplyDetails(
             Toast.makeText(
                 context,
                 "Please activate NFC and press Back to return to the application!",
-                Toast.LENGTH_LONG
+                Toast.LENGTH_LONG,
             ).show()
             startActivity(context, Intent(Settings.ACTION_NFC_SETTINGS), null)
         }
@@ -82,7 +82,8 @@ fun SchoolSupplyDetails(
                     schoolSupply,
                     onBack = {
                         navController.navigate(MainNavigation.home)
-                    })
+                    },
+                )
             } ?: SchoolSupplyDetailsPage(navController = navController, rfidTag = rfid)
         } ?: SchoolSupplyDetailsPage(navController = navController, rfidTag = null)
     } ?: run {
@@ -106,7 +107,7 @@ fun SchoolSupplyDetailsPage(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Top,
     ) {
         val rfid by rememberSaveable { mutableStateOf(rfidTag) }
         var isbn by rememberSaveable { mutableStateOf("") }
@@ -129,26 +130,26 @@ fun SchoolSupplyDetailsPage(
                 properties = DialogProperties(
                     dismissOnBackPress = true,
                     dismissOnClickOutside = false,
-                    usePlatformDefaultWidth = false
-                )
+                    usePlatformDefaultWidth = false,
+                ),
             ) {
                 CameraViewWithPermission(
                     topBar = {
                         Row(
                             Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             IconButton(onClick = { openCameraDialog = false }) {
                                 Icon(
                                     imageVector = Icons.TwoTone.ArrowBack,
                                     contentDescription = null,
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                             Text(
                                 "Scan ISBN",
                                 color = Color.White,
-                                fontSize = 20.sp
+                                fontSize = 20.sp,
                             )
                         }
                     },
@@ -156,7 +157,7 @@ fun SchoolSupplyDetailsPage(
                         Text(
                             "Place the barcode inside the frame to scan it.",
                             color = Color.White,
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
                         )
                     },
                     barcodeAnalyser = BarcodeAnalyser(
@@ -165,17 +166,15 @@ fun SchoolSupplyDetailsPage(
                             getBook(it)
                             openCameraDialog = false
                             Toast.makeText(context, "Barcode found", Toast.LENGTH_SHORT).show()
-
                         },
                         options = BarcodeScannerOptions.Builder()
                             .setBarcodeFormats(Barcode.FORMAT_EAN_13)
-                            .build()
+                            .build(),
                     ),
                     permissionState = permissionState,
                     onBack = { openCameraDialog = false },
                 )
             }
-
         }
         TopAppBar(
             title = { Text("Add book copy") },
@@ -187,7 +186,7 @@ fun SchoolSupplyDetailsPage(
                 }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.primary,
             ),
         )
         NewSchoolSupplyForm(
@@ -199,10 +198,10 @@ fun SchoolSupplyDetailsPage(
                 isbn = it
                 getBook(it)
             },
-            createSchoolSupply = { _, _ ->/* TODO */ },
+            createSchoolSupply = { _, _ -> /* TODO */ },
             openCameraDialog = {
                 openCameraDialog = true
-            }
+            },
         )
     }
 }

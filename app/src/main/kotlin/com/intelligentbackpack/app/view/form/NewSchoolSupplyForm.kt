@@ -52,24 +52,22 @@ fun NewSchoolSupplyForm(
             .padding(16.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically)
-    )
-    {
+        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
+    ) {
         if (rfid != null) {
             Row(
                 modifier = Modifier.fillMaxWidth(0.8f),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start)
+                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
             ) {
                 Text(text = "RFID tag found")
                 Icon(imageVector = Icons.Outlined.Done, "")
             }
-
         } else {
             Row(
                 modifier = Modifier.fillMaxWidth(0.8f),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start)
+                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
             ) {
                 Text(text = "No RFID tag found")
                 Icon(imageVector = Icons.Outlined.ErrorOutline, "")
@@ -96,13 +94,13 @@ fun NewSchoolSupplyForm(
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
             ),
         )
         book?.let {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start)
+                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
             ) {
                 Text(text = "Book found")
                 Icon(imageVector = Icons.Outlined.Done, "")
@@ -112,7 +110,7 @@ fun NewSchoolSupplyForm(
             if (it.isNotBlank()) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
                 ) {
                     Text(text = it)
                     Icon(imageVector = Icons.Outlined.ErrorOutline, "")
@@ -133,11 +131,10 @@ fun NewSchoolSupplyForm(
                 enabled = true,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.background
+                    contentColor = MaterialTheme.colorScheme.background,
                 ),
                 shape = MaterialTheme.shapes.medium,
-            )
-            {
+            ) {
                 Text("Add book copy")
             }
         }

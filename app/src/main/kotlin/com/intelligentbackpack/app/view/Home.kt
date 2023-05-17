@@ -68,13 +68,12 @@ import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun Home(
     navController: NavHostController,
     loginViewModel: LoginViewModel = viewModel(
-        factory = LoginViewModel.Factory
-    )
+        factory = LoginViewModel.Factory,
+        ),
 ) {
     val user = loginViewModel.user.observeAsState()
     val context = LocalContext.current
@@ -89,19 +88,21 @@ fun Home(
                 },
                 error = {
                     navController.navigate(MainNavigation.login)
-                }
+                },
             )
         }
     }
     user.value?.let {
         HomePage(
-            navController = navController, user = it,
+            navController = navController,
+            user = it,
             logout = {
                 loginViewModel.logout {
                     navController.navigate(MainNavigation.login)
                 }
             },
-            version = version, versionCode = versionCode
+            version = version,
+            versionCode = versionCode,
         )
     }
 }
@@ -121,49 +122,49 @@ fun HomePage(
         NavigationItem(
             title = "Books",
             route = TabNavigation.schoolSupplies,
-            icon = Icons.Outlined.Book
+            icon = Icons.Outlined.Book,
         ) {
             itemsNavController.navigate(TabNavigation.schoolSupplies)
         },
         NavigationItem(
             title = "Calendar",
             route = TabNavigation.calendar,
-            icon = Icons.Outlined.CalendarToday
+            icon = Icons.Outlined.CalendarToday,
         ) {
             itemsNavController.navigate(TabNavigation.calendar)
         },
         NavigationItem(
             title = "Backpack",
             route = TabNavigation.backpack,
-            icon = Icons.Outlined.Backpack
+            icon = Icons.Outlined.Backpack,
         ) {
             itemsNavController.navigate(TabNavigation.backpack)
         },
         NavigationItem(
             title = "Forget",
             route = TabNavigation.forget,
-            icon = Icons.Outlined.Announcement
+            icon = Icons.Outlined.Announcement,
         ) {
             itemsNavController.navigate(TabNavigation.forget)
-        }
+        },
     )
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val items = listOf(
         NavigationItem(
             title = "User info",
-            icon = Icons.Default.Person
+            icon = Icons.Default.Person,
         ) {
             navController.navigate(MainNavigation.user)
         },
         NavigationItem(
             title = "Logout",
-            icon = Icons.Default.Logout
+            icon = Icons.Default.Logout,
         ) {
             scope.launch {
                 logout()
             }
-        }
+        },
     )
     val selectedItem = remember { mutableStateOf(items[0]) }
     ModalNavigationDrawer(
@@ -180,18 +181,18 @@ fun HomePage(
                         contentDescription = "Account",
                         modifier = Modifier
                             .height(100.dp)
-                            .width(100.dp)
+                            .width(100.dp),
                     )
                     Text(
                         text = user.let { it.name + " " + it.surname },
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
                     )
                     Spacer(Modifier.height(12.dp))
                     Divider(
                         modifier = Modifier
                             .fillMaxWidth(0.8f),
                         color = Color.Gray,
-                        thickness = 1.dp
+                        thickness = 1.dp,
                     )
                     Spacer(Modifier.height(12.dp))
                     items.forEach { item ->
@@ -210,7 +211,7 @@ fun HomePage(
                                     }
                                 }*/
                             },
-                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                         )
                     }
                 }
@@ -225,7 +226,7 @@ fun HomePage(
                         modifier = Modifier
                             .fillMaxWidth(0.8f),
                         color = Color.Gray,
-                        thickness = 1.dp
+                        thickness = 1.dp,
                     )
                     Spacer(Modifier.height(12.dp))
                     Text(text = "Version: $version ($versionCode)")
@@ -233,7 +234,7 @@ fun HomePage(
                     Spacer(Modifier.height(12.dp))
                 }
             }
-        }
+        },
     ) {
         Scaffold(
             topBar = {
@@ -252,7 +253,7 @@ fun HomePage(
                 modifier = Modifier
                     .padding(contentPadding)
                     .fillMaxSize(),
-                Alignment.BottomStart
+                Alignment.BottomStart,
             ) {
                 Scaffold(
                     bottomBar = {
@@ -260,63 +261,64 @@ fun HomePage(
                             tabs.forEachIndexed { index, item ->
                                 NavigationBarItem(
                                     icon = {
-                                        if (item.route == TabNavigation.forget)
+                                        if (item.route == TabNavigation.forget) {
                                             BadgedBox(
                                                 badge = { Badge { Text("5") } },
                                             ) {
                                                 Icon(imageVector = item.icon, contentDescription = item.title)
                                             }
-                                        else
+                                        } else {
                                             Icon(imageVector = item.icon, contentDescription = item.title)
+                                        }
                                     },
                                     label = { Text(item.title) },
                                     selected = selectedTab == index,
                                     onClick = {
                                         selectedTab = index
                                         item.action()
-                                    }
+                                    },
                                 )
                             }
                         }
-                    }
+                    },
                 ) { contentPadding ->
                     Box(
                         modifier = Modifier
                             .padding(contentPadding)
                             .fillMaxSize(),
-                        Alignment.BottomStart
+                        Alignment.BottomStart,
                     ) {
                         Column(
                             modifier = Modifier
                                 .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             val viewModelStoreOwner = LocalViewModelStoreOwner.current!!
                             NavHost(itemsNavController, startDestination = tabs[selectedTab].route) {
                                 composable(TabNavigation.schoolSupplies) {
                                     CompositionLocalProvider(
-                                        LocalViewModelStoreOwner provides viewModelStoreOwner
+                                        LocalViewModelStoreOwner provides viewModelStoreOwner,
                                     ) {
                                         SchoolSupplies(navController = navController)
                                     }
                                 }
                                 composable(TabNavigation.calendar) {
                                     CompositionLocalProvider(
-                                        LocalViewModelStoreOwner provides viewModelStoreOwner
+                                        LocalViewModelStoreOwner provides viewModelStoreOwner,
                                     ) {
                                         Text(text = "Calendar")
                                     }
                                 }
                                 composable(TabNavigation.backpack) {
                                     CompositionLocalProvider(
-                                        LocalViewModelStoreOwner provides viewModelStoreOwner
+                                        LocalViewModelStoreOwner provides viewModelStoreOwner,
                                     ) {
                                         BackpackContent(navController = navController)
                                     }
                                 }
                                 composable(TabNavigation.forget) {
                                     CompositionLocalProvider(
-                                        LocalViewModelStoreOwner provides viewModelStoreOwner
+                                        LocalViewModelStoreOwner provides viewModelStoreOwner,
                                     ) {
                                         Text(text = "Forget")
                                     }
@@ -334,7 +336,8 @@ fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): Pa
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
     } else {
-        @Suppress("DEPRECATION") getPackageInfo(packageName, flags)
+        @Suppress("DEPRECATION")
+        getPackageInfo(packageName, flags)
     }
 
 @Preview(showBackground = true)
@@ -345,7 +348,7 @@ fun HomePreview() {
         name = "John",
         surname = "Doe",
         email = "JohnDoe@gmail.com",
-        password = "Test#1234"
+        password = "Test#1234",
     )
     HomePage(navController, user, {}, "1.0.0", 1)
 }

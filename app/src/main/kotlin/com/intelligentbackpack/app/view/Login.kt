@@ -19,7 +19,7 @@ fun Login(
     navController: NavHostController,
     loginViewModel: LoginViewModel = viewModel(
         factory = LoginViewModel.Factory,
-    )
+    ),
 ) {
     LaunchedEffect(Unit) {
         loginViewModel.tryAutomaticLogin({
@@ -49,10 +49,11 @@ fun Login(
                 Button(
                     onClick = {
                         openDialog.value = false
-                    }) {
+                    },
+                ) {
                     Text("Ok")
                 }
-            }
+            },
         )
     }
     val login =
@@ -60,9 +61,8 @@ fun Login(
             loginViewModel.login(
                 email,
                 password,
-                { navController.navigate(MainNavigation.home) }
-            )
-            { errorText ->
+                { navController.navigate(MainNavigation.home) },
+            ) { errorText ->
                 error.value = errorText
                 openDialog.value = true
             }

@@ -36,7 +36,7 @@ fun SchoolSupplyDetailsForm(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Top,
     ) {
         TopAppBar(
             title = { Text("Book copy") },
@@ -46,7 +46,7 @@ fun SchoolSupplyDetailsForm(
                 }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.primary,
             ),
         )
         Column(
@@ -54,9 +54,8 @@ fun SchoolSupplyDetailsForm(
                 .padding(16.dp)
                 .fillMaxSize(0.8f),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically)
-        )
-        {
+            verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
+        ) {
             schoolSupplyView.book?.let {
                 BookDetails(book = it)
             }
@@ -77,6 +76,6 @@ fun SchoolSupplyDetailsFormPreview() {
             rfidCode = "1234567890",
             type = "Book",
         ),
-        onBack = {}
+        onBack = {},
     )
 }

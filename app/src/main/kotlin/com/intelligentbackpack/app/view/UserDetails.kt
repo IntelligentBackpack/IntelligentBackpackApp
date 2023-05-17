@@ -32,12 +32,11 @@ import com.intelligentbackpack.app.ui.navigation.MainNavigation
 import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewmodel.LoginViewModel
 
-
 @Composable
 fun UserDetails(
     navController: NavHostController,
     loginViewModel: LoginViewModel = viewModel(
-        factory = LoginViewModel.Factory
+        factory = LoginViewModel.Factory,
     ),
 ) {
     val user = loginViewModel.user.observeAsState()
@@ -56,7 +55,7 @@ fun UserDetails(
             loginViewModel.deleteUser {
                 navController.navigate(MainNavigation.login)
             }
-        }
+        },
     )
 }
 
@@ -66,8 +65,7 @@ fun UserDetailsPage(navController: NavHostController, user: UserView, logout: ()
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-    )
-    {
+    ) {
         TopAppBar(
             navigationIcon = {
                 IconButton(onClick = { navController.navigate(MainNavigation.home) }) {
@@ -83,7 +81,7 @@ fun UserDetailsPage(navController: NavHostController, user: UserView, logout: ()
             contentDescription = "Account",
             modifier = Modifier
                 .height(100.dp)
-                .width(100.dp)
+                .width(100.dp),
         )
         Spacer(Modifier.height(12.dp))
         Column(
@@ -110,12 +108,11 @@ fun UserDetailsPage(navController: NavHostController, user: UserView, logout: ()
             enabled = true,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.primary
+                contentColor = MaterialTheme.colorScheme.primary,
             ),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
             shape = MaterialTheme.shapes.medium,
-        )
-        {
+        ) {
             Text("Delete user")
         }
         Spacer(Modifier.height(10.dp))
@@ -127,11 +124,10 @@ fun UserDetailsPage(navController: NavHostController, user: UserView, logout: ()
             enabled = true,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.background
+                contentColor = MaterialTheme.colorScheme.background,
             ),
             shape = MaterialTheme.shapes.medium,
-        )
-        {
+        ) {
             Text("Logout")
         }
     }
@@ -155,7 +151,7 @@ fun UserDetailsPreview() {
         surname = "Doe",
         email = "JohnDoe@gmail.com",
         password = "Test#1234",
-        role = Role.USER.toText()
+        role = Role.USER.toText(),
     )
     UserDetailsPage(navController, user, {}) {}
 }

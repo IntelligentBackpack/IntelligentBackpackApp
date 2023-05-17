@@ -58,7 +58,7 @@ import com.intelligentbackpack.app.viewmodel.BackpackViewModel
 fun BackpackContent(
     navController: NavHostController,
     backpackViewModel: BackpackViewModel = viewModel(
-        factory = BackpackViewModel.Factory
+        factory = BackpackViewModel.Factory,
     ),
     context: Context = LocalContext.current,
 ) {
@@ -71,11 +71,11 @@ fun BackpackContent(
             title = {
                 Text(
                     text = "Error with the " +
-                            if (isBackpackAssociated.value) {
-                                "disassociation"
-                            } else {
-                                "association"
-                            }
+                        if (isBackpackAssociated.value) {
+                            "disassociation"
+                        } else {
+                            "association"
+                        },
                 )
             },
             text = {
@@ -85,10 +85,12 @@ fun BackpackContent(
                 Button(
                     onClick = {
                         openErrorDialog = false
-                    }) {
+                    },
+                ) {
                     Text("Confirm")
                 }
-            })
+            },
+        )
     }
     backpackViewModel.getBackpackAssociated { error ->
         errorDialogMessage = error
@@ -103,26 +105,24 @@ fun BackpackContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 16.dp, horizontal = 0.dp)
+                .padding(vertical = 16.dp, horizontal = 0.dp),
         ) {
-
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
-            )
-            {
+                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
+            ) {
                 item {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = "Backpack",
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium,
                         )
                         Button(
                             onClick = {
@@ -139,12 +139,11 @@ fun BackpackContent(
                             enabled = true,
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.background
+                                contentColor = MaterialTheme.colorScheme.background,
                             ),
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                             shape = MaterialTheme.shapes.medium,
-                        )
-                        {
+                        ) {
                             Text("Associate backpack")
                         }
                     }
@@ -166,26 +165,26 @@ fun BackpackContent(
                 properties = DialogProperties(
                     dismissOnBackPress = true,
                     dismissOnClickOutside = false,
-                    usePlatformDefaultWidth = false
-                )
+                    usePlatformDefaultWidth = false,
+                ),
             ) {
                 CameraViewWithPermission(
                     topBar = {
                         Row(
                             Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             IconButton(onClick = { openCameraDialog = false }) {
                                 Icon(
                                     imageVector = Icons.TwoTone.ArrowBack,
                                     contentDescription = null,
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                             Text(
                                 "Scan QR Code",
                                 color = Color.White,
-                                fontSize = 20.sp
+                                fontSize = 20.sp,
                             )
                         }
                     },
@@ -193,7 +192,7 @@ fun BackpackContent(
                         Text(
                             "Place the QR code inside the frame to scan it.",
                             color = Color.White,
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
                         )
                     },
                     barcodeAnalyser = BarcodeAnalyser(
@@ -210,18 +209,17 @@ fun BackpackContent(
                         },
                         options = BarcodeScannerOptions.Builder()
                             .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-                            .build()
+                            .build(),
                     ),
                     permissionState = permissionState,
                     onBack = { openCameraDialog = false },
                 )
             }
-
         }
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         ) {
             Text(text = "No backpack associated")
             Button(
@@ -234,12 +232,11 @@ fun BackpackContent(
                 enabled = true,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.background
+                    contentColor = MaterialTheme.colorScheme.background,
                 ),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 shape = MaterialTheme.shapes.medium,
-            )
-            {
+            ) {
                 Text("Associate backpack")
             }
         }
@@ -251,4 +248,3 @@ fun BackpackContent(
 fun BackpackContentPreview() {
     BackpackContent(navController = rememberNavController())
 }
-

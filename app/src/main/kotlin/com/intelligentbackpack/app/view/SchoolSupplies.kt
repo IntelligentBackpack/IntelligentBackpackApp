@@ -34,11 +34,11 @@ fun SchoolSupplies(
     navController: NavHostController,
     schoolSupplyViewModel: SchoolSupplyViewModel = viewModel(
         factory = SchoolSupplyViewModel.Factory,
-    )
+    ),
 ) {
     val context = LocalContext.current
     val schoolSupplies = schoolSupplyViewModel.schoolSupplies.observeAsState(emptySet())
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         schoolSupplyViewModel.downloadSchoolSupplies {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
@@ -49,18 +49,18 @@ fun SchoolSupplies(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 16.dp, horizontal = 0.dp)
+            .padding(vertical = 16.dp, horizontal = 0.dp),
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
         ) {
             items(schoolSupplies.value.toList()) {
                 SchoolSupplyCard(
                     navHostController = navController,
                     schoolSupply = it,
-                    modifier = Modifier.fillMaxSize(0.9f)
+                    modifier = Modifier.fillMaxSize(0.9f),
                 )
             }
         }
@@ -73,7 +73,7 @@ fun SchoolSupplies(
             contentColor = MaterialTheme.colorScheme.background,
             onClick = {
                 navController.navigate(MainNavigation.schoolSupply(null))
-            }
+            },
         ) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
         }
@@ -85,7 +85,7 @@ fun SchoolSupplies(
 fun SchoolSuppliesPreview() {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background,
     ) {
         SchoolSupplies(navController = rememberNavController())
     }

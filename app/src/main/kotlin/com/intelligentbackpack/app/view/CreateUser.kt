@@ -19,8 +19,7 @@ import com.intelligentbackpack.app.viewmodel.LoginViewModel
 fun CreateUser(
     navController: NavHostController,
     email: String,
-    loginViewModel: LoginViewModel = viewModel(
-    )
+    loginViewModel: LoginViewModel = viewModel(),
 ) {
     val openDialog = remember { mutableStateOf(false) }
     val error = remember { mutableStateOf("") }
@@ -41,10 +40,11 @@ fun CreateUser(
                 Button(
                     onClick = {
                         openDialog.value = false
-                    }) {
+                    },
+                ) {
                     Text("Ok")
                 }
-            }
+            },
         )
     }
     val createUser = { data: UserView ->
