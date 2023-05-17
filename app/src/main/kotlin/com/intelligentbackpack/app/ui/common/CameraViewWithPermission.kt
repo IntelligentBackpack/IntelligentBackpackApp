@@ -21,8 +21,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.shouldShowRationale
 import com.intelligentbackpack.app.sensor.BarcodeAnalyser
 import com.intelligentbackpack.app.ui.shape.CutOutShape
 
@@ -42,21 +43,29 @@ fun CameraViewWithPermission(
         horizontalAlignment = Alignment.End,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
     ) {
-        PermissionRequired(
-            permissionState = permissionState,
-            permissionNotGrantedContent = {
-                PermissionsDenied(
-                    message = { Text(text = "Can't open camera without permission") },
-                    onBackMessage = { Text(text = "Insert ISBN manually") },
-                    onBack = onBack,
-                    changePermissions = {
-                        permissionState.launchPermissionRequest()
-                    },
-                    changePermissionsMessage = { Text(text = "Enable permission") })
-            },
-            permissionNotAvailableContent = {
+        if (permissionState.status.isGranted) {
+            Box {
+                PreviewViewComposable(
+                    modifier = Modifier.fillMaxSize(),
+                    barcodeAnalyser = barcodeAnalyser,
+                )
+                Surface(
+                    shape = CutOutShape(),
+                    color = Color.Black.copy(alpha = 0.45f),
+                    modifier = Modifier.fillMaxSize(),
+                ) { }
+                Column(
+                    modifier = Modifier
+                        .padding(top = 54.dp, start = 32.dp, end = 32.dp, bottom = 54.dp),
+                ) {
+                    topBar()
+                    message()
+                }
+            }
+        } else {
+            if (permissionState.status.shouldShowRationale) {
                 PermissionsDenied(
                     message = { Text(text = "Permission not available, please enable it in settings") },
                     onBackMessage = { Text(text = "Insert ISBN manually") },
@@ -68,32 +77,23 @@ fun CameraViewWithPermission(
                                 data = Uri.fromParts(
                                     "package",
                                     context.packageName,
-                                    null
+                                    null,
                                 )
                             },
-                            null
+                            null,
                         )
-                    }
+                    },
                 ) { Text("Activate permission in settings") }
-            }
-        ) {
-            Box {
-                PreviewViewComposable(
-                    modifier = Modifier.fillMaxSize(),
-                    barcodeAnalyser = barcodeAnalyser,
+            } else {
+                PermissionsDenied(
+                    message = { Text(text = "Can't open camera without permission") },
+                    onBackMessage = { Text(text = "Insert ISBN manually") },
+                    onBack = onBack,
+                    changePermissions = {
+                        permissionState.launchPermissionRequest()
+                    },
+                    changePermissionsMessage = { Text(text = "Enable permission") },
                 )
-                Surface(
-                    shape = CutOutShape(),
-                    color = Color.Black.copy(alpha = 0.45f),
-                    modifier = Modifier.fillMaxSize()
-                ) { }
-                Column(
-                    modifier = Modifier
-                        .padding(top = 54.dp, start = 32.dp, end = 32.dp, bottom = 54.dp)
-                ) {
-                    topBar()
-                    message()
-                }
             }
         }
     }
