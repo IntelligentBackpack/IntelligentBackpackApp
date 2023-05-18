@@ -207,12 +207,12 @@ fun SchoolSupplyDetailsPage(
             }
         }
         TopAppBar(
-            title = { Text("Add book copy") },
+            title = { Text("Add book copy", color = MaterialTheme.colorScheme.onPrimary) },
             navigationIcon = {
                 IconButton(onClick = {
                     navController.navigate(MainNavigation.home)
                 }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, "Back", tint = Color.White)
+                    Icon(imageVector = Icons.Filled.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onPrimary)
                 }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

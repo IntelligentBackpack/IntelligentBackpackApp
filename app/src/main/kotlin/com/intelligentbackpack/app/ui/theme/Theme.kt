@@ -13,15 +13,17 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val darkColorScheme = darkColorScheme(
-    primary = Orange200,
-    secondary = Blue300,
+    primary = Blue200,
+    secondary = Orange200,
     tertiary = Red200,
+    onPrimary = Color.Black,
 )
 
 private val lightColorScheme = lightColorScheme(
-    primary = Color.Red,
-    secondary = Color.Blue,
+    primary = Blue500,
+    secondary = Orange800,
     tertiary = Color.Gray,
+    onPrimary = Color.White,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -54,7 +56,7 @@ fun IntelligentBackpackAppTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = Color.Transparent.toArgb()
+            window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }

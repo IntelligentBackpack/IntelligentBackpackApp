@@ -36,6 +36,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
@@ -231,6 +232,11 @@ fun HomePage(
                                 }*/
                             },
                             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                            colors = NavigationDrawerItemDefaults.colors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                                selectedTextColor = MaterialTheme.colorScheme.onPrimary,
+                            ),
                         )
                     }
                 }
@@ -260,7 +266,11 @@ fun HomePage(
                 TopAppBar(
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(imageVector = Icons.Outlined.Menu, contentDescription = "Menu")
+                            Icon(
+                                imageVector = Icons.Outlined.Menu,
+                                contentDescription = "Menu",
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                            )
                         }
                     },
                     title = { Text("") },
@@ -296,6 +306,11 @@ fun HomePage(
                                         selectedTab = index
                                         item.action()
                                     },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        indicatorColor = MaterialTheme.colorScheme.primary,
+                                        selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                                        unselectedIconColor = MaterialTheme.colorScheme.onBackground,
+                                    ),
                                 )
                             }
                         }
@@ -324,7 +339,7 @@ fun HomePage(
                                     CompositionLocalProvider(
                                         LocalViewModelStoreOwner provides viewModelStoreOwner,
                                     ) {
-                                        Text(text = "Calendar")
+                                        Calendar()
                                     }
                                 }
                                 composable(TabNavigation.backpack) {

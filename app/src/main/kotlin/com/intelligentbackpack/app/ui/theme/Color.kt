@@ -2,10 +2,10 @@ package com.intelligentbackpack.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Orange200 = Color(0xFFFF5252)
-val Blue300 = Color(0xFF40C4FF)
 val Red200 = Color(0xFFFF6E40)
+val Blue200 = Color(0xFF8FB6FF)
+val Orange200 = Color(0xFFF9C96A)
+val Blue500 = Color(0xFF0C56E9)
+val Orange800 = Color(0xFFE99F0C)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+
