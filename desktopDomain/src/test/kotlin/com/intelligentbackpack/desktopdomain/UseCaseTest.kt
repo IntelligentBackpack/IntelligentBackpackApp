@@ -53,20 +53,13 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1),
             schoolSuppliesInBackpack = setOf(),
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
-        coEvery {
-            repository.getDesktop(any())
-        } returns (desktop)
-        useCase.getDesktop({
-            it shouldBe desktop
-        }, {
-            assert(false)
-        })
+        coEvery { repository.getDesktop(any()) } returns (desktop)
+        val result = useCase.getDesktop()
+        println(result)
+        result.isSuccess shouldBe true
+        result.getOrNull() shouldBe desktop
     }
 
     "Add a School Supply to Desktop" {
@@ -74,11 +67,7 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1),
             schoolSuppliesInBackpack = setOf(),
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
         coEvery {
             repository.getDesktop(any())
@@ -89,13 +78,7 @@ class UseCaseTest : StringSpec({
                 schoolSupply = any(),
             )
         } returns (desktop.schoolSupplies + bookCopy2)
-        useCase.addSchoolSupply(
-            schoolSupply = bookCopy2,
-            success = {
-                it.schoolSupplies shouldBe setOf(bookCopy1, bookCopy2)
-            },
-            error = { assert(false) },
-        )
+        useCase.addSchoolSupply(schoolSupply = bookCopy2).getOrNull() shouldBe desktop.schoolSupplies + bookCopy2
     }
 
     "Get School Supplies in Desktop" {
@@ -103,24 +86,12 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1),
             schoolSuppliesInBackpack = setOf(),
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
         coEvery {
             repository.getDesktop(any())
         } returns (desktop)
-        useCase.getSchoolSupply(
-            rfid = rfidCode1,
-            success = {
-                it shouldBe bookCopy1
-            },
-            error = {
-                assert(false)
-            },
-        )
+        useCase.getSchoolSupply(rfid = rfidCode1).getOrNull() shouldBe bookCopy1
     }
 
     "Try get a School Supplies not in Desktop" {
@@ -128,24 +99,12 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1),
             schoolSuppliesInBackpack = setOf(),
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
         coEvery {
             repository.getDesktop(any())
         } returns (desktop)
-        useCase.getSchoolSupply(
-            rfid = rfidCode2,
-            success = {
-                it shouldBe null
-            },
-            error = {
-                assert(false)
-            },
-        )
+        useCase.getSchoolSupply(rfid = rfidCode2).getOrDefault(bookCopy1) shouldBe null
     }
 
     "Subscribe to backpack" {
@@ -154,11 +113,7 @@ class UseCaseTest : StringSpec({
             schoolSuppliesInBackpack = setOf(),
             backpack = "backpack",
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
         val order: List<Set<SchoolSupply>> =
             listOf(setOf(bookCopy1), setOf(), setOf(bookCopy2), setOf(), setOf(bookCopy1, bookCopy2))
@@ -176,14 +131,12 @@ class UseCaseTest : StringSpec({
         } answers {
             rfidFlow
         }
-        useCase.subscribeToBackpack({ flow ->
+        useCase.subscribeToBackpack().getOrNull()?.let { flow ->
             runBlocking {
                 val result = flow.onEach { delay(200) }.toList()
                 result shouldBe listOf(setOf(bookCopy1), setOf(bookCopy1, bookCopy2))
             }
-        }, {
-            assert(false)
-        })
+        }
     }
 
     "Delete desktop" {
@@ -191,37 +144,20 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1, bookCopy2),
             schoolSuppliesInBackpack = setOf(),
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
         coEvery {
             repository.getDesktop(any())
         } returns (desktop)
-        useCase.getDesktop({
-            it shouldBe desktop
-        }, {
-            assert(false)
-        })
+        useCase.getDesktop().getOrNull() shouldBe desktop
         coEvery {
             repository.logoutDesktop(any())
         } answers {}
         coEvery {
             repository.getDesktop(any())
         } returns (Desktop.create())
-        useCase.logoutDesktop({
-            runBlocking {
-                useCase.getDesktop({
-                    it.schoolSupplies shouldBe setOf()
-                }, {
-                    assert(false)
-                })
-            }
-        }, {
-            assert(false)
-        })
+        useCase.logoutDesktop().getOrNull()
+        useCase.getDesktop().getOrNull()!!.schoolSupplies shouldBe emptySet()
     }
 
     "Associate backpack" {
@@ -229,11 +165,7 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1, bookCopy2),
             schoolSuppliesInBackpack = setOf(),
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
         coEvery {
             repository.getDesktop(any())
@@ -241,17 +173,8 @@ class UseCaseTest : StringSpec({
         coEvery {
             repository.associateBackpack(any(), any())
         } returns (backpack)
-        useCase.associateBackpack(backpack, {
-            runBlocking {
-                useCase.getDesktop({
-                    it.isBackpackAssociated shouldBe true
-                }, {
-                    assert(false)
-                })
-            }
-        }, {
-            assert(false)
-        })
+        useCase.associateBackpack(backpack).getOrNull()
+        desktop.isBackpackAssociated shouldBe true
     }
 
     "Associate backpack with error" {
@@ -259,11 +182,7 @@ class UseCaseTest : StringSpec({
             schoolSupplies = setOf(bookCopy1, bookCopy2),
             schoolSuppliesInBackpack = setOf(),
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
         coEvery {
             repository.getDesktop(any())
@@ -271,11 +190,9 @@ class UseCaseTest : StringSpec({
         coEvery {
             repository.associateBackpack(any(), any())
         } throws (Exception())
-        useCase.associateBackpack(backpack, {
-            assert(false)
-        }, {
-            desktop.isBackpackAssociated shouldBe false
-        })
+        val result = useCase.associateBackpack(backpack)
+        result.isFailure shouldBe true
+        desktop.isBackpackAssociated shouldBe false
     }
 
     "Disassociate backpack" {
@@ -284,11 +201,7 @@ class UseCaseTest : StringSpec({
             schoolSuppliesInBackpack = setOf(),
             backpack = backpack,
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
         coEvery {
             repository.getDesktop(any())
@@ -296,17 +209,8 @@ class UseCaseTest : StringSpec({
         coEvery {
             repository.disassociateBackpack(any(), any())
         } returns (backpack)
-        useCase.disassociateBackpack(backpack, {
-            runBlocking {
-                useCase.getDesktop({
-                    it.isBackpackAssociated shouldBe false
-                }, {
-                    assert(false)
-                })
-            }
-        }, {
-            assert(false)
-        })
+        useCase.disassociateBackpack(backpack).getOrNull()
+        desktop.isBackpackAssociated shouldBe false
     }
 
     "Disassociate backpack with error" {
@@ -315,11 +219,7 @@ class UseCaseTest : StringSpec({
             schoolSuppliesInBackpack = setOf(),
             backpack = backpack,
         )
-        coEvery {
-            accessUseCase.automaticLogin(any(), any())
-        } answers {
-            firstArg<(User) -> Unit>().invoke(user)
-        }
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
         val useCase = DesktopUseCase(accessUseCase, repository)
         coEvery {
             repository.getDesktop(any())
@@ -327,10 +227,7 @@ class UseCaseTest : StringSpec({
         coEvery {
             repository.disassociateBackpack(any(), any())
         } throws (Exception())
-        useCase.disassociateBackpack(backpack, {
-            assert(false)
-        }, {
-            desktop.isBackpackAssociated shouldBe true
-        })
+        useCase.disassociateBackpack(backpack).getOrNull()
+        desktop.isBackpackAssociated shouldBe true
     }
 })
