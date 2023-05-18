@@ -69,15 +69,19 @@ fun Login(
         )
     }
     LaunchedEffect(Unit) {
-        loginViewModel.tryAutomaticLogin({
-            openLoadingDialog = false
-            navController.navigate(MainNavigation.home)
-        }) {
-            openLoadingDialog = false
-            openErrorDialog = true
-            error = it
+        loginViewModel.isUserLogged { isUserLogged ->
+            if (isUserLogged) {
+                loginViewModel.tryAutomaticLogin({
+                    openLoadingDialog = false
+                    navController.navigate(MainNavigation.home)
+                }) {
+                    openLoadingDialog = false
+                    openErrorDialog = true
+                    error = it
+                }
+                openLoadingDialog = true
+            }
         }
-        openLoadingDialog = true
     }
     val login =
         { email: String, password: String ->

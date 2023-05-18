@@ -63,6 +63,15 @@ class LoginViewModel(
         }
     }
 
+    fun isUserLogged(success: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            accessUseCase.isUserLogged()
+                .onSuccess {
+                    success(it)
+                }
+        }
+    }
+
     /**
      * Try to login automatically.
      *
