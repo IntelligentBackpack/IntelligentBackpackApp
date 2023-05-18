@@ -50,13 +50,12 @@ class SchoolSupplyViewModel(
         error: (error: String) -> Unit,
     ) {
         viewModelScope.launch {
-            desktopUseCase.getDesktop(
-                { desktop ->
+            desktopUseCase.getDesktop()
+                .onSuccess { desktop ->
                     schoolSuppliesImpl.postValue(desktop.schoolSupplies.map { it.fromDomainToView() }.toSet())
-                },
-            ) {
-                error(it.message ?: "Unknown error")
-            }
+                }.onFailure {
+                    error(it.message ?: "Unknown error")
+                }
         }
     }
 
@@ -75,10 +74,9 @@ class SchoolSupplyViewModel(
         } ?: viewModelScope.launch {
             desktopUseCase.getSchoolSupply(
                 rfid,
-                {
-                    schoolSupplyImpl.postValue(it?.fromDomainToView())
-                },
-            ) {
+            ).onSuccess {
+                schoolSupplyImpl.postValue(it?.fromDomainToView())
+            }.onFailure {
                 error(it.message ?: "Unknown error")
             }
         }
@@ -98,13 +96,13 @@ class SchoolSupplyViewModel(
     ) {
         if (ISBNPolicy.isValid(isbn)) {
             viewModelScope.launch {
-                desktopUseCase.getBook(isbn, { book ->
+                desktopUseCase.getBook(isbn).onSuccess { book ->
                     book?.let {
                         success(it.fromDomainToView())
                     } ?: error("Book not found")
-                }, {
+                }.onFailure {
                     error(it.message ?: "Unknown error")
-                })
+                }
                 /*
             success(
                 Book.build {
@@ -121,15 +119,13 @@ class SchoolSupplyViewModel(
 
     fun createSchoolSupply(schoolSupplyView: SchoolSupplyView, success: () -> Unit, error: (String) -> Unit) {
         viewModelScope.launch {
-            desktopUseCase.addSchoolSupply(
-                schoolSupplyView.fromViewToDomain(),
-                {
+            desktopUseCase.addSchoolSupply(schoolSupplyView.fromViewToDomain())
+                .onSuccess {
                     schoolSuppliesImpl.postValue(it.schoolSupplies.map { it.fromDomainToView() }.toSet())
                     success()
-                },
-            ) {
-                error(it.message ?: "Unknown error")
-            }
+                }.onFailure {
+                    error(it.message ?: "Unknown error")
+                }
         }
     }
 

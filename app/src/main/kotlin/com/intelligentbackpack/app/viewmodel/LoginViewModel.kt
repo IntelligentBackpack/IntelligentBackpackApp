@@ -48,16 +48,18 @@ class LoginViewModel(
         error: (error: String) -> Unit,
     ) {
         viewModelScope.launch {
-            accessUseCase.loginWithData(email, password, { user ->
-                userImpl.postValue(user.fromDomainToView())
-                desktopUseCase.getDesktop({
-                    success(user)
-                }) {
+            accessUseCase.loginWithData(email, password)
+                .onSuccess { user ->
+                    userImpl.postValue(user.fromDomainToView())
+                    desktopUseCase.getDesktop()
+                        .onSuccess {
+                            success(user)
+                        }.onFailure {
+                            error(it.message ?: "Unknown error")
+                        }
+                }.onFailure {
                     error(it.message ?: "Unknown error")
                 }
-            }, {
-                error(it.message ?: "Unknown error")
-            })
         }
     }
 
@@ -72,16 +74,18 @@ class LoginViewModel(
         error: (String) -> Unit,
     ) {
         viewModelScope.launch {
-            accessUseCase.automaticLogin({ user ->
-                userImpl.postValue(user.fromDomainToView())
-                desktopUseCase.downloadDesktop({
-                    success(user)
-                }) {
+            accessUseCase.automaticLogin()
+                .onSuccess { user ->
+                    userImpl.postValue(user.fromDomainToView())
+                    desktopUseCase.downloadDesktop().onSuccess {
+                        success(user)
+                    }.onFailure {
+                        error(it.message ?: "Unknown error")
+                    }
+                }
+                .onFailure {
                     error(it.message ?: "Unknown error")
                 }
-            }, {
-                error(it.message ?: "Unknown error")
-            })
         }
     }
 
@@ -98,16 +102,14 @@ class LoginViewModel(
         error: (error: String) -> Unit,
     ) {
         viewModelScope.launch {
-            accessUseCase.createUser(
-                data.fromViewToDomain(),
-                {
+            accessUseCase.createUser(data.fromViewToDomain())
+                .onSuccess {
                     userImpl.postValue(it.fromDomainToView())
                     success(it)
-                },
-                {
+                }
+                .onFailure {
                     error(it.message ?: "Unknown error")
-                },
-            )
+                }
         }
     }
 
@@ -118,16 +120,20 @@ class LoginViewModel(
      */
     fun logout(success: () -> Unit, error: (String) -> Unit) {
         viewModelScope.launch {
-            desktopUseCase.logoutDesktop({
-                accessUseCase.logoutUser({
-                    userImpl.postValue(null)
-                    success()
-                }, {
+            desktopUseCase.logoutDesktop()
+                .onSuccess {
+                    accessUseCase.logoutUser()
+                        .onSuccess {
+                            userImpl.postValue(null)
+                            success()
+                        }
+                        .onFailure {
+                            error(it.message ?: "Unknown error")
+                        }
+                }
+                .onFailure {
                     error(it.message ?: "Unknown error")
-                })
-            }, {
-                error(it.message ?: "Unknown error")
-            })
+                }
         }
     }
 
@@ -138,12 +144,13 @@ class LoginViewModel(
      */
     fun deleteUser(success: () -> Unit, error: (String) -> Unit) {
         viewModelScope.launch {
-            accessUseCase.deleteUser({
-                userImpl.postValue(null)
-                success()
-            }, {
-                error(it.message ?: "Unknown error")
-            })
+            accessUseCase.deleteUser()
+                .onSuccess {
+                    userImpl.postValue(null)
+                    success()
+                }.onFailure {
+                    error(it.message ?: "Unknown error")
+                }
         }
     }
 
