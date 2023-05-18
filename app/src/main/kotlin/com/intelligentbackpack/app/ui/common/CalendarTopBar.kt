@@ -40,6 +40,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Calendar
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,9 +52,9 @@ fun CalendarTopBar(
     var selectedDate by remember { mutableStateOf(today) }
     if (openPickerDialog) {
         val datePickerState = rememberDatePickerState(
-            Calendar.getInstance().apply {
+            Calendar.getInstance(Locale.getDefault()).apply {
                 set(selectedDate.year, selectedDate.monthValue - 1, selectedDate.dayOfMonth)
-            }.timeInMillis,
+            }.timeInMillis + ZoneId.systemDefault().rules.getOffset(Instant.now()).totalSeconds * 1000,
         )
 
         DatePickerDialog(
