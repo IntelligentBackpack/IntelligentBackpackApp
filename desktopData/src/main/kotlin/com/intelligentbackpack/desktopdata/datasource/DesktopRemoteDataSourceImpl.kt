@@ -125,8 +125,8 @@ class DesktopRemoteDataSourceImpl(
                                     .filterNotNull()
                                     .map { it.uppercase() }
                                     .filter { RFIDPolicy.isValid(it) }
-                                    .toSet()
-                            )
+                                    .toSet(),
+                            ),
                         )
                     }
                 }
