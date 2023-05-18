@@ -30,30 +30,30 @@ class UseCaseTest : StringSpec({
     "Create a user" {
         val useCase = AccessUseCase(repository)
         val userCapture = slot<User>()
-        useCase.createUser(user = user, success = {}, error = {})
+        val result = useCase.createUser(user = user)
         coVerify { repository.createUser(capture(userCapture)) }
         userCapture.captured shouldBe user
+        result.isSuccess shouldBe true
     }
 
     "Login a user with email and password" {
         val useCase = AccessUseCase(repository)
         val emailCaptor = slot<String>()
         val passwordCaptor = slot<String>()
-        useCase.loginWithData(user.email, user.password, success = {}, error = {})
+        val result = useCase.loginWithData(user.email, user.password)
         coVerify { repository.loginWithData(capture(emailCaptor), capture(passwordCaptor)) }
         emailCaptor.captured shouldBe user.email
         passwordCaptor.captured shouldBe user.password
+        result.isSuccess shouldBe true
     }
 
     "Login automatically a user" {
         val useCase = AccessUseCase(repository)
-        coEvery {
-            repository.loginWithData(any(), any())
-        } returns user
-        useCase.loginWithData(user.email, user.password, success = {}, error = {})
+        coEvery { repository.loginWithData(any(), any()) } returns user
+        useCase.loginWithData(user.email, user.password)
         coEvery { repository.automaticLogin() } returns user
-        useCase.automaticLogin(success = {
-            it shouldBe user
-        }, error = { assert(false) })
+        val result = useCase.automaticLogin()
+        result.isSuccess shouldBe true
+        result.getOrNull() shouldBe user
     }
 })
