@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
  */
 class AccessDomainRepositoryImpl(
     private val accessLocalDataSource: AccessLocalDataSource,
-    private val accessRemoteDataSource: AccessRemoteDataSource
+    private val accessRemoteDataSource: AccessRemoteDataSource,
 ) : AccessDomainRepository {
 
     /**
@@ -53,7 +53,6 @@ class AccessDomainRepositoryImpl(
                 .also { accessLocalDataSource.saveUser(it) }
         }
 
-
     /**
      * Logs the saved user.
      *
@@ -62,9 +61,10 @@ class AccessDomainRepositoryImpl(
     override suspend fun automaticLogin(): User =
         withContext(Dispatchers.IO) {
             val user = accessLocalDataSource.getUser()
-            accessRemoteDataSource.accessWithData(user.email, user.password).also {
-                accessLocalDataSource.saveUser(it)
-            }
+            accessRemoteDataSource.accessWithData(user.email, user.password)
+                .also {
+                    accessLocalDataSource.saveUser(it)
+                }
         }
 
     /**
@@ -80,7 +80,6 @@ class AccessDomainRepositoryImpl(
                 .also { accessLocalDataSource.deleteUser() }
         }
 
-
     /**
      * Deletes the user.
      *
@@ -93,5 +92,15 @@ class AccessDomainRepositoryImpl(
             accessLocalDataSource.getUser()
                 .also { accessRemoteDataSource.deleteUser(it) }
                 .also { accessLocalDataSource.deleteUser() }
+        }
+
+    /**
+     * Gets the logged user.
+     *
+     * @return the logged user.
+     */
+    override suspend fun getLoggedUser(): User =
+        withContext(Dispatchers.IO) {
+            accessLocalDataSource.getUser()
         }
 }

@@ -17,7 +17,7 @@ import kotlinx.coroutines.runBlocking
 class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repository: DesktopDomainRepository) {
 
     suspend fun downloadDesktop(success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.automaticLogin({ user ->
+        accessUseCase.getLoggedUser({ user ->
             try {
                 success(repository.downloadDesktop(user))
             } catch (e: Exception) {
@@ -33,7 +33,7 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      * @param error the error callback.
      */
     suspend fun getDesktop(success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.automaticLogin({ user ->
+        accessUseCase.getLoggedUser({ user ->
             try {
                 success(repository.getDesktop(user))
             } catch (e: Exception) {
@@ -54,7 +54,7 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
         success: (Desktop) -> Unit,
         error: (Exception) -> Unit,
     ) {
-        accessUseCase.automaticLogin({ user ->
+        accessUseCase.getLoggedUser({ user ->
             runBlocking {
                 try {
                     val desktop = repository.getDesktop(user)
@@ -91,7 +91,7 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      * @param error The error callback.
      */
     suspend fun getSchoolSupply(rfid: String, success: (SchoolSupply?) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.automaticLogin({ user ->
+        accessUseCase.getLoggedUser({ user ->
             runBlocking {
                 try {
                     success(repository.getDesktop(user).schoolSupplies.firstOrNull { it.rfidCode == rfid })
@@ -110,7 +110,7 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      * @param error The error callback.
      */
     suspend fun associateBackpack(hash: String, success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.automaticLogin({ user ->
+        accessUseCase.getLoggedUser({ user ->
             try {
                 val returnedHash = repository.associateBackpack(user, hash)
                 val desktop = repository.getDesktop(user)
@@ -133,7 +133,7 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      * @param error The error callback.
      */
     suspend fun subscribeToBackpack(success: (Flow<Set<SchoolSupply>>) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.automaticLogin({ user ->
+        accessUseCase.getLoggedUser({ user ->
             try {
                 val flow = repository.subscribeToBackpack(user)
                     .map {
@@ -155,8 +155,8 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      * @param success The success callback.
      * @param error The error callback.
      */
-    suspend fun logoutDesktop(success: () -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.automaticLogin({ user ->
+    suspend fun logoutDesktop(success: suspend () -> Unit, error: (Exception) -> Unit) {
+        accessUseCase.getLoggedUser({ user ->
             try {
                 repository.logoutDesktop(user)
                 success()
@@ -174,7 +174,7 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      * @param error The error callback.
      */
     suspend fun disassociateBackpack(hash: String, success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.automaticLogin({ user ->
+        accessUseCase.getLoggedUser({ user ->
             val desktop = repository.getDesktop(user)
             if (desktop.isBackpackAssociated) {
                 if (desktop.backpack == hash) {

@@ -34,7 +34,7 @@ class AccessRemoteDataSourceImpl(baseUrl: String, desktopUrl: String) : AccessRe
             val jsonParam = mapOf(Pair("message", user.email))
             val request = RequestBody.create(
                 okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                (JSONObject(jsonParam)).toString()
+                (JSONObject(jsonParam)).toString(),
             )
             val responseLibrary = desktopApi.createLibrary(request).execute()
             if (responseLibrary.isSuccessful) {
@@ -62,7 +62,7 @@ class AccessRemoteDataSourceImpl(baseUrl: String, desktopUrl: String) : AccessRe
             access.communication.User.newBuilder()
                 .setEmail(email)
                 .setPassword(password)
-                .build()
+                .build(),
         ).execute()
         return if (response.isSuccessful) {
             response.body()!!.user.fromRemoteToDomain()

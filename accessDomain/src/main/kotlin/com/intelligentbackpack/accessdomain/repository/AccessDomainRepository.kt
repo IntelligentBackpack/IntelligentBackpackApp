@@ -51,4 +51,11 @@ interface AccessDomainRepository {
      * @return the deleted user.
      */
     suspend fun deleteUser(): User
+
+    /**
+     * Gets the logged user.
+     *
+     * @return the logged user.
+     */
+    suspend fun getLoggedUser(): User
 }

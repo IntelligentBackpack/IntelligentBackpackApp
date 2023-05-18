@@ -38,7 +38,7 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
     suspend fun loginWithData(
         email: String,
         password: String,
-        success: (User) -> Unit,
+        success: suspend (User) -> Unit,
         error: (Exception) -> Unit,
     ) =
         try {
@@ -56,6 +56,19 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
     suspend fun automaticLogin(success: suspend (User) -> Unit, error: (Exception) -> Unit) =
         try {
             success(repository.automaticLogin())
+        } catch (e: Exception) {
+            error(e)
+        }
+
+    /**
+     * Gets the logged user.
+     *
+     * @param success is the success callback with the logged user.
+     * @param error is the error callback.
+     */
+    suspend fun getLoggedUser(success: suspend (User) -> Unit, error: (Exception) -> Unit) =
+        try {
+            success(repository.getLoggedUser())
         } catch (e: Exception) {
             error(e)
         }
