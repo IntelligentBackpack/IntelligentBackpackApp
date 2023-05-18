@@ -14,6 +14,15 @@ object BookAdapter {
     fun Book.fromDomainToView() = BookView(
         isbn = isbn,
         title = title,
-        authors = authors
+        authors = authors,
     )
+
+    /**
+     * Converts a [BookView] to a [Book].
+     */
+    fun BookView.fromViewToDomain() = Book.build {
+        isbn = this@fromViewToDomain.isbn
+        title = this@fromViewToDomain.title
+        authors = this@fromViewToDomain.authors
+    }
 }

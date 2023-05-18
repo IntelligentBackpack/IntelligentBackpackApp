@@ -12,6 +12,7 @@ import com.intelligentbackpack.app.viewdata.BookView
 import com.intelligentbackpack.app.viewdata.SchoolSupplyView
 import com.intelligentbackpack.app.viewdata.adapter.BookAdapter.fromDomainToView
 import com.intelligentbackpack.app.viewdata.adapter.SchoolSupplyAdapter.fromDomainToView
+import com.intelligentbackpack.app.viewdata.adapter.SchoolSupplyAdapter.fromViewToDomain
 import com.intelligentbackpack.desktopdomain.policies.ISBNPolicy
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import kotlinx.coroutines.launch
@@ -115,6 +116,20 @@ class SchoolSupplyViewModel(
             }
         } else {
             error("Invalid ISBN")
+        }
+    }
+
+    fun createSchoolSupply(schoolSupplyView: SchoolSupplyView, success: () -> Unit, error: (String) -> Unit) {
+        viewModelScope.launch {
+            desktopUseCase.addSchoolSupply(
+                schoolSupplyView.fromViewToDomain(),
+                {
+                    schoolSuppliesImpl.postValue(it.schoolSupplies.map { it.fromDomainToView() }.toSet())
+                    success()
+                },
+            ) {
+                error(it.message ?: "Unknown error")
+            }
         }
     }
 

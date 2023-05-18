@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +34,6 @@ import com.intelligentbackpack.app.viewdata.BookView
 /**
  * Form for creating a new school supply.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewSchoolSupplyForm(
     rfid: String?,
@@ -43,7 +41,7 @@ fun NewSchoolSupplyForm(
     book: BookView?,
     error: String?,
     onIsbnChange: (isbn: String) -> Unit,
-    createSchoolSupply: (isbn: String, rfid: String) -> Unit,
+    createSchoolSupply: (book: BookView?, rfid: String?) -> Unit,
     openCameraDialog: () -> Unit,
     localFocusManager: FocusManager = LocalFocusManager.current,
 ) {
@@ -124,7 +122,7 @@ fun NewSchoolSupplyForm(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Button(
-                onClick = { createSchoolSupply(isbn, rfid!!) },
+                onClick = { createSchoolSupply(book, rfid) },
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .padding(top = 10.dp),

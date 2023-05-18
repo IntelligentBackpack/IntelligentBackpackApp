@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.twotone.ArrowBack
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -52,7 +53,9 @@ import com.intelligentbackpack.app.ui.navigation.MainNavigation
 import com.intelligentbackpack.app.view.form.NewSchoolSupplyForm
 import com.intelligentbackpack.app.view.form.SchoolSupplyDetailsForm
 import com.intelligentbackpack.app.viewdata.BookView
+import com.intelligentbackpack.app.viewdata.SchoolSupplyView
 import com.intelligentbackpack.app.viewmodel.SchoolSupplyViewModel
+import com.intelligentbackpack.desktopdomain.entities.SchoolSupplyTypes
 
 @Composable
 @ExperimentalGetImage
@@ -92,7 +95,7 @@ fun SchoolSupplyDetails(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 @ExperimentalGetImage
 fun SchoolSupplyDetailsPage(
@@ -122,6 +125,33 @@ fun SchoolSupplyDetailsPage(
             }, {
                 bookError = it
             })
+        }
+
+        var openErrorDialog by remember { mutableStateOf(false) }
+        var error by remember { mutableStateOf("") }
+        if (openErrorDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    openErrorDialog = false
+                },
+                title = {
+                    Text(text = "Creation error")
+                },
+                text = {
+                    Text(error)
+                },
+                confirmButton = {
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            openErrorDialog = false
+                        },
+                    ) {
+                        Text("Ok")
+                    }
+                },
+            )
         }
 
         if (openCameraDialog) {
@@ -198,7 +228,29 @@ fun SchoolSupplyDetailsPage(
                 isbn = it
                 getBook(it)
             },
-            createSchoolSupply = { _, _ -> /* TODO */ },
+            createSchoolSupply = { bookLambda, rfidLambda ->
+                rfidLambda?.let { rfidNotNull ->
+                    bookLambda?.let { bookNotNull ->
+                        val schoolSupplyView = SchoolSupplyView(
+                            book = bookNotNull,
+                            rfidCode = rfidNotNull,
+                            type = SchoolSupplyTypes.BOOK,
+                        )
+                        schoolSupplyViewModel.createSchoolSupply(schoolSupplyView, {
+                            navController.navigate(MainNavigation.home)
+                        }, {
+                            error = it
+                            openErrorDialog = true
+                        })
+                    } ?: run {
+                        error = "Please scan a book first or insert a valid ISBN"
+                        openErrorDialog = true
+                    }
+                } ?: run {
+                    error = "Please scan a RFID tag first"
+                    openErrorDialog = true
+                }
+            },
             openCameraDialog = {
                 openCameraDialog = true
             },
