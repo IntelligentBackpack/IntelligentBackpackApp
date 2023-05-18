@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.never
+import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 
@@ -44,8 +44,8 @@ class AccessDomainRepositoryInstrumentedTest {
         `when`(
             accessRemoteDataSource.accessWithData(
                 ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString()
-            )
+                ArgumentMatchers.anyString(),
+            ),
         ).thenReturn(expectedUser)
         val localAccessDataSource = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         val accessDomainRepository = AccessDomainRepositoryImpl(localAccessDataSource, accessRemoteDataSource)
@@ -63,12 +63,18 @@ class AccessDomainRepositoryInstrumentedTest {
             .getInstrumentation()
             .targetContext
         val accessRemoteDataSource = mock(AccessRemoteDataSource::class.java)
+        `when`(
+            accessRemoteDataSource.accessWithData(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(),
+            ),
+        ).thenReturn(expectedUser)
         val accessLocalDataSource = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         accessLocalDataSource.saveUser(expectedUser)
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataSource, accessRemoteDataSource)
         assertTrue(accessLocalDataSource.isUserSaved())
         val user = accessDomainRepository.automaticLogin()
-        verify(accessRemoteDataSource, never()).accessWithData("test@gmail.com", "Test#1234")
+        verify(accessRemoteDataSource, times(1)).accessWithData("test@gmail.com", "Test#1234")
         assertEquals(expectedUser, user)
     }
 
