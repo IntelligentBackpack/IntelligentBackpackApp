@@ -22,8 +22,10 @@ import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,7 +43,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -73,33 +74,51 @@ fun Home(
     navController: NavHostController,
     loginViewModel: LoginViewModel = viewModel(
         factory = LoginViewModel.Factory,
-        ),
+    ),
 ) {
     val user = loginViewModel.user.observeAsState()
     val context = LocalContext.current
     val pInfo: PackageInfo = context.packageManager.getPackageInfoCompat(context.packageName, 0)
     val version = pInfo.versionName
     val versionCode = pInfo.longVersionCode
-    LaunchedEffect(key1 = user) {
-        user.value ?: run {
-            loginViewModel.tryAutomaticLogin(
-                success = {
-                    navController.navigate(MainNavigation.home)
-                },
-                error = {
-                    navController.navigate(MainNavigation.login)
-                },
-            )
-        }
+
+    var openErrorDialog by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
+    if (openErrorDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                openErrorDialog = false
+            },
+            title = {
+                Text(text = "Delete error")
+            },
+            text = {
+                Text(error)
+            },
+            confirmButton = {
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        openErrorDialog = false
+                    },
+                ) {
+                    Text("Ok")
+                }
+            },
+        )
     }
-    user.value?.let {
+    user.value?.let { userNotNull ->
         HomePage(
             navController = navController,
-            user = it,
+            user = userNotNull,
             logout = {
-                loginViewModel.logout {
+                loginViewModel.logout({
                     navController.navigate(MainNavigation.login)
-                }
+                }, {
+                    error = it
+                    openErrorDialog = true
+                })
             },
             version = version,
             versionCode = versionCode,
@@ -289,8 +308,7 @@ fun HomePage(
                         Alignment.BottomStart,
                     ) {
                         Column(
-                            modifier = Modifier
-                                .padding(16.dp),
+                            modifier = Modifier,
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             val viewModelStoreOwner = LocalViewModelStoreOwner.current!!

@@ -12,6 +12,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -20,6 +21,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +42,32 @@ fun UserDetails(
         factory = LoginViewModel.Factory,
     ),
 ) {
+    val openDialog = remember { mutableStateOf(false) }
+    val error = remember { mutableStateOf("") }
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            title = {
+                Text(text = "OOperation error")
+            },
+            text = {
+                Text(error.value)
+            },
+            confirmButton = {
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        openDialog.value = false
+                    },
+                ) {
+                    Text("Ok")
+                }
+            },
+        )
+    }
     val user = loginViewModel.user.observeAsState()
     if (user.value == null) {
         navController.navigate(MainNavigation.login)
@@ -47,14 +76,20 @@ fun UserDetails(
         navController = navController,
         user = user.value!!,
         logout = {
-            loginViewModel.logout {
+            loginViewModel.logout({
                 navController.navigate(MainNavigation.login)
-            }
+            }, {
+                openDialog.value = true
+                error.value = it
+            })
         },
         delete = {
-            loginViewModel.deleteUser {
+            loginViewModel.deleteUser({
                 navController.navigate(MainNavigation.login)
-            }
+            }, {
+                openDialog.value = true
+                error.value = it
+            })
         },
     )
 }
