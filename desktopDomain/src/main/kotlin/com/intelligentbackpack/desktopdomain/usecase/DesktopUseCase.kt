@@ -9,118 +9,74 @@ import com.intelligentbackpack.desktopdomain.repository.DesktopDomainRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 
 /**
  * Use case for the desktop domain.
  */
 class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repository: DesktopDomainRepository) {
 
-    suspend fun downloadDesktop(success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.getLoggedUser({ user ->
-            try {
-                success(repository.downloadDesktop(user))
-            } catch (e: Exception) {
-                error(e)
-            }
-        }, error)
-    }
+    /**
+     * Download the desktop.
+     *
+     * @return the result of the download with the desktop.
+     */
+    suspend fun downloadDesktop(): Result<Desktop> =
+        accessUseCase.getLoggedUser().mapCatching { user -> repository.downloadDesktop(user) }
 
     /**
      * Gets the desktop.
      *
-     * @param success the success callback with the desktop.
-     * @param error the error callback.
+     * @return the result of the get with the desktop.
      */
-    suspend fun getDesktop(success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.getLoggedUser({ user ->
-            try {
-                success(repository.getDesktop(user))
-            } catch (e: Exception) {
-                error(e)
-            }
-        }, error)
-    }
+    suspend fun getDesktop(): Result<Desktop> =
+        accessUseCase.getLoggedUser().mapCatching { user -> repository.getDesktop(user) }
 
     /**
      * Adds a school supply to the desktop.
      *
      * @param schoolSupply The school supply to add.
-     * @param success The success callback with all the school supplies.
-     * @param error The error callback.
+     * @return the result of the add with the new desktop.
      */
-    suspend fun addSchoolSupply(
-        schoolSupply: SchoolSupply,
-        success: (Desktop) -> Unit,
-        error: (Exception) -> Unit,
-    ) {
-        accessUseCase.getLoggedUser({ user ->
-            runBlocking {
-                try {
-                    val desktop = repository.getDesktop(user)
-                    desktop.addSchoolSupply(schoolSupply)
-                    repository.addSchoolSupply(user, schoolSupply)
-                    success(desktop)
-                } catch (e: Exception) {
-                    error(e)
-                }
-            }
-        }, error)
-    }
+    suspend fun addSchoolSupply(schoolSupply: SchoolSupply): Result<Desktop> =
+        accessUseCase.getLoggedUser().mapCatching { user ->
+            val desktop = repository.getDesktop(user)
+            repository.addSchoolSupply(user, schoolSupply)
+            desktop.addSchoolSupply(schoolSupply)
+            desktop
+        }
 
     /**
      * Get the book given the isbn.
      *
      * @param isbn The isbn.
-     * @param success The success callback with the book.
-     * @param error The error callback.
+     * @return the result of the get with the book.
      */
-    suspend fun getBook(isbn: String, success: (Book?) -> Unit, error: (Exception) -> Unit) {
-        try {
-            success(repository.getBook(isbn))
-        } catch (e: Exception) {
-            error(e)
-        }
-    }
+    suspend fun getBook(isbn: String): Result<Book?> = kotlin.runCatching { repository.getBook(isbn) }
 
     /**
      * Gets the school supply given the rfid.
      *
      * @param rfid The rfid.
-     * @param success The success callback with the school supply.
-     * @param error The error callback.
+     * @return the result of the get with the school supply.
      */
-    suspend fun getSchoolSupply(rfid: String, success: (SchoolSupply?) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.getLoggedUser({ user ->
-            runBlocking {
-                try {
-                    success(repository.getDesktop(user).schoolSupplies.firstOrNull { it.rfidCode == rfid })
-                } catch (e: Exception) {
-                    error(e)
-                }
-            }
-        }, error)
-    }
+    suspend fun getSchoolSupply(rfid: String): Result<SchoolSupply?> =
+        accessUseCase.getLoggedUser().mapCatching { user ->
+            repository.getDesktop(user).schoolSupplies.firstOrNull { it.rfidCode == rfid }
+        }
 
     /**
      * associate the backpack.
      *
      * @param hash The hash of the backpack.
-     * @param success The success callback with the desktop.
-     * @param error The error callback.
+     * @return the result of the associate with the new desktop.
      */
-    suspend fun associateBackpack(hash: String, success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.getLoggedUser({ user ->
-            try {
-                val returnedHash = repository.associateBackpack(user, hash)
-                val desktop = repository.getDesktop(user)
-                desktop.associateBackpack(returnedHash)
-                success(desktop)
-            } catch (e: Exception) {
-                error(e)
-            }
-        }, error)
-    }
+    suspend fun associateBackpack(hash: String): Result<Desktop> =
+        accessUseCase.getLoggedUser().mapCatching { user ->
+            val returnedHash = repository.associateBackpack(user, hash)
+            val desktop = repository.getDesktop(user)
+            desktop.associateBackpack(returnedHash)
+            desktop
+        }
 
     /**
      * Subscribes to the backpack.
@@ -129,68 +85,55 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      * The repository emits the changes of the backpack when the desktop changes.
      * The desktop changes when the backpack changes.
      *
-     * @param success The success callback with a [Flow] of the school supplies in backpack.
-     * @param error The error callback.
+     * @return the result of the subscribe with the [Flow] of [Set] of [SchoolSupply].
      */
-    suspend fun subscribeToBackpack(success: (Flow<Set<SchoolSupply>>) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.getLoggedUser({ user ->
-            try {
-                val flow = repository.subscribeToBackpack(user)
-                    .map {
-                        repository.getDesktop(user).schoolSupplies.filter { supply ->
-                            it.contains(supply.rfidCode)
-                        }.toSet()
-                    }
-                    .conflate()
-                success(flow)
-            } catch (e: Exception) {
-                error(e)
-            }
-        }, error)
-    }
+    suspend fun subscribeToBackpack(): Result<Flow<Set<SchoolSupply>>> =
+        accessUseCase.getLoggedUser().mapCatching { user ->
+            repository.subscribeToBackpack(user)
+                .map {
+                    repository.getDesktop(user).schoolSupplies.filter { supply ->
+                        it.contains(supply.rfidCode)
+                    }.toSet()
+                }
+                .conflate()
+        }
 
     /**
      * Delete the desktop.
      *
-     * @param success The success callback.
-     * @param error The error callback.
+     * @return the result of the logout.
      */
-    suspend fun logoutDesktop(success: suspend () -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.getLoggedUser({ user ->
-            try {
-                repository.logoutDesktop(user)
-                success()
-            } catch (e: Exception) {
-                error(e)
-            }
-        }, error)
-    }
+    suspend fun logoutDesktop(): Result<Unit> =
+        accessUseCase.getLoggedUser().mapCatching { user -> repository.logoutDesktop(user) }
 
     /**
      * Disassociate a backpack from the desktop.
      *
      * @param hash The hash of the backpack.
-     * @param success The success callback.
-     * @param error The error callback.
+     * @return the result of the disassociate with the new desktop.
      */
-    suspend fun disassociateBackpack(hash: String, success: (Desktop) -> Unit, error: (Exception) -> Unit) {
-        accessUseCase.getLoggedUser({ user ->
-            val desktop = repository.getDesktop(user)
-            if (desktop.isBackpackAssociated) {
-                if (desktop.backpack == hash) {
-                    try {
-                        repository.disassociateBackpack(user, hash)
-                        desktop.disassociateBackpack(hash)
-                        success(desktop)
-                    } catch (e: Exception) {
-                        error(e)
+    suspend fun disassociateBackpack(hash: String): Result<Desktop> =
+        accessUseCase.getLoggedUser().let { result ->
+            if (result.isFailure) {
+                Result.failure(result.exceptionOrNull()!!)
+            } else {
+                val user = result.getOrNull()!!
+                val desktop = repository.getDesktop(user)
+                if (desktop.isBackpackAssociated) {
+                    if (desktop.backpack == hash) {
+                        try {
+                            repository.disassociateBackpack(user, hash)
+                            desktop.disassociateBackpack(hash)
+                            Result.success(desktop)
+                        } catch (e: Exception) {
+                            Result.failure(e)
+                        }
+                    } else {
+                        Result.failure(BackpackNotAssociatedException())
                     }
                 } else {
-                    error(BackpackNotAssociatedException())
+                    Result.failure(BackpackNotAssociatedException())
                 }
-            } else {
-                error(BackpackNotAssociatedException())
             }
-        }, error)
-    }
+        }
 }
