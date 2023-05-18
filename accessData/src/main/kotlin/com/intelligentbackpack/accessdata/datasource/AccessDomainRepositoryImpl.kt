@@ -61,7 +61,10 @@ class AccessDomainRepositoryImpl(
      */
     override suspend fun automaticLogin(): User =
         withContext(Dispatchers.IO) {
-            accessLocalDataSource.getUser()
+            val user = accessLocalDataSource.getUser()
+            accessRemoteDataSource.accessWithData(user.email, user.password).also {
+                accessLocalDataSource.saveUser(it)
+            }
         }
 
     /**
