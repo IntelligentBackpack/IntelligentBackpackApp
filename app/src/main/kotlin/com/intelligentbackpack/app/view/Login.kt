@@ -1,19 +1,26 @@
 package com.intelligentbackpack.app.view
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.intelligentbackpack.app.ui.navigation.MainNavigation
 import com.intelligentbackpack.app.view.form.LoginForm
 import com.intelligentbackpack.app.viewmodel.LoginViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(
     navController: NavHostController,
@@ -21,34 +28,25 @@ fun Login(
         factory = LoginViewModel.Factory,
     ),
 ) {
-    LaunchedEffect(Unit) {
-        loginViewModel.tryAutomaticLogin({
-            navController.navigate(MainNavigation.home)
-        }) {
-            loginViewModel.logout {
-                navController.navigate(MainNavigation.login)
-            }
-        }
-    }
-    val openDialog = remember { mutableStateOf(false) }
-    val error = remember { mutableStateOf("") }
-    if (openDialog.value) {
+    var openErrorDialog by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
+    if (openErrorDialog) {
         AlertDialog(
             onDismissRequest = {
-                openDialog.value = false
+                openErrorDialog = false
             },
             title = {
                 Text(text = "Login error")
             },
             text = {
-                Text(error.value)
+                Text(error)
             },
             confirmButton = {
             },
             dismissButton = {
                 Button(
                     onClick = {
-                        openDialog.value = false
+                        openErrorDialog = false
                     },
                 ) {
                     Text("Ok")
@@ -56,16 +54,46 @@ fun Login(
             },
         )
     }
+    var openLoadingDialog by remember { mutableStateOf(false) }
+    if (openLoadingDialog) {
+        AlertDialog(
+            modifier = Modifier.fillMaxSize(0.7f),
+            onDismissRequest = {
+                openLoadingDialog = false
+            },
+            content = {
+                CircularProgressIndicator(
+                    modifier = Modifier.fillMaxSize(),
+                )
+            },
+        )
+    }
+    LaunchedEffect(Unit) {
+        loginViewModel.tryAutomaticLogin({
+            openLoadingDialog = false
+            navController.navigate(MainNavigation.home)
+        }) {
+            openLoadingDialog = false
+            openErrorDialog = true
+            error = it
+        }
+        openLoadingDialog = true
+    }
     val login =
         { email: String, password: String ->
             loginViewModel.login(
                 email,
                 password,
-                { navController.navigate(MainNavigation.home) },
+                {
+                    openLoadingDialog = false
+                    navController.navigate(MainNavigation.home)
+                },
             ) { errorText ->
-                error.value = errorText
-                openDialog.value = true
+                openLoadingDialog = false
+                error = errorText
+                openErrorDialog = true
             }
+            openLoadingDialog = true
         }
     val createUser = { email: String ->
         navController.navigate(MainNavigation.createUser(email.trim()))

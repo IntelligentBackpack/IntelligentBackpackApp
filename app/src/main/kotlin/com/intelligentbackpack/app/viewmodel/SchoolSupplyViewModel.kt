@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  * View model for the school supplies.
  */
 class SchoolSupplyViewModel(
-    private val desktopUseCase: DesktopUseCase
+    private val desktopUseCase: DesktopUseCase,
 ) : ViewModel() {
 
     /**
@@ -40,39 +40,19 @@ class SchoolSupplyViewModel(
     private val schoolSupplyImpl = MutableLiveData<SchoolSupplyView?>()
 
     /**
-     * Downloads the school supplies.
-     * The result is stored in the live data schoolSupplies.
-     *
-     * @param error the error callback.
-     */
-    fun downloadSchoolSupplies(
-        error: (error: String) -> Unit
-    ) {
-        viewModelScope.launch {
-            desktopUseCase.downloadDesktop(
-                { desktop ->
-                    schoolSuppliesImpl.postValue(desktop.schoolSupplies.map { it.fromDomainToView() }.toSet())
-                }
-            ) {
-                error(it.message ?: "Unknown error")
-            }
-        }
-    }
-
-    /**
      * Gets the school supplies.
      * The result is stored in the live data schoolSupplies.
      *
      * @param error the error callback.
      */
     fun getSchoolSupplies(
-        error: (error: String) -> Unit
+        error: (error: String) -> Unit,
     ) {
         viewModelScope.launch {
             desktopUseCase.getDesktop(
                 { desktop ->
                     schoolSuppliesImpl.postValue(desktop.schoolSupplies.map { it.fromDomainToView() }.toSet())
-                }
+                },
             ) {
                 error(it.message ?: "Unknown error")
             }
@@ -87,7 +67,7 @@ class SchoolSupplyViewModel(
      */
     fun getSchoolSupply(
         rfid: String,
-        error: (error: String) -> Unit
+        error: (error: String) -> Unit,
     ) {
         schoolSupplies.value?.firstOrNull { it.rfidCode == rfid }?.let {
             schoolSupplyImpl.postValue(it)
@@ -96,7 +76,7 @@ class SchoolSupplyViewModel(
                 rfid,
                 {
                     schoolSupplyImpl.postValue(it?.fromDomainToView())
-                }
+                },
             ) {
                 error(it.message ?: "Unknown error")
             }
@@ -113,9 +93,9 @@ class SchoolSupplyViewModel(
     fun getBook(
         isbn: String,
         success: (book: BookView) -> Unit,
-        error: (error: String) -> Unit
+        error: (error: String) -> Unit,
     ) {
-        if (ISBNPolicy.isValid(isbn))
+        if (ISBNPolicy.isValid(isbn)) {
             viewModelScope.launch {
                 desktopUseCase.getBook(isbn, { book ->
                     book?.let {
@@ -133,8 +113,9 @@ class SchoolSupplyViewModel(
                 }.fromDomainToView()
             )*/
             }
-        else
+        } else {
             error("Invalid ISBN")
+        }
     }
 
     companion object {
@@ -147,7 +128,7 @@ class SchoolSupplyViewModel(
                 // Get the Application object from extras
                 val application = checkNotNull(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
                 SchoolSupplyViewModel(
-                    (application as App).desktopUseCase
+                    (application as App).desktopUseCase,
                 )
             }
         }

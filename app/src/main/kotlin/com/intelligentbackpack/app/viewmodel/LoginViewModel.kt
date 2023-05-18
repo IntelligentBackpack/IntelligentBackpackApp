@@ -14,14 +14,15 @@ import com.intelligentbackpack.app.App
 import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromDomainToView
 import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromViewToDomain
-import kotlinx.coroutines.Dispatchers
+import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import kotlinx.coroutines.launch
 
 /**
  * View model for the login.
  */
 class LoginViewModel(
-    private val accessUseCase: AccessUseCase
+    private val accessUseCase: AccessUseCase,
+    private val desktopUseCase: DesktopUseCase,
 ) : ViewModel() {
 
     /**
@@ -44,12 +45,16 @@ class LoginViewModel(
         email: String,
         password: String,
         success: (user: User) -> Unit,
-        error: (error: String) -> Unit
+        error: (error: String) -> Unit,
     ) {
         viewModelScope.launch {
-            accessUseCase.loginWithData(email, password, {
-                userImpl.postValue(it.fromDomainToView())
-                success(it)
+            accessUseCase.loginWithData(email, password, { user ->
+                userImpl.postValue(user.fromDomainToView())
+                desktopUseCase.getDesktop({
+                    success(user)
+                }) {
+                    error(it.message ?: "Unknown error")
+                }
             }, {
                 error(it.message ?: "Unknown error")
             })
@@ -64,14 +69,18 @@ class LoginViewModel(
      */
     fun tryAutomaticLogin(
         success: (user: User) -> Unit,
-        error: () -> Unit
+        error: (String) -> Unit,
     ) {
         viewModelScope.launch {
-            accessUseCase.automaticLogin({
-                userImpl.postValue(it.fromDomainToView())
-                success(it)
+            accessUseCase.automaticLogin({ user ->
+                userImpl.postValue(user.fromDomainToView())
+                desktopUseCase.downloadDesktop({
+                    success(user)
+                }) {
+                    error(it.message ?: "Unknown error")
+                }
             }, {
-                error()
+                error(it.message ?: "Unknown error")
             })
         }
     }
@@ -86,7 +95,7 @@ class LoginViewModel(
     fun createUser(
         data: UserView,
         success: (user: User) -> Unit,
-        error: (error: String) -> Unit
+        error: (error: String) -> Unit,
     ) {
         viewModelScope.launch {
             accessUseCase.createUser(
@@ -94,27 +103,30 @@ class LoginViewModel(
                 {
                     userImpl.postValue(it.fromDomainToView())
                     success(it)
-                }, {
+                },
+                {
                     error(it.message ?: "Unknown error")
-                }
+                },
             )
         }
     }
-
 
     /**
      * Logout the user.
      *
      * @param success the success callback.
      */
-    fun logout(success: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            accessUseCase.logoutUser({
-                viewModelScope.launch(Dispatchers.Main) {
+    fun logout(success: () -> Unit, error: (String) -> Unit) {
+        viewModelScope.launch {
+            desktopUseCase.logoutDesktop({
+                accessUseCase.logoutUser({
                     userImpl.postValue(null)
                     success()
-                }
+                }, {
+                    error(it.message ?: "Unknown error")
+                })
             }, {
+                error(it.message ?: "Unknown error")
             })
         }
     }
@@ -124,17 +136,15 @@ class LoginViewModel(
      *
      * @param success the success callback.
      */
-    fun deleteUser(success: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun deleteUser(success: () -> Unit, error: (String) -> Unit) {
+        viewModelScope.launch {
             accessUseCase.deleteUser({
-                viewModelScope.launch(Dispatchers.Main) {
-                    userImpl.postValue(null)
-                    success()
-                }
+                userImpl.postValue(null)
+                success()
             }, {
+                error(it.message ?: "Unknown error")
             })
         }
-
     }
 
     companion object {
@@ -146,7 +156,8 @@ class LoginViewModel(
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY])
                 LoginViewModel(
-                    (application as App).accessUseCase
+                    (application as App).accessUseCase,
+                    application.desktopUseCase,
                 )
             }
         }
