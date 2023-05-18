@@ -41,15 +41,18 @@ class MainActivity : ComponentActivity() {
         this.nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         nfcAdapter ?: run {
             Toast.makeText(
-                this, "NO NFC Capabilities",
-                Toast.LENGTH_SHORT
+                this,
+                "NO NFC Capabilities",
+                Toast.LENGTH_SHORT,
             ).show()
         }
         val intent = Intent(this.applicationContext, this.javaClass)
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         pendingIntent = PendingIntent.getActivity(
-            this.applicationContext, 0, intent,
-            PendingIntent.FLAG_MUTABLE
+            this.applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_MUTABLE,
         )
         setContent {
             navController = rememberNavController()
@@ -57,52 +60,51 @@ class MainActivity : ComponentActivity() {
             IntelligentBackpackAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     NavHost(navController, startDestination = MainNavigation.login) {
                         composable(MainNavigation.login) {
                             CompositionLocalProvider(
-                                LocalViewModelStoreOwner provides viewModelStoreOwner
+                                LocalViewModelStoreOwner provides viewModelStoreOwner,
                             ) {
                                 Login(navController)
                             }
                         }
                         composable(
                             MainNavigation.createUser,
-                            arguments = listOf(navArgument(MainNavigation.createUserParam) { nullable = true })
+                            arguments = listOf(navArgument(MainNavigation.createUserParam) { nullable = true }),
                         ) { backStackEntry ->
                             val email = backStackEntry.arguments?.getString(MainNavigation.createUserParam)
                             CompositionLocalProvider(
-                                LocalViewModelStoreOwner provides viewModelStoreOwner
+                                LocalViewModelStoreOwner provides viewModelStoreOwner,
                             ) {
                                 CreateUser(
                                     navController = navController,
                                     email = email ?: "",
                                 )
                             }
-
                         }
                         composable(MainNavigation.home) {
                             CompositionLocalProvider(
-                                LocalViewModelStoreOwner provides viewModelStoreOwner
+                                LocalViewModelStoreOwner provides viewModelStoreOwner,
                             ) {
                                 Home(navController = navController)
                             }
                         }
                         composable(MainNavigation.user) {
                             CompositionLocalProvider(
-                                LocalViewModelStoreOwner provides viewModelStoreOwner
+                                LocalViewModelStoreOwner provides viewModelStoreOwner,
                             ) {
                                 UserDetails(navController = navController)
                             }
                         }
                         composable(
                             MainNavigation.schoolSupply,
-                            arguments = listOf(navArgument(MainNavigation.schoolSupplyParam) { nullable = true })
+                            arguments = listOf(navArgument(MainNavigation.schoolSupplyParam) { nullable = true }),
                         ) { backStackEntry ->
                             val rfid = backStackEntry.arguments?.getString(MainNavigation.schoolSupplyParam)
                             CompositionLocalProvider(
-                                LocalViewModelStoreOwner provides viewModelStoreOwner
+                                LocalViewModelStoreOwner provides viewModelStoreOwner,
                             ) {
                                 SchoolSupplyDetails(navController = navController, rfid = rfid)
                             }
@@ -122,7 +124,10 @@ class MainActivity : ComponentActivity() {
     @Suppress("DEPRECATION")
     private fun resolveIntent(intent: Intent) {
         val action = intent.action
-        if (NfcAdapter.ACTION_TAG_DISCOVERED == action || NfcAdapter.ACTION_TECH_DISCOVERED == action || NfcAdapter.ACTION_NDEF_DISCOVERED == action) {
+        if (NfcAdapter.ACTION_TAG_DISCOVERED == action ||
+            NfcAdapter.ACTION_TECH_DISCOVERED == action ||
+            NfcAdapter.ACTION_NDEF_DISCOVERED == action
+        ) {
             val tag: Tag? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag::class.java)
             } else {
@@ -130,8 +135,11 @@ class MainActivity : ComponentActivity() {
             }
             tag?.let { detectTagData(it) }
                 .let {
-                    if (navController.currentDestination?.route != MainNavigation.login && navController.currentDestination?.route != MainNavigation.createUser)
+                    if (navController.currentDestination?.route != MainNavigation.login &&
+                        navController.currentDestination?.route != MainNavigation.createUser
+                    ) {
                         navController.navigate(MainNavigation.schoolSupply(it?.rfidId)) { launchSingleTop = true }
+                    }
                 }
         }
     }
