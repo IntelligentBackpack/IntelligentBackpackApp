@@ -41,6 +41,18 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
         }
 
     /**
+     * Checks if the user is logged.
+     *
+     * @return the result of the check on the status of the user.
+     */
+    suspend fun isUserLogged(): Result<Boolean> =
+        try {
+            Result.success(repository.isUserLogged())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+
+    /**
      * Logs the saved user.
      *
      * @return the result of the login with the user.
