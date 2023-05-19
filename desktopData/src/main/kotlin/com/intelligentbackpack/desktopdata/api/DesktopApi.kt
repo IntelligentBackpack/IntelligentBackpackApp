@@ -1,11 +1,13 @@
 package com.intelligentbackpack.desktopdata.api
 
+import book.communication.BasicMessage
 import book.communication.Book
 import book.communication.BuyBook
 import book.communication.Library
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PUT
 import retrofit2.http.Query
 
@@ -43,4 +45,19 @@ interface DesktopApi {
     @PUT("/create/buyBook")
     fun addBookCopy(@Body buyBook: BuyBook): Call<Void>
 
+    /**
+     * Delete the user library.
+     *
+     * @param email The email of the user.
+     */
+    @HTTP(method = "DELETE", path = "/remove/libreria", hasBody = true)
+    fun deleteLibrary(@Body email: BasicMessage): Call<Void>
+
+    /**
+     * Delete all the book copies.
+     *
+     * @param email The email of the user.
+     */
+    @HTTP(method = "DELETE", path = "/remove/RFID/all", hasBody = true)
+    fun deleteAllCopies(email: BasicMessage): Call<Void>
 }

@@ -136,4 +136,8 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
                 }
             }
         }
+
+    suspend fun deleteDesktop() {
+        accessUseCase.getLoggedUser().mapCatching { user -> repository.deleteDesktop(user) }
+    }
 }

@@ -80,4 +80,11 @@ interface DesktopDomainRepository {
      * @return the hash of the backpack
      */
     suspend fun disassociateBackpack(user: User, hash: String): String
+
+    /**
+     * Deletes the desktop and all its school supplies.
+     *
+     * @param user The user that deletes the desktop.
+     */
+    suspend fun deleteDesktop(user: User)
 }

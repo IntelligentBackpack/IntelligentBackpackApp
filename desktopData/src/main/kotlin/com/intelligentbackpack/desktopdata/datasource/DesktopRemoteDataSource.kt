@@ -50,7 +50,7 @@ interface DesktopRemoteDataSource {
      * @param hash the hash of the backpack to associate
      * @return the backpack hash
      */
-    fun associateBackpack(user: User, hash: String) : String
+    fun associateBackpack(user: User, hash: String): String
 
     /**
      * Disassociates a backpack from a user.
@@ -59,4 +59,11 @@ interface DesktopRemoteDataSource {
      * @param hash the hash of the backpack to disassociate
      */
     fun disassociateBackpack(user: User, hash: String)
+
+    /**
+     * Deletes the desktop and all its school supplies.
+     *
+     * @param user The user.
+     */
+    fun deleteDesktop(user: User)
 }

@@ -47,10 +47,9 @@ class DesktopDomainRepositoryImpl(
             Desktop.create(
                 desktopLocalDataSource.getAllSchoolSupplies(),
                 desktopLocalDataSource.getSchoolSupplyInBackpack(),
-                desktopLocalDataSource.getBackpack()
+                desktopLocalDataSource.getBackpack(),
             )
         }
-
 
     override suspend fun addSchoolSupply(user: User, schoolSupply: SchoolSupply) =
         withContext(Dispatchers.IO) {
@@ -102,5 +101,14 @@ class DesktopDomainRepositoryImpl(
             desktopLocalDataSource.disassociateBackpack()
             desktopLocalDataSource.removeAllSchoolSuppliesFromBackpack()
             hash
+        }
+
+    override suspend fun deleteDesktop(user: User) =
+        withContext(Dispatchers.IO) {
+            desktopLocalDataSource.getBackpack()?.let {
+                desktopRemoteDataSource.disassociateBackpack(user, it)
+            }
+            desktopRemoteDataSource.deleteDesktop(user)
+            desktopLocalDataSource.deleteDesktop()
         }
 }

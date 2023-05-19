@@ -1,5 +1,6 @@
 package com.intelligentbackpack.desktopdata.datasource
 
+import book.communication.BasicMessage
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -154,6 +155,19 @@ class DesktopRemoteDataSourceImpl(
     override fun disassociateBackpack(user: User, hash: String) {
         val response = backpackApi.disassociateBackpack(user.email, hash).execute()
         if (!response.isSuccessful) {
+            throw DownloadException(getError(response))
+        }
+    }
+
+    override fun deleteDesktop(user: User) {
+        val message = BasicMessage.newBuilder().setMessage(user.email).build()
+        val response = desktopApi.deleteAllCopies(message).execute()
+        if (response.isSuccessful) {
+            val responseLibrary = desktopApi.deleteLibrary(message).execute()
+            if (!responseLibrary.isSuccessful) {
+                throw DownloadException(getError(response))
+            }
+        } else {
             throw DownloadException(getError(response))
         }
     }
