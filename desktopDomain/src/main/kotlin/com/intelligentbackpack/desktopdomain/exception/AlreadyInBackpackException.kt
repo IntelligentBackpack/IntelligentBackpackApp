@@ -7,4 +7,5 @@ import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
  *
  * @param schoolSupply The school supply that is already in the backpack.
  */
-class AlreadyInBackpackException(val schoolSupply: SchoolSupply) : IllegalArgumentException()
+class AlreadyInBackpackException(val schoolSupply: SchoolSupply) :
+    IllegalArgumentException("The school supply ${schoolSupply.rfidCode} is already in the backpack.")

@@ -3,4 +3,4 @@ package com.intelligentbackpack.desktopdomain.exception
 /**
  * Exception that is thrown when a RFID code is already present.
  */
-class DuplicateRFIDException : IllegalArgumentException()
+class DuplicateRFIDException : IllegalArgumentException("The RFID code is already present.")
