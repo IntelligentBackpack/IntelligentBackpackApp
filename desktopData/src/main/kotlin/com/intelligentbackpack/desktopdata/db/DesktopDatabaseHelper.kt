@@ -18,14 +18,18 @@ object DesktopDatabaseHelper {
     fun getDatabase(appContext: Context): DesktopDatabase {
         return Room.databaseBuilder(
             appContext,
-            DesktopDatabase::class.java, "desktop-database"
+            DesktopDatabase::class.java,
+            "desktop-database",
         ).addCallback(
             object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
-                    db.execSQL("INSERT INTO School_supply_types (type_id, type) VALUES (0, '${SchoolSupplyTypes.BOOK}')")
+                    db.execSQL(
+                        "INSERT INTO School_supply_types (type_id, type) VALUES (0, '${SchoolSupplyTypes.BOOK}')",
+                    )
                 }
-            })
+            },
+        )
             .fallbackToDestructiveMigration()
             .build()
     }

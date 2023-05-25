@@ -15,7 +15,7 @@ import com.intelligentbackpack.desktopdata.db.view.BookCopy
 @Database(
     entities = [Author::class, Book::class, Wrote::class, SchoolSupplyType::class, SchoolSupply::class],
     views = [BookCopy::class],
-    version = 1
+    version = 1,
 )
 abstract class DesktopDatabase : RoomDatabase() {
 
@@ -23,5 +23,4 @@ abstract class DesktopDatabase : RoomDatabase() {
      * Get desktop DAO to access database
      */
     internal abstract fun desktopDao(): DesktopDAO
-
 }

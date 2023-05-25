@@ -10,25 +10,27 @@ import androidx.room.Index
  */
 @Entity(
     tableName = "Wrote",
-    foreignKeys = [ForeignKey(
-        entity = Book::class,
-        parentColumns = arrayOf("isbn"),
-        childColumns = arrayOf("isbn"),
-        onDelete = ForeignKey.CASCADE
-    ), ForeignKey(
-        entity = Author::class,
-        parentColumns = arrayOf("author_id"),
-        childColumns = arrayOf("author_id"),
-        onDelete = ForeignKey.CASCADE
-    )],
+    foreignKeys = [
+        ForeignKey(
+            entity = Book::class,
+            parentColumns = arrayOf("isbn"),
+            childColumns = arrayOf("isbn"),
+            onDelete = ForeignKey.CASCADE,
+        ), ForeignKey(
+            entity = Author::class,
+            parentColumns = arrayOf("author_id"),
+            childColumns = arrayOf("author_id"),
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
     primaryKeys = ["isbn", "author_id"],
     indices = [
         Index(value = ["isbn"], unique = false),
-        Index(value = ["author_id"], unique = false)
-    ]
+        Index(value = ["author_id"], unique = false),
+    ],
 )
 internal data class Wrote(
     val isbn: String,
     @ColumnInfo(name = "author_id")
-    val authorId: Int
+    val authorId: Int,
 )

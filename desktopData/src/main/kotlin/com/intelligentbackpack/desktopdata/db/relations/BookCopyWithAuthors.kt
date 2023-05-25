@@ -15,7 +15,7 @@ internal data class BookCopyWithAuthors(
     @Relation(
         parentColumn = "isbn",
         entityColumn = "author_id",
-        associateBy = Junction(Wrote::class)
+        associateBy = Junction(Wrote::class),
     )
-    val authors: List<Author>
+    val authors: List<Author>,
 )

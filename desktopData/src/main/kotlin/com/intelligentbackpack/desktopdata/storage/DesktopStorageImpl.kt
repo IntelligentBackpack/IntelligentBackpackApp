@@ -30,8 +30,9 @@ class DesktopStorageImpl(private val context: Context) : DesktopStorage {
      */
     @Throws(IllegalStateException::class)
     override fun getBackpack(): String {
-        if (!isBackpackSaved())
+        if (!isBackpackSaved()) {
             throw IllegalStateException("Backpack not saved")
+        }
         val sp = context.getSharedPreferences(name, MODE_PRIVATE)
         return sp.getString("backpack", "")!!
     }
@@ -42,8 +43,9 @@ class DesktopStorageImpl(private val context: Context) : DesktopStorage {
      * @throws IllegalStateException if backpack is not saved
      */
     override fun deleteBackpack() {
-        if (!isBackpackSaved())
+        if (!isBackpackSaved()) {
             throw IllegalStateException("Backpack not saved")
+        }
         val sp: SharedPreferences = context.getSharedPreferences(name, MODE_PRIVATE)
         val edit: SharedPreferences.Editor = sp.edit()
         edit.remove("backpack")

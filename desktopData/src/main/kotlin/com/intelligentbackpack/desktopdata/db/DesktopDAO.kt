@@ -167,8 +167,9 @@ internal interface DesktopDAO {
     @Transaction
     @Query(
         "SELECT School_supply_types.type" +
-                " FROM School_supplies INNER JOIN School_supply_types ON  School_supplies.type = School_supply_types.type_id " +
-                " WHERE rfid = :rfid"
+            " FROM School_supplies INNER JOIN School_supply_types ON  " +
+            "School_supplies.type = School_supply_types.type_id " +
+            " WHERE rfid = :rfid",
     )
     fun getSchoolSupplyType(rfid: String): String?
 
@@ -186,5 +187,4 @@ internal interface DesktopDAO {
      */
     @Query("UPDATE School_supplies SET in_backpack = 0 WHERE in_backpack = 1")
     fun removeAllSchoolSuppliesFromBackpack()
-
 }
