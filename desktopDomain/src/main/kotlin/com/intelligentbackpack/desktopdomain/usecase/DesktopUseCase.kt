@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.map
 
 /**
  * Use case for the desktop domain.
+ *
+ * @param accessUseCase the access use case
+ * @param repository the desktop domain repository
  */
 class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repository: DesktopDomainRepository) {
 
