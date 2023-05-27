@@ -171,7 +171,7 @@ fun UserDetailsPage(navController: NavHostController, user: UserView, logout: ()
 fun Role.toText(): String {
     return when (this) {
         Role.USER -> "User"
-        Role.TEACHER -> "Teacher"
+        Role.PROFESSOR -> "Professor"
         Role.STUDENT -> "Student"
         else -> ""
     }

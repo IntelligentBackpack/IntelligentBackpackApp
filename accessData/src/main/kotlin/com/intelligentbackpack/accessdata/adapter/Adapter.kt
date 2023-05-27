@@ -24,7 +24,7 @@ object Adapter {
             cognome = user.surname
             role = when (user.role) {
                 Role.USER -> RoleRemote.USER
-                Role.TEACHER -> RoleRemote.TEACHER
+                Role.PROFESSOR -> RoleRemote.TEACHER
                 Role.STUDENT -> RoleRemote.STUDENT
                 else -> {
                     throw IllegalArgumentException("Role not valid")
@@ -46,7 +46,7 @@ object Adapter {
             surname = user.cognome
             role = when (user.role) {
                 RoleRemote.USER -> Role.USER
-                RoleRemote.TEACHER -> Role.TEACHER
+                RoleRemote.TEACHER -> Role.PROFESSOR
                 RoleRemote.STUDENT -> Role.STUDENT
                 else -> {
                     throw IllegalArgumentException("Role not valid")

@@ -17,9 +17,9 @@ enum class Role {
     USER,
 
     /**
-     * Teacher role is used to define the teacher's permissions.
+     * professor role is used to define the professor's permissions.
      */
-    TEACHER,
+    PROFESSOR,
 
     /**
      * Student role is used to define the student's permissions.
