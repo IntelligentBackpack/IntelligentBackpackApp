@@ -24,7 +24,8 @@ class CalendarTest : StringSpec({
     val surname = "Doe"
     val math = "Math"
     val physics = "Physics"
-    val school = School.create(schoolName, schoolCity)
+    val calendar = SchoolCalendar.create(schoolYear)
+    val school = School.create(schoolName, schoolCity).replaceCalendar(calendar)
     val studentClass = Class.create(class1A, school)
     val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf(math, physics)))
     val singleMondayLesson = createWeekLesson(
@@ -65,7 +66,6 @@ class CalendarTest : StringSpec({
     )
 
     "should be able to create a Calendar" {
-        val calendar = SchoolCalendar.create(schoolYear)
         calendar.schoolYear shouldBe schoolYear
         calendar.alterations shouldBe emptySet()
         calendar.studentsTimeTableLesson shouldBe emptyMap()
@@ -73,19 +73,15 @@ class CalendarTest : StringSpec({
     }
 
     "should be able to add a student time table lesson" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = setOf(singleMondayLesson)
-        calendar.addLessons(lessons)
-        calendar.studentsTimeTableLesson shouldBe mapOf(studentClass to mapOf(DayOfWeek.MONDAY to lessons.toList()))
+        val newCalendar = calendar.addLessons(lessons)
+        newCalendar.studentsTimeTableLesson shouldBe mapOf(studentClass to mapOf(DayOfWeek.MONDAY to lessons.toList()))
     }
 
     "should be able to add a student time table lesson more lesson" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
-        calendar.studentsTimeTableLesson shouldBe mapOf(
+        val newCalendar = calendar.addLessons(lessons)
+        newCalendar.studentsTimeTableLesson shouldBe mapOf(
             studentClass to mapOf(
                 DayOfWeek.MONDAY to mondayLessons.toList(),
                 DayOfWeek.TUESDAY to tuesday.toList(),
@@ -94,16 +90,12 @@ class CalendarTest : StringSpec({
     }
 
     "should be able to add a professor time table lesson" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = setOf(singleMondayLesson)
-        calendar.addLessons(lessons)
-        calendar.professorsTimeTableLesson shouldBe mapOf(professor to mapOf(DayOfWeek.MONDAY to lessons.toList()))
+        val newCalendar = calendar.addLessons(lessons)
+        newCalendar.professorsTimeTableLesson shouldBe mapOf(professor to mapOf(DayOfWeek.MONDAY to lessons.toList()))
     }
 
     "should have an error if a professor doesn't teach a subject" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val exception = shouldThrow<IllegalArgumentException> {
             createWeekLesson(
                 day = DayOfWeek.MONDAY,
@@ -120,8 +112,6 @@ class CalendarTest : StringSpec({
     }
 
     "should have an error if fromDate is after toDate" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val exception = shouldThrow<IllegalArgumentException> {
             createWeekLesson(
                 day = DayOfWeek.MONDAY,
@@ -138,8 +128,6 @@ class CalendarTest : StringSpec({
     }
 
     "should have an error if a professor teaches more than one subject at the same time" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val studentClass2 = Class.create("2A", school)
         shouldThrow<EventOverlappingException> {
             val lessons = setOf(
@@ -160,8 +148,6 @@ class CalendarTest : StringSpec({
     }
 
     "should have an error if a student has more than one lesson at the same time" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         shouldThrow<EventOverlappingException> {
             val lessons = setOf(
                 singleMondayLesson,
@@ -181,68 +167,54 @@ class CalendarTest : StringSpec({
     }
 
     "should be able to have a student's lessons for a day" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val newCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 9, 12)
         day.dayOfWeek shouldBe DayOfWeek.MONDAY
-        calendar.getStudentsEvents(studentClass, day) shouldBe mondayLessons
+        newCalendar.getStudentsEvents(studentClass, day) shouldBe mondayLessons
     }
 
     "should be able to have a professor's lessons for a day" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val newCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 9, 12)
         day.dayOfWeek shouldBe DayOfWeek.MONDAY
-        calendar.getProfessorEvents(professor, day) shouldBe mondayLessons
+        newCalendar.getProfessorEvents(professor, day) shouldBe mondayLessons
     }
 
     "should be able to have a an empty list of student's lessons for a day after the last lesson" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val newCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 12, 14)
-        calendar.getStudentsEvents(studentClass, day) shouldBe emptyList()
+        newCalendar.getStudentsEvents(studentClass, day) shouldBe emptyList()
     }
 
     "should be able to have a an empty list of student's lessons for a day before the first lesson" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val newCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 9, 11)
-        calendar.getStudentsEvents(studentClass, day) shouldBe emptyList()
+        newCalendar.getStudentsEvents(studentClass, day) shouldBe emptyList()
     }
 
     "should be able to have a an empty list of professor's lessons for a day after the last lesson" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val newCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 12, 14)
-        calendar.getProfessorEvents(professor, day) shouldBe emptyList()
+        newCalendar.getProfessorEvents(professor, day) shouldBe emptyList()
     }
 
     "should be able to have a an empty list of professor's lessons for a day before the first lesson" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val newCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 9, 11)
-        calendar.getProfessorEvents(professor, day) shouldBe emptyList()
+        newCalendar.getProfessorEvents(professor, day) shouldBe emptyList()
     }
 
     "should be able to have a student's lessons ordered by time" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = (mondayLessons.toList().sortedByDescending { it.startTime } + tuesday).toSet()
-        calendar.addLessons(lessons)
+        val newCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 9, 12)
         day.dayOfWeek shouldBe DayOfWeek.MONDAY
-        calendar.getStudentsEvents(studentClass, day) shouldBe mondayLessons.toList().sortedBy { it.startTime }
+        newCalendar.getStudentsEvents(studentClass, day) shouldBe mondayLessons.toList().sortedBy { it.startTime }
     }
 })

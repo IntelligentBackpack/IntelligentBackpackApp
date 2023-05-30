@@ -27,7 +27,9 @@ class RescheduleEventTest : StringSpec({
     val surname = "Doe"
     val math = "Math"
     val physics = "Physics"
+    val calendar = SchoolCalendar.create(schoolYear)
     val school = School.create(schoolName, schoolCity)
+        .replaceCalendar(calendar)
     val studentClass = Class.create(class1A, school)
     val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf(math, physics)))
     val mondayLesson1 = CalendarEventFactory.createWeekLesson(
@@ -69,10 +71,8 @@ class RescheduleEventTest : StringSpec({
     val tuesday = setOf(tuesday1)
 
     "should be able to add a rescheduled week event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val initialCancelledDate = LocalDate.of(2022, 10, 17)
         initialCancelledDate.dayOfWeek shouldBe DayOfWeek.MONDAY
         val finalCancelledDate = LocalDate.of(2022, 10, 24)
@@ -97,28 +97,26 @@ class RescheduleEventTest : StringSpec({
             newEvent = newLesson,
             originalEvent = mondayLesson1,
         )
-        calendar.addAlteration(newEvent)
+        lessonCalendar = lessonCalendar.addAlteration(newEvent)
         val tuesdayInInterval = LocalDate.of(2022, 10, 18)
         tuesdayInInterval.dayOfWeek shouldBe DayOfWeek.TUESDAY
-        calendar.getStudentsEvents(
+        lessonCalendar.getStudentsEvents(
             studentClass,
             tuesdayInInterval,
         ) shouldBe (tuesday + newLesson).sortedBy { it.startTime }
-        calendar.getProfessorEvents(
+        lessonCalendar.getProfessorEvents(
             professor,
             tuesdayInInterval,
         ) shouldBe (tuesday + newLesson).sortedBy { it.startTime }
         val mondayInInterval = LocalDate.of(2022, 10, 17)
         mondayInInterval.dayOfWeek shouldBe DayOfWeek.MONDAY
-        calendar.getStudentsEvents(studentClass, mondayInInterval) shouldBe listOf(mondayLesson2)
-        calendar.getProfessorEvents(professor, mondayInInterval) shouldBe listOf(mondayLesson2)
+        lessonCalendar.getStudentsEvents(studentClass, mondayInInterval) shouldBe listOf(mondayLesson2)
+        lessonCalendar.getProfessorEvents(professor, mondayInInterval) shouldBe listOf(mondayLesson2)
     }
 
     "should have an error if the original event is not in the calendar" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = tuesday + mondayLesson2
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         val initialCancelledDate = LocalDate.of(2022, 10, 17)
         initialCancelledDate.dayOfWeek shouldBe DayOfWeek.MONDAY
         val finalCancelledDate = LocalDate.of(2022, 10, 24)
@@ -144,15 +142,13 @@ class RescheduleEventTest : StringSpec({
             originalEvent = mondayLesson1,
         )
         shouldThrow<EventNotFoundException> {
-            calendar.addAlteration(newEvent)
+            lessonCalendar.addAlteration(newEvent)
         }
     }
 
     "should have an error if the original event is already rescheduled" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val initialCancelledDate = LocalDate.of(2022, 10, 17)
         initialCancelledDate.dayOfWeek shouldBe DayOfWeek.MONDAY
         val finalCancelledDate = LocalDate.of(2022, 10, 24)
@@ -177,7 +173,7 @@ class RescheduleEventTest : StringSpec({
             newEvent = newLesson,
             originalEvent = mondayLesson1,
         )
-        calendar.addAlteration(newEvent)
+        lessonCalendar = lessonCalendar.addAlteration(newEvent)
         val anotherNewEvent = AlterationFactory.createRescheduleIntervalOfDaysEvent(
             initialCancelledDate,
             finalCancelledDate,
@@ -185,15 +181,13 @@ class RescheduleEventTest : StringSpec({
             originalEvent = mondayLesson1,
         )
         shouldThrow<EventCantBeRescheduleException> {
-            calendar.addAlteration(anotherNewEvent)
+            lessonCalendar.addAlteration(anotherNewEvent)
         }
     }
 
     "should have an error if the new week rescheduled event is overlapping with another event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         val initialCancelledDate = LocalDate.of(2022, 10, 17)
         initialCancelledDate.dayOfWeek shouldBe DayOfWeek.MONDAY
         val finalCancelledDate = LocalDate.of(2022, 10, 24)
@@ -219,15 +213,13 @@ class RescheduleEventTest : StringSpec({
             originalEvent = mondayLesson1,
         )
         shouldThrow<EventCantBeRescheduleException> {
-            calendar.addAlteration(newEvent)
+            lessonCalendar.addAlteration(newEvent)
         }
     }
 
     "should be able to add a rescheduled date event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val newEventDate = LocalDate.of(2022, 10, 18)
         newEventDate.dayOfWeek shouldBe DayOfWeek.TUESDAY
         val oldEventDate = LocalDate.of(2022, 10, 17)
@@ -245,24 +237,20 @@ class RescheduleEventTest : StringSpec({
             newEvent = newLesson,
             originalEvent = mondayLesson1,
         )
-        calendar.addAlteration(newEvent)
-        calendar.getStudentsEvents(
+        lessonCalendar = lessonCalendar.addAlteration(newEvent)
+        lessonCalendar.getStudentsEvents(
             studentClass,
             newEventDate,
         ) shouldBe (tuesday + newLesson).sortedBy { it.startTime }
-        calendar.getProfessorEvents(
+        lessonCalendar.getProfessorEvents(
             professor,
             newEventDate,
         ) shouldBe (tuesday + newLesson).sortedBy { it.startTime }
-        calendar.getStudentsEvents(studentClass, oldEventDate) shouldBe listOf(mondayLesson2)
-        calendar.getProfessorEvents(professor, oldEventDate) shouldBe listOf(mondayLesson2)
+        lessonCalendar.getStudentsEvents(studentClass, oldEventDate) shouldBe listOf(mondayLesson2)
+        lessonCalendar.getProfessorEvents(professor, oldEventDate) shouldBe listOf(mondayLesson2)
     }
 
     "should have an error if the date of the event rescheduled is not one of day of the original event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
-        val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
         val newEventDate = LocalDate.of(2022, 10, 19)
         newEventDate.dayOfWeek shouldBe DayOfWeek.WEDNESDAY
         val oldEventDate = LocalDate.of(2022, 10, 18)
@@ -285,10 +273,8 @@ class RescheduleEventTest : StringSpec({
     }
 
     "should have an error if the day of the event have already an event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val newEventDate = LocalDate.of(2022, 10, 18)
         newEventDate.dayOfWeek shouldBe DayOfWeek.TUESDAY
         val oldEventDate = LocalDate.of(2022, 10, 17)
@@ -306,7 +292,7 @@ class RescheduleEventTest : StringSpec({
             newEvent = newLesson,
             originalEvent = mondayLesson1,
         )
-        calendar.addAlteration(newEvent)
+        lessonCalendar = lessonCalendar.addAlteration(newEvent)
         val anotherNewLesson = CalendarEventFactory.createDateLesson(
             subject = math,
             startTime = LocalTime.of(10, 30),
@@ -321,7 +307,7 @@ class RescheduleEventTest : StringSpec({
             originalEvent = mondayLesson1,
         )
         shouldThrow<EventCantBeRescheduleException> {
-            calendar.addAlteration(anotherNewEvent)
+            lessonCalendar.addAlteration(anotherNewEvent)
         }
     }
 })

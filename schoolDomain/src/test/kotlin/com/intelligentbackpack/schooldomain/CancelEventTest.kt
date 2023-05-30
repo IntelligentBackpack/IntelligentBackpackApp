@@ -27,7 +27,9 @@ class CancelEventTest : StringSpec({
     val surname = "Doe"
     val math = "Math"
     val physics = "Physics"
+    val calendar = SchoolCalendar.create(schoolYear)
     val school = School.create(schoolName, schoolCity)
+        .replaceCalendar(calendar)
     val studentClass = Class.create(class1A, school)
     val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf(math, physics)))
     val mondayLesson1 = CalendarEventFactory.createWeekLesson(
@@ -69,135 +71,117 @@ class CancelEventTest : StringSpec({
     val tuesday = setOf(tuesday1)
 
     "should be able to cancel an event on a specific date" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 10, 10)
         day.dayOfWeek shouldBe DayOfWeek.MONDAY
         val cancelledLesson = AlterationFactory.createCancelSingleDayEvent(day, mondayLesson1)
-        calendar.addAlteration(cancelledLesson)
-        calendar.getStudentsEvents(studentClass, day) shouldBe setOf(mondayLesson2)
-        calendar.getProfessorEvents(professor, day) shouldBe setOf(mondayLesson2)
-        calendar.getStudentsEvents(studentClass, day.plusDays(7)) shouldBe mondayLessons
-        calendar.getProfessorEvents(professor, day.plusDays(7)) shouldBe mondayLessons
+        lessonCalendar = lessonCalendar.addAlteration(cancelledLesson)
+        lessonCalendar.getStudentsEvents(studentClass, day) shouldBe setOf(mondayLesson2)
+        lessonCalendar.getProfessorEvents(professor, day) shouldBe setOf(mondayLesson2)
+        lessonCalendar.getStudentsEvents(studentClass, day.plusDays(7)) shouldBe mondayLessons
+        lessonCalendar.getProfessorEvents(professor, day.plusDays(7)) shouldBe mondayLessons
     }
 
     "should have an error if the day event to cancel is not in the calendar" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = tuesday + mondayLesson2
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 10, 10)
         day.dayOfWeek shouldBe DayOfWeek.MONDAY
         shouldThrow<EventNotFoundException> {
             val cancelledLesson = AlterationFactory.createCancelSingleDayEvent(day, mondayLesson1)
-            calendar.addAlteration(cancelledLesson)
+            lessonCalendar.addAlteration(cancelledLesson)
         }
     }
 
     "should have an error if the event to cancel is not on the same day of the week" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 10, 11)
         day.dayOfWeek shouldBe DayOfWeek.TUESDAY
         shouldThrow<EventDateException> {
             val anotherCancelledLesson = AlterationFactory.createCancelSingleDayEvent(day, mondayLesson1)
-            calendar.addAlteration(anotherCancelledLesson)
+            lessonCalendar.addAlteration(anotherCancelledLesson)
         }
     }
 
     "should have an error if the event to cancel is not in the calendar on the specified date" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 8, 8)
         day.dayOfWeek shouldBe DayOfWeek.MONDAY
         shouldThrow<EventDateException> {
             val anotherCancelledLesson = AlterationFactory.createCancelSingleDayEvent(day, mondayLesson2)
-            calendar.addAlteration(anotherCancelledLesson)
+            lessonCalendar.addAlteration(anotherCancelledLesson)
         }
     }
 
     "should have an error if the event to cancel is already canceled" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 10, 10)
         day.dayOfWeek shouldBe DayOfWeek.MONDAY
         val cancelledLesson = AlterationFactory.createCancelSingleDayEvent(day, mondayLesson1)
-        calendar.addAlteration(cancelledLesson)
+        lessonCalendar = lessonCalendar.addAlteration(cancelledLesson)
         shouldThrow<EventCantBeCancelledException> {
             val anotherCancelledLesson = AlterationFactory.createCancelSingleDayEvent(day, mondayLesson1)
-            calendar.addAlteration(anotherCancelledLesson)
+            lessonCalendar.addAlteration(anotherCancelledLesson)
         }
     }
 
     "should be able to cancel an event on an interval" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val from = LocalDate.of(2022, 10, 9)
         val to = LocalDate.of(2022, 10, 17)
         val cancelledLesson = AlterationFactory.createCancelIntervalOfDaysEvent(from, to, mondayLesson1)
-        calendar.addAlteration(cancelledLesson)
+        lessonCalendar = lessonCalendar.addAlteration(cancelledLesson)
         val firstMondayInInterval = LocalDate.of(2022, 10, 10)
         firstMondayInInterval.dayOfWeek shouldBe DayOfWeek.MONDAY
         val secondMondayInInterval = LocalDate.of(2022, 10, 17)
         secondMondayInInterval.dayOfWeek shouldBe DayOfWeek.MONDAY
         val firstMondayAfterInterval = LocalDate.of(2022, 10, 24)
         firstMondayAfterInterval.dayOfWeek shouldBe DayOfWeek.MONDAY
-        calendar.getStudentsEvents(studentClass, firstMondayInInterval) shouldBe setOf(mondayLesson2)
-        calendar.getProfessorEvents(professor, firstMondayInInterval) shouldBe setOf(mondayLesson2)
-        calendar.getStudentsEvents(studentClass, secondMondayInInterval) shouldBe setOf(mondayLesson2)
-        calendar.getProfessorEvents(professor, secondMondayInInterval) shouldBe setOf(mondayLesson2)
-        calendar.getStudentsEvents(studentClass, firstMondayAfterInterval) shouldBe mondayLessons
-        calendar.getProfessorEvents(professor, firstMondayAfterInterval) shouldBe mondayLessons
+        lessonCalendar.getStudentsEvents(studentClass, firstMondayInInterval) shouldBe setOf(mondayLesson2)
+        lessonCalendar.getProfessorEvents(professor, firstMondayInInterval) shouldBe setOf(mondayLesson2)
+        lessonCalendar.getStudentsEvents(studentClass, secondMondayInInterval) shouldBe setOf(mondayLesson2)
+        lessonCalendar.getProfessorEvents(professor, secondMondayInInterval) shouldBe setOf(mondayLesson2)
+        lessonCalendar.getStudentsEvents(studentClass, firstMondayAfterInterval) shouldBe mondayLessons
+        lessonCalendar.getProfessorEvents(professor, firstMondayAfterInterval) shouldBe mondayLessons
     }
 
     "should have an error if the interval event to cancel is not in the calendar" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = tuesday + mondayLesson2
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         val from = LocalDate.of(2022, 10, 9)
         val to = LocalDate.of(2022, 10, 17)
         shouldThrow<EventNotFoundException> {
             val cancelledLesson = AlterationFactory.createCancelIntervalOfDaysEvent(from, to, mondayLesson1)
-            calendar.addAlteration(cancelledLesson)
+            lessonCalendar.addAlteration(cancelledLesson)
         }
     }
 
     "should have an error if the interval event to cancel is not in the interval of the cancelled event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         val from = LocalDate.of(2022, 8, 9)
         val to = LocalDate.of(2022, 8, 17)
         shouldThrow<EventDateException> {
             val cancelledLesson = AlterationFactory.createCancelIntervalOfDaysEvent(from, to, mondayLesson1)
-            calendar.addAlteration(cancelledLesson)
+            lessonCalendar.addAlteration(cancelledLesson)
         }
     }
 
     "should have an error if the interval event to cancel is already canceled" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val from = LocalDate.of(2022, 10, 9)
         val to = LocalDate.of(2022, 10, 17)
         val cancelledLesson = AlterationFactory.createCancelIntervalOfDaysEvent(from, to, mondayLesson1)
-        calendar.addAlteration(cancelledLesson)
+        lessonCalendar = lessonCalendar.addAlteration(cancelledLesson)
         shouldThrow<EventCantBeCancelledException> {
             val anotherCancelledLesson = AlterationFactory.createCancelIntervalOfDaysEvent(from, to, mondayLesson1)
-            calendar.addAlteration(anotherCancelledLesson)
+            lessonCalendar.addAlteration(anotherCancelledLesson)
         }
     }
 })

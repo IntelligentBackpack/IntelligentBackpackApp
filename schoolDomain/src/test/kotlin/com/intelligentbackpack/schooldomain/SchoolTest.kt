@@ -56,9 +56,9 @@ class SchoolTest : StringSpec({
         val school = School.create(schoolName, schoolCity)
         val studentClass = Class.create(class1A, school)
         val student = Student.create(email, name, surname, studentClass)
-        studentClass.addStudent(student)
+        val newStudentClass = studentClass.addStudent(student)
         student.studentClass shouldBe studentClass
-        studentClass.students shouldBe setOf(student)
+        newStudentClass.students shouldBe setOf(student)
     }
 
     "should have a error when adding a student to a class that is not his" {
@@ -76,9 +76,9 @@ class SchoolTest : StringSpec({
         val school = School.create(schoolName, schoolCity)
         val studentClass = Class.create(class1A, school)
         val student = Student.create(email, name, surname, studentClass)
-        studentClass.addStudent(student)
+        val newStudentClass = studentClass.addStudent(student)
         val exception = shouldThrow<IllegalArgumentException> {
-            studentClass.addStudent(student)
+            newStudentClass.addStudent(student)
         }
         exception.message shouldBe "student is already in this class"
     }
@@ -99,22 +99,23 @@ class SchoolTest : StringSpec({
         val school = School.create(schoolName, schoolCity)
         val studentClass = Class.create(class1A, school)
         val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf("Math", "Physics")))
-        studentClass.addProfessor(professor, setOf("Math", "Physics"))
-        studentClass.professors shouldBe setOf(professor)
-        studentClass.professorTeachSubjects[professor] shouldBe setOf("Math", "Physics")
-        professor.professorClasses shouldBe setOf(studentClass)
-        professor.professorSubjectsInClasses shouldBe mapOf(studentClass to setOf("Math", "Physics"))
+        val result = studentClass.addProfessor(professor, setOf("Math", "Physics"))
+        val newStudentClass = result.first
+        val newProfessor = result.second
+        newStudentClass.professors shouldBe setOf(professor)
+        newStudentClass.professorTeachSubjects[professor] shouldBe setOf("Math", "Physics")
+        newProfessor.professorClasses shouldBe setOf(newStudentClass)
+        newProfessor.professorSubjectsInClasses shouldBe mapOf(newStudentClass to setOf("Math", "Physics"))
     }
 
-    "should have a error when adding a professor to a class that is not his" {
+    "should be able to add a professor to a class even when the class isn't his" {
         val school = School.create(schoolName, schoolCity)
         val studentClass = Class.create(class1A, school)
         val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf("Math", "Physics")))
         val studentClass2 = Class.create("2A", school)
-        val exception = shouldThrow<IllegalArgumentException> {
-            studentClass2.addProfessor(professor, setOf("Math", "Physics"))
-        }
-        exception.message shouldBe "professor is not in this class"
+        val result = studentClass2.addProfessor(professor, setOf("Math", "Physics"))
+        val newProfessor = result.second
+        newProfessor.professorClasses shouldBe setOf(studentClass, studentClass2)
     }
 
     "should have a error when adding a professor to a class that is not in the same school" {
@@ -126,17 +127,17 @@ class SchoolTest : StringSpec({
         val exception = shouldThrow<IllegalArgumentException> {
             studentClass2.addProfessor(professor, setOf("Math", "Physics"))
         }
-        exception.message shouldBe "professor is not in this class"
+        exception.message shouldBe "professor doesn't teach the subjects in this school"
     }
 
-    "should have a error when adding a professor to a class with a subject that he doesn't teach" {
+    "should have a error when adding a professor to a class with no subjects" {
         val school = School.create(schoolName, schoolCity)
         val studentClass = Class.create(class1A, school)
         val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf("Math")))
         val exception = shouldThrow<IllegalArgumentException> {
-            studentClass.addProfessor(professor, setOf("Math", "Physics"))
+            studentClass.addProfessor(professor, setOf())
         }
-        exception.message shouldBe "professor doesn't teach this subjects in this class"
+        exception.message shouldBe "subjects cannot be empty"
     }
 
     "should update subject when adding a professor to a class in which he is already in" {

@@ -26,7 +26,9 @@ class NewEventTest : StringSpec({
     val surname = "Doe"
     val math = "Math"
     val physics = "Physics"
+    val calendar = SchoolCalendar.create(schoolYear)
     val school = School.create(schoolName, schoolCity)
+        .replaceCalendar(calendar)
     val studentClass = Class.create(class1A, school)
     val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf(math, physics)))
     val mondayLesson1 = CalendarEventFactory.createWeekLesson(
@@ -68,10 +70,8 @@ class NewEventTest : StringSpec({
     val tuesday = setOf(tuesday1)
 
     "should be able to add a new week event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val newLesson = CalendarEventFactory.createWeekLesson(
             day = DayOfWeek.TUESDAY,
             subject = math,
@@ -83,33 +83,29 @@ class NewEventTest : StringSpec({
             studentsClass = studentClass,
         )
         val newEvent = AlterationFactory.createNewEvent(newLesson)
-        calendar.addAlteration(newEvent)
+        lessonCalendar = lessonCalendar.addAlteration(newEvent)
         val tuesdayInInterval = LocalDate.of(2022, 10, 18)
         tuesdayInInterval.dayOfWeek shouldBe DayOfWeek.TUESDAY
-        calendar.getStudentsEvents(studentClass, tuesdayInInterval) shouldBe (tuesday + newLesson)
-        calendar.getProfessorEvents(professor, tuesdayInInterval) shouldBe (tuesday + newLesson)
+        lessonCalendar.getStudentsEvents(studentClass, tuesdayInInterval) shouldBe (tuesday + newLesson)
+        lessonCalendar.getProfessorEvents(professor, tuesdayInInterval) shouldBe (tuesday + newLesson)
         val tuesdayAfterInterval = LocalDate.of(2022, 10, 25)
         tuesdayAfterInterval.dayOfWeek shouldBe DayOfWeek.TUESDAY
-        calendar.getStudentsEvents(studentClass, tuesdayAfterInterval) shouldBe tuesday
-        calendar.getProfessorEvents(professor, tuesdayAfterInterval) shouldBe tuesday
+        lessonCalendar.getStudentsEvents(studentClass, tuesdayAfterInterval) shouldBe tuesday
+        lessonCalendar.getProfessorEvents(professor, tuesdayAfterInterval) shouldBe tuesday
     }
 
     "should have an error if the new week event is overlapping with another event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         shouldThrow<EventNotFoundException> {
             val anotherNewEvent = AlterationFactory.createNewEvent(tuesday1)
-            calendar.addAlteration(anotherNewEvent)
+            lessonCalendar.addAlteration(anotherNewEvent)
         }
     }
 
     "should have an error if the new week event is overlapping with another event, smaller interval" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         val tuesday2 = CalendarEventFactory.createWeekLesson(
             day = DayOfWeek.TUESDAY,
             subject = math,
@@ -122,15 +118,13 @@ class NewEventTest : StringSpec({
         )
         shouldThrow<EventCantBeAddedException> {
             val anotherNewEvent = AlterationFactory.createNewEvent(tuesday2)
-            calendar.addAlteration(anotherNewEvent)
+            lessonCalendar.addAlteration(anotherNewEvent)
         }
     }
 
     "should be able to add a new date event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 10, 18)
         day.dayOfWeek shouldBe DayOfWeek.TUESDAY
         val newLesson = CalendarEventFactory.createDateLesson(
@@ -142,22 +136,20 @@ class NewEventTest : StringSpec({
             date = day,
         )
         val newEvent = AlterationFactory.createNewEvent(newLesson)
-        calendar.addAlteration(newEvent)
+        lessonCalendar = lessonCalendar.addAlteration(newEvent)
         val tuesdayInInterval = LocalDate.of(2022, 10, 18)
         tuesdayInInterval.dayOfWeek shouldBe DayOfWeek.TUESDAY
-        calendar.getStudentsEvents(studentClass, tuesdayInInterval) shouldBe (tuesday + newLesson)
-        calendar.getProfessorEvents(professor, tuesdayInInterval) shouldBe (tuesday + newLesson)
+        lessonCalendar.getStudentsEvents(studentClass, tuesdayInInterval) shouldBe (tuesday + newLesson)
+        lessonCalendar.getProfessorEvents(professor, tuesdayInInterval) shouldBe (tuesday + newLesson)
         val tuesdayAfterInterval = LocalDate.of(2022, 10, 25)
         tuesdayAfterInterval.dayOfWeek shouldBe DayOfWeek.TUESDAY
-        calendar.getStudentsEvents(studentClass, tuesdayAfterInterval) shouldBe tuesday
-        calendar.getProfessorEvents(professor, tuesdayAfterInterval) shouldBe tuesday
+        lessonCalendar.getStudentsEvents(studentClass, tuesdayAfterInterval) shouldBe tuesday
+        lessonCalendar.getProfessorEvents(professor, tuesdayAfterInterval) shouldBe tuesday
     }
 
     "should have an error if the new date event is overlapping with another event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        val lessonCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 10, 18)
         day.dayOfWeek shouldBe DayOfWeek.TUESDAY
         shouldThrow<EventCantBeAddedException> {
@@ -170,15 +162,13 @@ class NewEventTest : StringSpec({
                 date = day,
             )
             val anotherNewEvent = AlterationFactory.createNewEvent(newLesson)
-            calendar.addAlteration(anotherNewEvent)
+            lessonCalendar.addAlteration(anotherNewEvent)
         }
     }
 
     "should have an error if adding a event when there is already a new event" {
-        val calendar = SchoolCalendar.create(schoolYear)
-        school.replaceCalendar(calendar)
         val lessons = mondayLessons + tuesday
-        calendar.addLessons(lessons)
+        var lessonCalendar = calendar.addLessons(lessons)
         val day = LocalDate.of(2022, 10, 18)
         day.dayOfWeek shouldBe DayOfWeek.TUESDAY
         val newLesson = CalendarEventFactory.createDateLesson(
@@ -190,10 +180,10 @@ class NewEventTest : StringSpec({
             date = day,
         )
         val newEvent = AlterationFactory.createNewEvent(newLesson)
-        calendar.addAlteration(newEvent)
+        lessonCalendar = lessonCalendar.addAlteration(newEvent)
         shouldThrow<EventCantBeAddedException> {
             val anotherNewEvent = AlterationFactory.createNewEvent(newLesson)
-            calendar.addAlteration(anotherNewEvent)
+            lessonCalendar.addAlteration(anotherNewEvent)
         }
     }
 })

@@ -23,7 +23,7 @@ class PersonTest : StringSpec({
         student.email shouldBe email
         student.name shouldBe name
         student.surname shouldBe surname
-        student.studentClass.name shouldBe studentClass.name
+        student.studentClass?.name shouldBe studentClass.name
     }
 
     "should have a error when creating a Student with blank email" {
@@ -87,8 +87,8 @@ class PersonTest : StringSpec({
     "should be able to add a subject to a Professor" {
         val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf(math)))
         val newSubject: Subject = "English"
-        professor.addProfessorToClass(studentClass, setOf(newSubject))
-        professor.professorSubjects shouldBe setOf(math, newSubject)
+        val newProfessor = professor.addProfessorToClass(studentClass, setOf(newSubject))
+        newProfessor.professorSubjects shouldBe setOf(math, newSubject)
     }
 
     "should have a error when adding an empty set of subject to a professor in class" {
