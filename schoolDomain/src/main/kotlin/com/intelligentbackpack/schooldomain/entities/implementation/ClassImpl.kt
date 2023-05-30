@@ -35,14 +35,16 @@ internal data class ClassImpl(
      * @param student the student to add
      * @throws IllegalArgumentException if the student is already in the class or if the student is not in the class
      */
-    override fun addStudent(student: Student) {
+    override fun addStudent(student: Student): Class {
         if (students.contains(student)) {
             throw IllegalArgumentException("student is already in this class")
         } else {
             if (student.studentClass != this) {
                 throw IllegalArgumentException("student is not in this class")
             } else {
-                students = students + student
+                return copy().apply {
+                    students = students + student
+                }
             }
         }
     }
@@ -55,21 +57,32 @@ internal data class ClassImpl(
      * @param subjects the subjects taught by the professor in the class
      * @throws IllegalArgumentException if the professor is not in the class or if the professor doesn't teach the subjects in the class
      */
-    override fun addProfessor(professor: Professor, subjects: Set<Subject>) {
-        if (!professor.professorClasses.contains(this)) {
-            throw IllegalArgumentException("professor is not in this class")
+    override fun addProfessor(professor: Professor, subjects: Set<Subject>): Pair<Class, Professor> {
+        if (subjects.isEmpty()) {
+            throw IllegalArgumentException("subjects cannot be empty")
+        } else if (professor.professorClasses.any { it.school != school }) {
+            throw IllegalArgumentException("professor doesn't teach the subjects in this school")
         } else {
-            if (professor.professorSubjectsInClasses[this]?.containsAll(subjects) == false) {
-                throw IllegalArgumentException("professor doesn't teach this subjects in this class")
-            } else {
-                if (professors.contains(professor)) {
-                    val oldSubjects = professorTeachSubjects[professor]!!
-                    professorTeachSubjects = professorTeachSubjects + (professor to oldSubjects + subjects)
+            val newProfessor =
+                if (!professor.professorClasses.contains(this)) {
+                    professor.addProfessorToClass(this, subjects)
+                } else if (professor.professorSubjectsInClasses[this]?.containsAll(subjects) == false) {
+                    professor.addProfessorToClass(this, subjects)
                 } else {
+                    professor
+                }
+            val newClass = if (professors.contains(professor)) {
+                val oldSubjects = professorTeachSubjects[professor]!!
+                copy().apply {
+                    professorTeachSubjects = professorTeachSubjects + (newProfessor to oldSubjects + subjects)
+                }
+            } else {
+                copy().apply {
                     professors = professors + professor
-                    professorTeachSubjects = professorTeachSubjects + (professor to subjects)
+                    professorTeachSubjects = professorTeachSubjects + (newProfessor to subjects)
                 }
             }
+            return Pair(newClass, newProfessor)
         }
     }
 }

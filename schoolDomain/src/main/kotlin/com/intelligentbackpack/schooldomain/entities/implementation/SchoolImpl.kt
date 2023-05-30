@@ -31,17 +31,30 @@ internal data class SchoolImpl(
     override var professors: Set<Professor> = setOf()
         private set
 
+    private fun copy(
+        calendar: SchoolCalendar? = this.calendar,
+        classes: Set<Class> = this.classes,
+        students: Set<Student> = this.students,
+        professors: Set<Professor> = this.professors,
+    ): SchoolImpl =
+        SchoolImpl(name, city).apply {
+            this.calendar = calendar
+            this.classes = classes
+            this.students = students
+            this.professors = professors
+        }
+
     /**
      * Adds a class to the school.
      *
      * @param classToAdd the class to add
      * @throws IllegalArgumentException if the class is already in the school
      */
-    override fun addClass(classToAdd: Class) {
+    override fun addClass(classToAdd: Class): School {
         if (classes.contains(classToAdd)) {
             throw IllegalArgumentException("class already in school")
         } else {
-            classes = classes + classToAdd
+            return copy(classes = classes + classToAdd)
         }
     }
 
@@ -51,11 +64,11 @@ internal data class SchoolImpl(
      * @param student the student to add
      * @throws IllegalArgumentException if the student is already in the school
      */
-    override fun addStudent(student: Student) {
+    override fun addStudent(student: Student): School {
         if (students.contains(student)) {
             throw IllegalArgumentException("student already in school")
         } else {
-            students = students + student
+            return copy(students = students + student)
         }
     }
 
@@ -65,11 +78,11 @@ internal data class SchoolImpl(
      * @param professor the professor to add
      * @throws IllegalArgumentException if the professor is already in the school
      */
-    override fun addProfessor(professor: Professor) {
+    override fun addProfessor(professor: Professor): School {
         if (professors.contains(professor)) {
             throw IllegalArgumentException("professor already in school")
         } else {
-            professors = professors + professor
+            return copy(professors = professors + professor)
         }
     }
 
@@ -78,7 +91,6 @@ internal data class SchoolImpl(
      *
      * @param calendar the new calendar of the school
      */
-    override fun replaceCalendar(calendar: SchoolCalendar) {
-        this.calendar = calendar
-    }
+    override fun replaceCalendar(calendar: SchoolCalendar): School =
+        copy(calendar = calendar)
 }

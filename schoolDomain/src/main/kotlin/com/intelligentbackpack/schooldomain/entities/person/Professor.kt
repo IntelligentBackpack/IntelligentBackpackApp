@@ -30,7 +30,7 @@ interface Professor : Person {
      * @param subjects the subjects the professor teaches in the class
      * @throws IllegalArgumentException if the subjects are empty
      */
-    fun addProfessorToClass(professorClass: Class, subjects: Set<Subject>)
+    fun addProfessorToClass(professorClass: Class, subjects: Set<Subject>): Professor
 
     companion object {
 
@@ -44,15 +44,22 @@ interface Professor : Person {
             override var professorSubjectsInClasses: Map<Class, Set<Subject>> = mapOf()
                 private set
 
-            override fun addProfessorToClass(professorClass: Class, subjects: Set<Subject>) {
+            override fun addProfessorToClass(professorClass: Class, subjects: Set<Subject>): Professor {
                 if (subjects.isEmpty()) {
                     throw IllegalArgumentException("subjects cannot be empty")
                 } else {
-                    professorSubjectsInClasses = if (professorSubjectsInClasses.containsKey(professorClass)) {
+                    return if (professorSubjectsInClasses.containsKey(professorClass)) {
                         val oldSubjects = professorSubjectsInClasses[professorClass]!!
-                        professorSubjectsInClasses + (professorClass to oldSubjects + subjects)
+                        copy().apply {
+                            professorSubjectsInClasses =
+                                this@ProfessorImpl.professorSubjectsInClasses +
+                                (professorClass to (oldSubjects + subjects))
+                        }
                     } else {
-                        professorSubjectsInClasses + (professorClass to subjects)
+                        copy().apply {
+                            professorSubjectsInClasses =
+                                this@ProfessorImpl.professorSubjectsInClasses + (professorClass to subjects)
+                        }
                     }
                 }
             }
@@ -87,8 +94,10 @@ interface Professor : Person {
                 if (professorClasses.any { it.value.isEmpty() }) {
                     throw IllegalArgumentException("professorClasses cannot be empty")
                 } else {
-                    return ProfessorImpl(email, name, surname).apply {
-                        professorClasses.forEach { addProfessorToClass(it.key, it.value) }
+                    return ProfessorImpl(email, name, surname).let {
+                        professorClasses.entries.fold(it as Professor) { professor, (professorClass, subjects) ->
+                            professor.addProfessorToClass(professorClass, subjects)
+                        }
                     }
                 }
             }

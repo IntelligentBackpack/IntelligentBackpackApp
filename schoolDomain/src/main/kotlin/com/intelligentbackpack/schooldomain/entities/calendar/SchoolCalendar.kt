@@ -30,14 +30,14 @@ interface SchoolCalendar {
      *
      * @param lessons the lessons to add
      */
-    fun addLessons(lessons: Set<WeekLesson>)
+    fun addLessons(lessons: Set<WeekLesson>): SchoolCalendar
 
     /**
      * Adds an alteration to the calendar.
      *
      * @param alteration the alteration to add
      */
-    fun addAlteration(alteration: AlterationEvent)
+    fun addAlteration(alteration: AlterationEvent): SchoolCalendar
 
     /**
      * Gets the events of a class on a certain date.

@@ -11,15 +11,26 @@ import com.intelligentbackpack.schooldomain.entities.Class
  * @property studentClass the class the student attends
  */
 interface Student : Person {
-    val studentClass: Class
+    val studentClass: Class?
+
+    fun changeClass(newClass: Class): Student
 
     companion object {
         private data class StudentImpl(
             override val email: String,
             override val name: String,
             override val surname: String,
-            override val studentClass: Class,
-        ) : Student
+        ) : Student {
+
+            override var studentClass: Class? = null
+                private set
+
+            override fun changeClass(newClass: Class): Student {
+                return copy().apply {
+                    studentClass = newClass
+                }
+            }
+        }
 
         /**
          * Creates a student.
@@ -35,7 +46,7 @@ interface Student : Person {
             email: String,
             name: String,
             surname: String,
-            studentClass: Class,
+            studentClass: Class? = null,
         ): Student {
             if (email.isBlank()) {
                 throw IllegalArgumentException("email cannot be blank")
@@ -44,7 +55,11 @@ interface Student : Person {
             } else if (surname.isBlank()) {
                 throw IllegalArgumentException("surname cannot be blank")
             } else {
-                return StudentImpl(email, name, surname, studentClass)
+                return StudentImpl(email, name, surname).let { student ->
+                    studentClass?.let {
+                        student.changeClass(it)
+                    } ?: student
+                }
             }
         }
     }

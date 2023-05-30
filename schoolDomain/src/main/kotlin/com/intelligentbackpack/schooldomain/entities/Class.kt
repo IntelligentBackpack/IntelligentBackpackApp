@@ -27,7 +27,7 @@ interface Class {
      *
      * @param student the student to add
      */
-    fun addStudent(student: Student)
+    fun addStudent(student: Student): Class
 
     /**
      * Adds a professor to the class.
@@ -35,7 +35,7 @@ interface Class {
      * @param professor the professor to add
      * @param subjects the subjects taught by the professor in the class
      */
-    fun addProfessor(professor: Professor, subjects: Set<Subject>)
+    fun addProfessor(professor: Professor, subjects: Set<Subject>): Pair<Class, Professor>
 
     companion object {
 

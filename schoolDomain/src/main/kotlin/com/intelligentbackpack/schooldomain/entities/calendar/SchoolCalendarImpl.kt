@@ -48,7 +48,21 @@ internal data class SchoolCalendarImpl(
     override val alterations: Set<AlterationEvent>
         get() = cancelEvents + newEvents + rescheduleEvents
 
-    override fun addLessons(lessons: Set<WeekLesson>) {
+    private fun copy(
+        lessons: Set<WeekLesson> = this.lessons,
+        cancelEvents: Set<CancelEvent> = this.cancelEvents,
+        newEvents: Set<NewEvent> = this.newEvents,
+        rescheduleEvents: Set<RescheduleEvent> = this.rescheduleEvents,
+    ) = SchoolCalendarImpl(
+        schoolYear = schoolYear,
+    ).apply {
+        this.lessons = lessons
+        this.cancelEvents = cancelEvents
+        this.newEvents = newEvents
+        this.rescheduleEvents = rescheduleEvents
+    }
+
+    override fun addLessons(lessons: Set<WeekLesson>): SchoolCalendar {
         if (lessons.any { lesson ->
                 lesson.professor.professorClasses.any {
                     it.school.calendar?.schoolYear != schoolYear
@@ -79,13 +93,13 @@ internal data class SchoolCalendarImpl(
                 if (checkOverlappingStudents || checkOverlappingProfessors) {
                     throw EventOverlappingException()
                 } else {
-                    this.lessons += lessons
+                    return copy(lessons = this.lessons + lessons)
                 }
             }
         }
     }
 
-    override fun addAlteration(alteration: AlterationEvent) {
+    override fun addAlteration(alteration: AlterationEvent): SchoolCalendar {
         when (alteration) {
             is CancelEvent -> {
                 val cancelEvent = alteration.event
@@ -93,7 +107,7 @@ internal data class SchoolCalendarImpl(
                     throw EventNotFoundException()
                 } else {
                     if (checkEventCanBeCancelled(alteration, cancelEvents, rescheduleEvents, newEvents)) {
-                        cancelEvents += alteration
+                        return copy(cancelEvents = this.cancelEvents + alteration)
                     } else {
                         throw EventCantBeCancelledException()
                     }
@@ -127,7 +141,7 @@ internal data class SchoolCalendarImpl(
                                 )
                     }
                     if (check) {
-                        newEvents += alteration
+                        return copy(newEvents = this.newEvents + alteration)
                     } else {
                         throw EventCantBeAddedException()
                     }
@@ -162,12 +176,14 @@ internal data class SchoolCalendarImpl(
                                 )
                     }
                     if (check) {
-                        rescheduleEvents += alteration
+                        return copy(rescheduleEvents = this.rescheduleEvents + alteration)
                     } else {
                         throw EventCantBeRescheduleException()
                     }
                 }
             }
+
+            else -> throw IllegalArgumentException("alteration must be a CancelEvent, NewEvent or RescheduleEvent")
         }
     }
 

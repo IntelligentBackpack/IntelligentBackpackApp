@@ -28,28 +28,28 @@ interface School {
      *
      * @param classToAdd the class to add
      */
-    fun addClass(classToAdd: Class)
+    fun addClass(classToAdd: Class): School
 
     /**
      * Adds a student to the school.
      *
      * @param student the student to add
      */
-    fun addStudent(student: Student)
+    fun addStudent(student: Student): School
 
     /**
      * Adds a professor to the school.
      *
      * @param professor the professor to add
      */
-    fun addProfessor(professor: Professor)
+    fun addProfessor(professor: Professor): School
 
     /**
      * Replaces the calendar of the school.
      *
      * @param calendar the new calendar
      */
-    fun replaceCalendar(calendar: SchoolCalendar)
+    fun replaceCalendar(calendar: SchoolCalendar): School
 
     companion object {
         /**
