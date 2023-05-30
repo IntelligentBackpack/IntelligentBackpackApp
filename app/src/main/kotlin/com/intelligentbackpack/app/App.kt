@@ -26,5 +26,8 @@ class App : Application() {
         ServiceLocator.initializeRepository(this)
         accessUseCase = AccessUseCase(ServiceLocator.accessRepository)
         desktopUseCase = DesktopUseCase(accessUseCase, ServiceLocator.desktopRepository)
+        accessUseCase.onUserLogin = { desktopUseCase.downloadDesktop() }
+        accessUseCase.onUserLogout = { desktopUseCase.logoutDesktop() }
+        accessUseCase.onUserDelete = { desktopUseCase.deleteDesktop() }
     }
 }

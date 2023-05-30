@@ -14,7 +14,6 @@ import com.intelligentbackpack.app.App
 import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromDomainToView
 import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromViewToDomain
-import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import kotlinx.coroutines.launch
 
 /**
@@ -22,7 +21,6 @@ import kotlinx.coroutines.launch
  */
 class LoginViewModel(
     private val accessUseCase: AccessUseCase,
-    private val desktopUseCase: DesktopUseCase,
 ) : ViewModel() {
 
     /**
@@ -51,12 +49,7 @@ class LoginViewModel(
             accessUseCase.loginWithData(email, password)
                 .onSuccess { user ->
                     userImpl.postValue(user.fromDomainToView())
-                    desktopUseCase.getDesktop()
-                        .onSuccess {
-                            success(user)
-                        }.onFailure {
-                            error(it.message ?: "Unknown error")
-                        }
+                    success(user)
                 }.onFailure {
                     error(it.message ?: "Unknown error")
                 }
@@ -86,11 +79,7 @@ class LoginViewModel(
             accessUseCase.automaticLogin()
                 .onSuccess { user ->
                     userImpl.postValue(user.fromDomainToView())
-                    desktopUseCase.downloadDesktop().onSuccess {
-                        success(user)
-                    }.onFailure {
-                        error(it.message ?: "Unknown error")
-                    }
+                    success(user)
                 }
                 .onFailure {
                     error(it.message ?: "Unknown error")
@@ -129,16 +118,10 @@ class LoginViewModel(
      */
     fun logout(success: () -> Unit, error: (String) -> Unit) {
         viewModelScope.launch {
-            desktopUseCase.logoutDesktop()
+            accessUseCase.logoutUser()
                 .onSuccess {
-                    accessUseCase.logoutUser()
-                        .onSuccess {
-                            userImpl.postValue(null)
-                            success()
-                        }
-                        .onFailure {
-                            error(it.message ?: "Unknown error")
-                        }
+                    userImpl.postValue(null)
+                    success()
                 }
                 .onFailure {
                     error(it.message ?: "Unknown error")
@@ -173,7 +156,6 @@ class LoginViewModel(
                 val application = checkNotNull(this[APPLICATION_KEY])
                 LoginViewModel(
                     (application as App).accessUseCase,
-                    application.desktopUseCase,
                 )
             }
         }

@@ -10,6 +10,10 @@ import com.intelligentbackpack.accessdomain.repository.AccessDomainRepository
  */
 class AccessUseCase(private val repository: AccessDomainRepository) {
 
+    var onUserLogin: (suspend (User) -> Unit) = {}
+    var onUserLogout: (suspend (User) -> Unit) = {}
+    var onUserDelete: (suspend (User) -> Unit) = {}
+
     /**
      * Creates a new user.
      * @param user is the user to create.
@@ -35,7 +39,9 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
      */
     suspend fun loginWithData(email: String, password: String): Result<User> =
         try {
-            Result.success(repository.loginWithData(email, password))
+            val user = repository.loginWithData(email, password)
+            onUserLogin(user)
+            Result.success(user)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -59,7 +65,9 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
      */
     suspend fun automaticLogin(): Result<User> =
         try {
-            Result.success(repository.automaticLogin())
+            val user = repository.automaticLogin()
+            onUserLogin(user)
+            Result.success(user)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -83,7 +91,9 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
      */
     suspend fun logoutUser(): Result<User> =
         try {
-            Result.success(repository.logoutUser())
+            val user = repository.logoutUser()
+            onUserLogout(user)
+            Result.success(user)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -95,7 +105,9 @@ class AccessUseCase(private val repository: AccessDomainRepository) {
      */
     suspend fun deleteUser(): Result<User> =
         try {
-            Result.success(repository.deleteUser())
+            val user = repository.deleteUser()
+            onUserDelete(user)
+            Result.success(user)
         } catch (e: Exception) {
             Result.failure(e)
         }
