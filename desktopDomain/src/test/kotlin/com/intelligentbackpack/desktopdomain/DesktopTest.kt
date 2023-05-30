@@ -43,10 +43,10 @@ class DesktopTest : StringSpec({
             this.rfidCode = "FF:24:3E:C2"
             this.book = book
         }
-        desktop.addSchoolSupply(bookCopy2)
-        desktop.schoolSupplies.size shouldBe 2
-        desktop.schoolSupplyTypes.size shouldBe 1
-        desktop.schoolSupplyTypes shouldBe setOf(SchoolSupplyTypes.BOOK)
+        val newDesktop = desktop.addSchoolSupply(bookCopy2)
+        newDesktop.schoolSupplies.size shouldBe 2
+        newDesktop.schoolSupplyTypes.size shouldBe 1
+        newDesktop.schoolSupplyTypes shouldBe setOf(SchoolSupplyTypes.BOOK)
     }
 
     "Add an already present School Supply to Desktop" {
@@ -58,9 +58,9 @@ class DesktopTest : StringSpec({
 
     "Put a School Supply in Backpack" {
         val desktop = Desktop.create(setOf(bookCopy), backpack = backpack)
-        desktop.putSchoolSupplyInBackpack(bookCopy)
-        desktop.schoolSuppliesInBackpack.size shouldBe 1
-        desktop.schoolSupplies shouldBe setOf(bookCopy)
+        val newDesktop = desktop.putSchoolSupplyInBackpack(bookCopy)
+        newDesktop.schoolSuppliesInBackpack.size shouldBe 1
+        newDesktop.schoolSupplies shouldBe setOf(bookCopy)
     }
 
     "Put a School Supply in Backpack but Backpack is not associated" {
@@ -90,9 +90,9 @@ class DesktopTest : StringSpec({
 
     "Take a School Supply from Backpack" {
         val desktop = Desktop.create(setOf(bookCopy), setOf(bookCopy), backpack = backpack)
-        desktop.takeSchoolSupplyFromBackpack(bookCopy)
-        desktop.schoolSuppliesInBackpack.size shouldBe 0
-        desktop.schoolSupplies shouldBe setOf(bookCopy)
+        val newDesktop = desktop.takeSchoolSupplyFromBackpack(bookCopy)
+        newDesktop.schoolSuppliesInBackpack.size shouldBe 0
+        newDesktop.schoolSupplies shouldBe setOf(bookCopy)
     }
 
     "Take a School Supply not in Backpack from Backpack" {
@@ -112,8 +112,8 @@ class DesktopTest : StringSpec({
     "Associate backpack" {
         val desktop = Desktop.create(setOf(bookCopy))
         desktop.isBackpackAssociated shouldBe false
-        desktop.associateBackpack(backpack)
-        desktop.isBackpackAssociated shouldBe true
+        val newDesktop = desktop.associateBackpack(backpack)
+        newDesktop.isBackpackAssociated shouldBe true
     }
 
     "Associate a backpack to a desktop already with a backpack associated" {
@@ -126,9 +126,9 @@ class DesktopTest : StringSpec({
     "Disassociate backpack" {
         val desktop = Desktop.create(setOf(bookCopy), setOf(bookCopy), backpack = backpack)
         desktop.isBackpackAssociated shouldBe true
-        desktop.disassociateBackpack(backpack)
-        desktop.isBackpackAssociated shouldBe false
-        desktop.schoolSuppliesInBackpack shouldBe emptySet()
+        val newDesktop = desktop.disassociateBackpack(backpack)
+        newDesktop.isBackpackAssociated shouldBe false
+        newDesktop.schoolSuppliesInBackpack shouldBe emptySet()
     }
 
     "Disassociate a backpack from a desktop without a backpack associated" {

@@ -6,6 +6,7 @@ import com.intelligentbackpack.desktopdomain.entities.Book
 import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
+import com.intelligentbackpack.desktopdomain.exception.ISBNException
 import com.intelligentbackpack.desktopdomain.repository.DesktopDomainRepository
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import io.kotest.core.spec.style.StringSpec
@@ -78,7 +79,8 @@ class UseCaseTest : StringSpec({
                 schoolSupply = any(),
             )
         } returns (desktop.schoolSupplies + bookCopy2)
-        useCase.addSchoolSupply(schoolSupply = bookCopy2).getOrNull() shouldBe desktop.schoolSupplies + bookCopy2
+        useCase.addSchoolSupply(schoolSupply = bookCopy2)
+            .getOrNull()!!.schoolSupplies shouldBe desktop.schoolSupplies + bookCopy2
     }
 
     "Get School Supplies in Desktop" {
@@ -173,8 +175,9 @@ class UseCaseTest : StringSpec({
         coEvery {
             repository.associateBackpack(any(), any())
         } returns (backpack)
-        useCase.associateBackpack(backpack).getOrNull()
-        desktop.isBackpackAssociated shouldBe true
+        val result = useCase.associateBackpack(backpack)
+        result.isSuccess shouldBe true
+        result.getOrNull()!!.isBackpackAssociated shouldBe true
     }
 
     "Associate backpack with error" {
@@ -209,8 +212,9 @@ class UseCaseTest : StringSpec({
         coEvery {
             repository.disassociateBackpack(any(), any())
         } returns (backpack)
-        useCase.disassociateBackpack(backpack).getOrNull()
-        desktop.isBackpackAssociated shouldBe false
+        val result = useCase.disassociateBackpack(backpack)
+        result.isSuccess shouldBe true
+        result.getOrNull()!!.isBackpackAssociated shouldBe false
     }
 
     "Disassociate backpack with error" {
@@ -229,5 +233,65 @@ class UseCaseTest : StringSpec({
         } throws (Exception())
         useCase.disassociateBackpack(backpack).getOrNull()
         desktop.isBackpackAssociated shouldBe true
+    }
+
+    "Get a book copy from its isbn" {
+        val isbn2 = "9788843025336"
+        val book2 = Book.build {
+            this.isbn = isbn2
+            this.title = title
+            this.authors = authors
+        }
+        val bookCopy3 = BookCopy.build {
+            this.book = book2
+            this.rfidCode = rfidCode2
+        }
+        val desktop = Desktop.create(
+            schoolSupplies = setOf(bookCopy1, bookCopy3),
+            schoolSuppliesInBackpack = setOf(),
+            backpack = backpack,
+        )
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
+        val useCase = DesktopUseCase(accessUseCase, repository)
+
+        coEvery {
+            repository.getDesktop(any())
+        } returns (desktop)
+        useCase.getBookCopy(isbn = isbn2).getOrNull() shouldBe bookCopy3
+    }
+
+    "should return null if the book copy is not found" {
+        val isbn2 = "9788843025336"
+        val desktop = Desktop.create(
+            schoolSupplies = setOf(bookCopy1),
+            schoolSuppliesInBackpack = setOf(),
+            backpack = backpack,
+        )
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
+        val useCase = DesktopUseCase(accessUseCase, repository)
+
+        coEvery {
+            repository.getDesktop(any())
+        } returns (desktop)
+        val result = useCase.getBookCopy(isbn = isbn2)
+        result.isSuccess shouldBe true
+        result.getOrNull() shouldBe null
+    }
+
+    "should return error if the isbn isn't in the right format" {
+        val desktop = Desktop.create(
+            schoolSupplies = setOf(bookCopy1),
+            schoolSuppliesInBackpack = setOf(),
+            backpack = backpack,
+        )
+        coEvery { accessUseCase.getLoggedUser() } returns Result.success(user)
+        val useCase = DesktopUseCase(accessUseCase, repository)
+
+        coEvery {
+            repository.getDesktop(any())
+        } returns (desktop)
+        val result = useCase.getBookCopy(isbn = "9788843025344")
+        result.isFailure shouldBe true
+        result.exceptionOrNull() shouldBe ISBNException()
     }
 })
