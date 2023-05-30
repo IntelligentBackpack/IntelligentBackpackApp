@@ -20,22 +20,12 @@ import kotlin.jvm.Throws
  * @property schoolSuppliesInBackpack The school supplies in the backpack.
  * @property backpack The backpack of the user.
  */
-internal class DesktopImpl(
-    schoolSupplies: Set<SchoolSupply>,
-    schoolSupplyTypes: Set<SchoolSupplyType>,
-    schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet(),
-    backpack: Backpack? = null,
+internal data class DesktopImpl(
+    override val schoolSupplies: Set<SchoolSupply>,
+    override val schoolSupplyTypes: Set<SchoolSupplyType>,
+    override val schoolSuppliesInBackpack: Set<SchoolSupply> = emptySet(),
+    override val backpack: Backpack? = null,
 ) : Desktop {
-
-    override var schoolSupplies: Set<SchoolSupply> = schoolSupplies
-        private set
-    override var schoolSupplyTypes: Set<SchoolSupplyType> = schoolSupplyTypes
-        private set
-    override var schoolSuppliesInBackpack: Set<SchoolSupply> = schoolSuppliesInBackpack
-        private set
-
-    override var backpack: Backpack? = backpack
-        private set
 
     /**
      * Add a school supply to the desktop.
@@ -45,14 +35,14 @@ internal class DesktopImpl(
      * @throws DuplicateRFIDException If the RFID code of the school supply is already in the desktop.
      */
     @Throws(TypeException::class, DuplicateRFIDException::class)
-    override fun addSchoolSupply(schoolSupply: SchoolSupply) =
+    override fun addSchoolSupply(schoolSupply: SchoolSupply): Desktop =
         if (!schoolSupplyTypes.contains(schoolSupply.type)) {
             throw TypeException(schoolSupply.type)
         } else {
             if (schoolSupplies.map { it.rfidCode }.contains(schoolSupply.rfidCode)) {
                 throw DuplicateRFIDException()
             } else {
-                schoolSupplies = schoolSupplies + schoolSupply
+                copy(schoolSupplies = schoolSupplies + schoolSupply)
             }
         }
 
@@ -64,7 +54,7 @@ internal class DesktopImpl(
      * @throws AlreadyInBackpackException If the school supply is already in the backpack.
      */
     @Throws(SchoolSupplyNotFoundException::class)
-    override fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply) {
+    override fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply): Desktop {
         if (!isBackpackAssociated) {
             throw BackpackNotAssociatedException()
         } else {
@@ -74,7 +64,7 @@ internal class DesktopImpl(
                 if (schoolSuppliesInBackpack.contains(schoolSupply)) {
                     throw AlreadyInBackpackException(schoolSupply)
                 } else {
-                    schoolSuppliesInBackpack = schoolSuppliesInBackpack + schoolSupply
+                    return copy(schoolSuppliesInBackpack = schoolSuppliesInBackpack + schoolSupply)
                 }
             }
         }
@@ -86,11 +76,11 @@ internal class DesktopImpl(
      * @throws BackpackAlreadyAssociatedException If a backpack is already connected.
      */
     @Throws(BackpackAlreadyAssociatedException::class)
-    override fun associateBackpack(backpack: Backpack) {
+    override fun associateBackpack(backpack: Backpack): Desktop {
         if (isBackpackAssociated) {
             throw BackpackAlreadyAssociatedException()
         } else {
-            this.backpack = backpack
+            return copy(backpack = backpack)
         }
     }
 
@@ -101,14 +91,14 @@ internal class DesktopImpl(
      * @throws SchoolSupplyNotFoundException If the school supply is not in the backpack.
      */
     @Throws(SchoolSupplyNotFoundException::class)
-    override fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply) {
+    override fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply): Desktop {
         if (!isBackpackAssociated) {
             throw BackpackNotAssociatedException()
         } else {
             if (!schoolSuppliesInBackpack.contains(schoolSupply)) {
                 throw SchoolSupplyNotFoundException(schoolSupply.rfidCode)
             } else {
-                schoolSuppliesInBackpack = schoolSuppliesInBackpack - schoolSupply
+                return copy(schoolSuppliesInBackpack = schoolSuppliesInBackpack - schoolSupply)
             }
         }
     }
@@ -120,10 +110,9 @@ internal class DesktopImpl(
      * @throws BackpackNotAssociatedException If no backpack is connected.
      */
     @Throws(BackpackNotAssociatedException::class)
-    override fun disassociateBackpack(hash: String) {
+    override fun disassociateBackpack(hash: String): Desktop {
         if (isBackpackAssociated && backpack!! == hash) {
-            backpack = null
-            schoolSuppliesInBackpack = emptySet()
+            return copy(backpack = null, schoolSuppliesInBackpack = emptySet())
         } else {
             throw BackpackNotAssociatedException()
         }

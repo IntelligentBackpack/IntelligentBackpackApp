@@ -46,56 +46,64 @@ interface Desktop {
      * Adds a school supply to the desktop.
      *
      * @param schoolSupply The school supply to add.
+     * @return The desktop with the school supply added.
      * @throws TypeException If the school supply type is not present.
      * @throws DuplicateRFIDException If the school supply RFID code is already present.
      */
     @Throws(TypeException::class, DuplicateRFIDException::class)
-    fun addSchoolSupply(schoolSupply: SchoolSupply)
+    fun addSchoolSupply(schoolSupply: SchoolSupply): Desktop
 
     /**
      * Connects the backpack for the desktop's user.
      *
+     * @param backpack The backpack to connect.
+     * @return The desktop with the backpack connected.
      * @throws BackpackAlreadyAssociatedException If a backpack is already connected.
      */
     @Throws(BackpackAlreadyAssociatedException::class)
-    fun associateBackpack(backpack: Backpack)
+    fun associateBackpack(backpack: Backpack): Desktop
 
     /**
      * Adds a school supply in the backpack.
      *
      * @param schoolSupply The school supply to add.
+     * @return The desktop with the school supply added in the backpack.
      */
-    fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply)
+    fun putSchoolSupplyInBackpack(schoolSupply: SchoolSupply): Desktop
 
     /**
      * Adds a set of school supplies in the backpack.
      *
      * @param schoolSupplies The school supplies to add.
+     * @return The desktop with the school supplies added in the backpack.
      */
-    fun putSchoolSuppliesInBackpack(schoolSupplies: Set<SchoolSupply>) =
-        schoolSupplies.forEach { putSchoolSupplyInBackpack(it) }
+    fun putSchoolSuppliesInBackpack(schoolSupplies: Set<SchoolSupply>): Desktop =
+        schoolSupplies.fold(this) { desktop, schoolSupply -> desktop.putSchoolSupplyInBackpack(schoolSupply) }
 
     /**
      * Extract a school supplies from the backpack.
      *
      * @param schoolSupply The school supply to extract.
+     * @return The desktop with the school supply extracted from the backpack.
      */
-    fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply)
+    fun takeSchoolSupplyFromBackpack(schoolSupply: SchoolSupply): Desktop
 
     /**
      * Extract a set of school supply from the backpack.
      *
      * @param schoolSupplies The school supplies to extract.
+     * @return The desktop with the school supplies extracted from the backpack.
      */
-    fun takeSchoolSuppliesFromBackpack(schoolSupplies: Set<SchoolSupply>) =
-        schoolSupplies.forEach { takeSchoolSupplyFromBackpack(it) }
+    fun takeSchoolSuppliesFromBackpack(schoolSupplies: Set<SchoolSupply>): Desktop =
+        schoolSupplies.fold(this) { desktop, schoolSupply -> desktop.takeSchoolSupplyFromBackpack(schoolSupply) }
 
     /**
      * Disassociates the backpack from the user.
      *
      * @param hash the hash of the backpack to disassociate
+     * @return The desktop with the backpack disassociated.
      */
-    fun disassociateBackpack(hash: String)
+    fun disassociateBackpack(hash: String): Desktop
 
     companion object {
         /**
