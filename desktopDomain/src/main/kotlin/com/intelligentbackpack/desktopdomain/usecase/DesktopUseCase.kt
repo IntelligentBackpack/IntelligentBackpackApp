@@ -2,9 +2,12 @@ package com.intelligentbackpack.desktopdomain.usecase
 
 import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.desktopdomain.entities.Book
+import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
 import com.intelligentbackpack.desktopdomain.exception.BackpackNotAssociatedException
+import com.intelligentbackpack.desktopdomain.exception.ISBNException
+import com.intelligentbackpack.desktopdomain.policies.ISBNPolicy
 import com.intelligentbackpack.desktopdomain.repository.DesktopDomainRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
@@ -43,8 +46,8 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
     suspend fun addSchoolSupply(schoolSupply: SchoolSupply): Result<Desktop> =
         accessUseCase.getLoggedUser().mapCatching { user ->
             val desktop = repository.getDesktop(user)
+                .addSchoolSupply(schoolSupply)
             repository.addSchoolSupply(user, schoolSupply)
-            desktop.addSchoolSupply(schoolSupply)
             desktop
         }
 
@@ -55,6 +58,28 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      * @return the result of the get with the book.
      */
     suspend fun getBook(isbn: String): Result<Book?> = kotlin.runCatching { repository.getBook(isbn) }
+
+    /**
+     * Gets the book copy given the isbn.
+     * The isbn must be valid, if the isbn is not valid the result is a failure.
+     * If there is no book copy with the given isbn the result is a success with null.
+     *
+     *
+     * @param isbn The isbn.
+     * @return the result of the get with the book copy, if the isbn is not valid the result is a failure.
+     */
+    suspend fun getBookCopy(isbn: String): Result<SchoolSupply?> =
+        if (ISBNPolicy.isValid(isbn)) {
+            accessUseCase.getLoggedUser().mapCatching { user ->
+                repository.getDesktop(user).schoolSupplies.firstOrNull { schoolSupply ->
+                    (schoolSupply as BookCopy?)?.let {
+                        it.book.isbn == isbn
+                    } ?: false
+                }
+            }
+        } else {
+            Result.failure(ISBNException())
+        }
 
     /**
      * Gets the school supply given the rfid.
@@ -78,7 +103,6 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
             val returnedHash = repository.associateBackpack(user, hash)
             val desktop = repository.getDesktop(user)
             desktop.associateBackpack(returnedHash)
-            desktop
         }
 
     /**
@@ -126,8 +150,7 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
                     if (desktop.backpack == hash) {
                         try {
                             repository.disassociateBackpack(user, hash)
-                            desktop.disassociateBackpack(hash)
-                            Result.success(desktop)
+                            Result.success(desktop.disassociateBackpack(hash))
                         } catch (e: Exception) {
                             Result.failure(e)
                         }
@@ -140,6 +163,11 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
             }
         }
 
+    /**
+     * Deletes the desktop.
+     *
+     * @return the result of the delete.
+     */
     suspend fun deleteDesktop() {
         accessUseCase.getLoggedUser().mapCatching { user -> repository.deleteDesktop(user) }
     }
