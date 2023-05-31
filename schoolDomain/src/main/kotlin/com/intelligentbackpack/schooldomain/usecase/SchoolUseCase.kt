@@ -1,11 +1,11 @@
 package com.intelligentbackpack.schooldomain.usecase
 
 import com.intelligentbackpack.accessdomain.entities.Role
+import com.intelligentbackpack.accessdomain.exceptions.ActionNotAllowedForUserException
 import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.schooldomain.entities.School
 import com.intelligentbackpack.schooldomain.entities.calendar.CalendarEvent
 import com.intelligentbackpack.schooldomain.entities.calendar.alteration.AlterationEvent
-import com.intelligentbackpack.schooldomain.exceptions.ActionNotAllowedForUserException
 import com.intelligentbackpack.schooldomain.repository.SchoolRepository
 import java.time.LocalDate
 

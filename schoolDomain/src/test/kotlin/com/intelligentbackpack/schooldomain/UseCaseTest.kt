@@ -11,7 +11,7 @@ import com.intelligentbackpack.schooldomain.entities.calendar.SchoolCalendar
 import com.intelligentbackpack.schooldomain.entities.calendar.alteration.AlterationFactory
 import com.intelligentbackpack.schooldomain.entities.person.Professor
 import com.intelligentbackpack.schooldomain.entities.person.Student
-import com.intelligentbackpack.schooldomain.exceptions.ActionNotAllowedForUserException
+import com.intelligentbackpack.accessdomain.exceptions.ActionNotAllowedForUserException
 import com.intelligentbackpack.schooldomain.repository.SchoolRepository
 import com.intelligentbackpack.schooldomain.usecase.SchoolUseCase
 import io.kotest.matchers.shouldBe
@@ -245,22 +245,22 @@ class UseCaseTest : StringSpec({
             password = "professorUser#1234"
             role = Role.PROFESSOR
         }
-        const val schoolYear = "2022-2023"
-        val calendar = SchoolCalendar.create(schoolYear)
-        val school = School.create("School", "City")
+        private const val schoolYear = "2022-2023"
+        private val calendar = SchoolCalendar.create(schoolYear)
+        private val school = School.create("School", "City")
             .replaceCalendar(calendar)
         val studentClass = Class.create("1A", school)
 
-        val date = LocalDate.of(2022, 9, 12)
-        val math = "Math"
-        val physics = "Physics"
+        val date: LocalDate = LocalDate.of(2022, 9, 12)
+        const val math = "Math"
+        const val physics = "Physics"
         val professor = Professor.create(
             email = professorUser.email,
             name = professorUser.name,
             surname = professorUser.surname,
             professorClasses = mapOf(studentClass to setOf(math, physics)),
         )
-        val singleMondayLesson = CalendarEventFactory.createWeekLesson(
+        private val singleMondayLesson = CalendarEventFactory.createWeekLesson(
             day = DayOfWeek.MONDAY,
             subject = math,
             startTime = LocalTime.of(8, 30),
