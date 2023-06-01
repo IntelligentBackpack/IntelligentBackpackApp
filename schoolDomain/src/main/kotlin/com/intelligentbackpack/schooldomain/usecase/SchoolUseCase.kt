@@ -116,14 +116,14 @@ class SchoolUseCase(private val accessUseCase: AccessUseCase, private val reposi
                 repository.getSchool(user).let { school ->
                     if (user.role == Role.STUDENT) {
                         school.students.find { it.email == user.email }?.studentClass?.let { studentClass ->
-                            school.calendar?.getAllStudentEvents(studentClass) ?: emptyList()
+                            school.calendar?.getAllStudentEvents(studentClass) ?: emptySet()
                         }
                     } else {
                         school.professors.find { it.email == user.email }?.let { professor ->
-                            school.calendar?.getAllProfessorEvents(professor) ?: emptyList()
+                            school.calendar?.getAllProfessorEvents(professor) ?: emptySet()
                         }
                     }
-                }
+                } ?: emptySet()
             } else {
                 throw ActionNotAllowedForUserException()
             }
