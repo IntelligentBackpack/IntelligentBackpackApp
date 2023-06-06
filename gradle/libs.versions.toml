@@ -140,7 +140,7 @@ dokka = "org.jetbrains.dokka:1.8.20"
 android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 application = { id = "com.android.application", version.ref = "gradle" }
 library = { id = "com.android.library", version.ref = "gradle" }
-kotlin-qa = { id = "org.danilopianini.gradle-kotlin-qa", version = "0.42.1" }
+kotlin-qa = { id = "org.danilopianini.gradle-kotlin-qa", version = "0.43.0" }
 taskTree = { id = "com.dorongold.task-tree", version = "2.1.1" }
 protobuf-plugin = { id = "com.google.protobuf", version = "0.9.3" }
 sem-ver = { id = "io.github.andreabrighi.android-git-sensitive-semantic-versioning-gradle-plugin", version = "1.0.2" }
