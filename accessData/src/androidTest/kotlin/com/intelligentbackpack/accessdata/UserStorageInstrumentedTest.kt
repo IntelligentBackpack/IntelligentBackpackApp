@@ -91,7 +91,7 @@ class UserStorageInstrumentedTest {
         storage.saveUser(expectedUser)
         assertTrue(storage.isUserSaved())
         assertFalse(
-            isPresentElementsFromSharedPreferences(appContext, "password")
+            isPresentElementsFromSharedPreferences(appContext, "password"),
         )
     }
 
