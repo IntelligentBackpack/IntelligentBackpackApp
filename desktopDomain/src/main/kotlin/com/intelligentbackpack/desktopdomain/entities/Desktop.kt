@@ -2,8 +2,8 @@ package com.intelligentbackpack.desktopdomain.entities
 
 import com.intelligentbackpack.desktopdomain.entities.implementations.DesktopImpl
 import com.intelligentbackpack.desktopdomain.exception.BackpackAlreadyAssociatedException
-import com.intelligentbackpack.desktopdomain.exception.DuplicateRFIDException
 import com.intelligentbackpack.desktopdomain.exception.BackpackNotAssociatedException
+import com.intelligentbackpack.desktopdomain.exception.DuplicateRFIDException
 import com.intelligentbackpack.desktopdomain.exception.TypeException
 
 /**

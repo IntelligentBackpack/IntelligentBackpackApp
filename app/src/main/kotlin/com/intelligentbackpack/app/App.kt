@@ -1,8 +1,8 @@
 package com.intelligentbackpack.app
 
 import android.app.Application
-import com.intelligentbackpack.app.di.ServiceLocator
 import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
+import com.intelligentbackpack.app.di.ServiceLocator
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 
 /**

@@ -1,7 +1,7 @@
 package com.intelligentbackpack.schooldomain
 
-import com.intelligentbackpack.schooldomain.entities.School
 import com.intelligentbackpack.schooldomain.entities.Class
+import com.intelligentbackpack.schooldomain.entities.School
 import com.intelligentbackpack.schooldomain.entities.person.Professor
 import com.intelligentbackpack.schooldomain.entities.person.Student
 import io.kotest.assertions.throwables.shouldThrow

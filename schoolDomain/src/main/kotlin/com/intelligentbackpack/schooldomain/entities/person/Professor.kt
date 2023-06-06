@@ -1,7 +1,7 @@
 package com.intelligentbackpack.schooldomain.entities.person
 
-import com.intelligentbackpack.schooldomain.entities.Subject
 import com.intelligentbackpack.schooldomain.entities.Class
+import com.intelligentbackpack.schooldomain.entities.Subject
 
 /**
  * A professor.

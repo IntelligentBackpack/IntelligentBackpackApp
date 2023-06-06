@@ -4,9 +4,9 @@ import com.intelligentbackpack.schooldomain.entities.Class
 import com.intelligentbackpack.schooldomain.entities.School
 import com.intelligentbackpack.schooldomain.entities.Subject
 import com.intelligentbackpack.schooldomain.entities.person.Professor
-import io.kotest.core.spec.style.StringSpec
 import com.intelligentbackpack.schooldomain.entities.person.Student
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
 class PersonTest : StringSpec({

@@ -1,8 +1,8 @@
 package com.intelligentbackpack.schooldomain
 
 import com.intelligentbackpack.accessdomain.entities.Role
-import io.kotest.core.spec.style.StringSpec
 import com.intelligentbackpack.accessdomain.entities.User
+import com.intelligentbackpack.accessdomain.exceptions.ActionNotAllowedForUserException
 import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.schooldomain.entities.Class
 import com.intelligentbackpack.schooldomain.entities.School
@@ -11,9 +11,9 @@ import com.intelligentbackpack.schooldomain.entities.calendar.SchoolCalendar
 import com.intelligentbackpack.schooldomain.entities.calendar.alteration.AlterationFactory
 import com.intelligentbackpack.schooldomain.entities.person.Professor
 import com.intelligentbackpack.schooldomain.entities.person.Student
-import com.intelligentbackpack.accessdomain.exceptions.ActionNotAllowedForUserException
 import com.intelligentbackpack.schooldomain.repository.SchoolRepository
 import com.intelligentbackpack.schooldomain.usecase.SchoolUseCase
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify

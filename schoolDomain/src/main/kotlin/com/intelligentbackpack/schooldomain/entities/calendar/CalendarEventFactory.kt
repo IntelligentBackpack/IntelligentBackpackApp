@@ -1,8 +1,8 @@
 package com.intelligentbackpack.schooldomain.entities.calendar
 
+import com.intelligentbackpack.schooldomain.entities.Class
 import com.intelligentbackpack.schooldomain.entities.Subject
 import com.intelligentbackpack.schooldomain.entities.person.Professor
-import com.intelligentbackpack.schooldomain.entities.Class
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
