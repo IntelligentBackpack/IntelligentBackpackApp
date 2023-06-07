@@ -46,12 +46,12 @@ object EventAdapter {
     /**
      * WeekEvent is a interface that represents event in calendar that is done in a specific day of week.
      *
-     * @property fromData is a date from which event is done.
+     * @property fromDate is a date from which event is done.
      * @property toDate is a date to which event is done.
      * @property dayOfWeek is a day of week when event is done.
      */
     interface WeekEvent : CalendarEvent {
-        val fromData: LocalDate
+        val fromDate: LocalDate
         val toDate: LocalDate
         val dayOfWeek: DayOfWeek
     }
@@ -90,7 +90,7 @@ object EventAdapter {
      * @param endTime is a end time of event.
      * @param className is a name of class.
      * @param subject is a name of subject.
-     * @param fromData is a date from which event is done.
+     * @param fromDate is a date from which event is done.
      * @param toDate is a date to which event is done.
      * @param dayOfWeek is a day of week when event is done.
      */
@@ -99,7 +99,7 @@ object EventAdapter {
         override val endTime: LocalTime,
         override val className: String,
         override val subject: String,
-        override val fromData: LocalDate,
+        override val fromDate: LocalDate,
         override val toDate: LocalDate,
         override val dayOfWeek: DayOfWeek,
     ) : WeekLesson

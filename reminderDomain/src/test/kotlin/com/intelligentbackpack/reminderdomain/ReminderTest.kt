@@ -20,7 +20,7 @@ class ReminderTest : StringSpec({
         startTime = LocalTime.of(10, 0),
         endTime = LocalTime.of(11, 0),
         dayOfWeek = DayOfWeek.MONDAY,
-        fromData = LocalDate.of(2021, 1, 1),
+        fromDate = LocalDate.of(2021, 1, 1),
         toDate = LocalDate.of(2021, 1, 31),
         className = className,
         subject = subject,

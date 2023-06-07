@@ -39,7 +39,7 @@ interface ReminderForLessonIntervalPeriod : ReminderForLesson {
                 }
 
                 is EventAdapter.WeekEvent -> {
-                    if (startDate in lesson.fromData..lesson.toDate && endDate in lesson.fromData..lesson.toDate) {
+                    if (startDate in lesson.fromDate..lesson.toDate && endDate in lesson.fromDate..lesson.toDate) {
                         ReminderForLessonIntervalPeriodImpl(isbn, lesson, startDate, endDate)
                     } else {
                         throw IllegalArgumentException("Date is not in lesson interval")
