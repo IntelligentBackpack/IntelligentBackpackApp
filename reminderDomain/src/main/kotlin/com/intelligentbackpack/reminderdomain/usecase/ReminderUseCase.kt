@@ -35,9 +35,9 @@ class ReminderUseCase(
      * @return the result of the operation, if the user isn't a professor or a student exception ActionNotAllowedForUserException
      */
     suspend fun downloadReminder(): Result<Unit> =
-        accessUseCase.getLoggedUser().mapCatching {
-            if (it.role == Role.PROFESSOR || it.role == Role.STUDENT) {
-                reminderRepository.downloadReminder()
+        accessUseCase.getLoggedUser().mapCatching { user ->
+            if (user.role == Role.PROFESSOR || user.role == Role.STUDENT) {
+                reminderRepository.downloadReminder(user)
             } else {
                 throw ActionNotAllowedForUserException()
             }
@@ -53,11 +53,11 @@ class ReminderUseCase(
     suspend fun addSchoolSupplyForEvent(
         reminderForLesson: ReminderForLesson,
     ) =
-        accessUseCase.getLoggedUser().mapCatching {
-            if (it.role == Role.PROFESSOR) {
+        accessUseCase.getLoggedUser().mapCatching { user ->
+            if (user.role == Role.PROFESSOR) {
                 val reminder = reminderRepository.getReminder()
                 reminder.addBookForLesson(reminderForLesson)
-                reminderRepository.addBookForLesson(reminderForLesson)
+                reminderRepository.addBookForLesson(reminderForLesson, user)
             } else {
                 throw ActionNotAllowedForUserException()
             }
@@ -70,11 +70,11 @@ class ReminderUseCase(
      * @return the result of the operation, if the user isn't a professor exception ActionNotAllowedForUserException
      */
     suspend fun removeSchoolSupplyForEvent(reminderForLesson: ReminderForLesson) =
-        accessUseCase.getLoggedUser().mapCatching {
-            if (it.role == Role.PROFESSOR) {
+        accessUseCase.getLoggedUser().mapCatching { user ->
+            if (user.role == Role.PROFESSOR) {
                 val reminder = reminderRepository.getReminder()
                 reminder.removeBookForLesson(reminderForLesson)
-                reminderRepository.removeBookForLesson(reminderForLesson)
+                reminderRepository.removeBookForLesson(reminderForLesson, user)
             } else {
                 throw ActionNotAllowedForUserException()
             }
@@ -91,11 +91,11 @@ class ReminderUseCase(
         oldReminderForLesson: ReminderForLesson,
         newReminderForLesson: ReminderForLesson,
     ) =
-        accessUseCase.getLoggedUser().mapCatching {
-            if (it.role == Role.PROFESSOR) {
+        accessUseCase.getLoggedUser().mapCatching { user ->
+            if (user.role == Role.PROFESSOR) {
                 val reminder = reminderRepository.getReminder()
                 reminder.changePeriodOfBookForLesson(oldReminderForLesson, newReminderForLesson)
-                reminderRepository.changeBookForLesson(oldReminderForLesson, newReminderForLesson)
+                reminderRepository.changeBookForLesson(oldReminderForLesson, newReminderForLesson, user)
             } else {
                 throw ActionNotAllowedForUserException()
             }

@@ -41,7 +41,7 @@ class UseCaseTest : StringSpec({
         val useCase = ReminderUseCase(accessUseCase, desktopUseCase, schoolUseCase, repository)
         val result = useCase.downloadReminder()
         result.isSuccess shouldBe true
-        coVerify { repository.downloadReminder() }
+        coVerify { repository.downloadReminder(any()) }
     }
 
     "should be able to download if the user is a professor" {
@@ -49,7 +49,7 @@ class UseCaseTest : StringSpec({
         val useCase = ReminderUseCase(accessUseCase, desktopUseCase, schoolUseCase, repository)
         val result = useCase.downloadReminder()
         result.isSuccess shouldBe true
-        coVerify { repository.downloadReminder() }
+        coVerify { repository.downloadReminder(any()) }
     }
 
     "should have an error if the user is not a professor or a student" {
@@ -68,10 +68,10 @@ class UseCaseTest : StringSpec({
             lesson = lesson,
             date = LocalDate.of(2021, 1, 1),
         )
-        coEvery { repository.addBookForLesson(any()) } answers { }
+        coEvery { repository.addBookForLesson(any(), any()) } answers { }
         val result = useCase.addSchoolSupplyForEvent(reminderForLesson)
         result.isSuccess shouldBe true
-        coVerify(exactly = 1) { repository.addBookForLesson(reminderForLesson) }
+        coVerify(exactly = 1) { repository.addBookForLesson(reminderForLesson, professorUser) }
     }
 
     "should have an error if the user is a student and try to add a school supply" {
@@ -110,10 +110,10 @@ class UseCaseTest : StringSpec({
         )
         val reminder = Reminder.create(setOf(reminderForLesson))
         coEvery { repository.getReminder() } returns reminder
-        coEvery { repository.removeBookForLesson(any()) } answers { }
+        coEvery { repository.removeBookForLesson(any(), any()) } answers { }
         val result = useCase.removeSchoolSupplyForEvent(reminderForLesson)
         result.isSuccess shouldBe true
-        coVerify(exactly = 1) { repository.removeBookForLesson(reminderForLesson) }
+        coVerify(exactly = 1) { repository.removeBookForLesson(reminderForLesson, professorUser) }
     }
 
     "should have an error if the user is a student and try to remove a school supply" {
@@ -157,10 +157,16 @@ class UseCaseTest : StringSpec({
         )
         val reminder = Reminder.create(setOf(oldReminderForLesson))
         coEvery { repository.getReminder() } returns reminder
-        coEvery { repository.changeBookForLesson(any(), any()) } answers { }
+        coEvery { repository.changeBookForLesson(any(), any(), any()) } answers { }
         val result = useCase.changeSchoolSupplyForEvent(oldReminderForLesson, newReminderForLesson)
         result.isSuccess shouldBe true
-        coVerify(exactly = 1) { repository.changeBookForLesson(oldReminderForLesson, newReminderForLesson) }
+        coVerify(exactly = 1) {
+            repository.changeBookForLesson(
+                oldReminderForLesson,
+                newReminderForLesson,
+                professorUser,
+            )
+        }
     }
 
     "should have an error if the user is a student and try to change a reminder" {
