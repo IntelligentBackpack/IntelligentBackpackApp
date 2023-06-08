@@ -7,7 +7,7 @@ import com.intelligentbackpack.reminderdomain.entitites.ReminderForLesson
 /**
  * Reminder repository.
  */
-interface ReminderRepository {
+interface ReminderDomainRepository {
 
     /**
      * Download reminder from server.

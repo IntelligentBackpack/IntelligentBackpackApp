@@ -8,7 +8,7 @@ import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import com.intelligentbackpack.reminderdomain.adapter.EventAdapter.fromSchoolToReminder
 import com.intelligentbackpack.reminderdomain.entitites.ReminderForLesson
-import com.intelligentbackpack.reminderdomain.repository.ReminderRepository
+import com.intelligentbackpack.reminderdomain.repository.ReminderDomainRepository
 import com.intelligentbackpack.schooldomain.entities.calendar.CalendarEvent
 import com.intelligentbackpack.schooldomain.usecase.SchoolUseCase
 import kotlinx.coroutines.flow.map
@@ -20,13 +20,13 @@ import java.time.LocalDate
  * @param accessUseCase the use case for access
  * @param desktopUseCase the use case for desktop
  * @param schoolUseCase the use case for school
- * @param reminderRepository the repository of reminder
+ * @param reminderDomainRepository the repository of reminder
  */
 class ReminderUseCase(
     private val accessUseCase: AccessUseCase,
     private val desktopUseCase: DesktopUseCase,
     private val schoolUseCase: SchoolUseCase,
-    private val reminderRepository: ReminderRepository,
+    private val reminderDomainRepository: ReminderDomainRepository,
 ) {
 
     /**
@@ -37,7 +37,7 @@ class ReminderUseCase(
     suspend fun downloadReminder(): Result<Unit> =
         accessUseCase.getLoggedUser().mapCatching { user ->
             if (user.role == Role.PROFESSOR || user.role == Role.STUDENT) {
-                reminderRepository.downloadReminder(user)
+                reminderDomainRepository.downloadReminder(user)
             } else {
                 throw ActionNotAllowedForUserException()
             }
@@ -55,9 +55,9 @@ class ReminderUseCase(
     ) =
         accessUseCase.getLoggedUser().mapCatching { user ->
             if (user.role == Role.PROFESSOR) {
-                val reminder = reminderRepository.getReminder()
+                val reminder = reminderDomainRepository.getReminder()
                 reminder.addBookForLesson(reminderForLesson)
-                reminderRepository.addBookForLesson(reminderForLesson, user)
+                reminderDomainRepository.addBookForLesson(reminderForLesson, user)
             } else {
                 throw ActionNotAllowedForUserException()
             }
@@ -72,9 +72,9 @@ class ReminderUseCase(
     suspend fun removeSchoolSupplyForEvent(reminderForLesson: ReminderForLesson) =
         accessUseCase.getLoggedUser().mapCatching { user ->
             if (user.role == Role.PROFESSOR) {
-                val reminder = reminderRepository.getReminder()
+                val reminder = reminderDomainRepository.getReminder()
                 reminder.removeBookForLesson(reminderForLesson)
-                reminderRepository.removeBookForLesson(reminderForLesson, user)
+                reminderDomainRepository.removeBookForLesson(reminderForLesson, user)
             } else {
                 throw ActionNotAllowedForUserException()
             }
@@ -93,9 +93,9 @@ class ReminderUseCase(
     ) =
         accessUseCase.getLoggedUser().mapCatching { user ->
             if (user.role == Role.PROFESSOR) {
-                val reminder = reminderRepository.getReminder()
+                val reminder = reminderDomainRepository.getReminder()
                 reminder.changePeriodOfBookForLesson(oldReminderForLesson, newReminderForLesson)
-                reminderRepository.changeBookForLesson(oldReminderForLesson, newReminderForLesson, user)
+                reminderDomainRepository.changeBookForLesson(oldReminderForLesson, newReminderForLesson, user)
             } else {
                 throw ActionNotAllowedForUserException()
             }
@@ -110,7 +110,7 @@ class ReminderUseCase(
     suspend fun getSchoolSuppliesForEvent(calendarEvent: CalendarEvent) =
         accessUseCase.getLoggedUser().mapCatching { user ->
             if (user.role == Role.PROFESSOR || user.role == Role.STUDENT) {
-                val reminder = reminderRepository.getReminder()
+                val reminder = reminderDomainRepository.getReminder()
                 calendarEvent.fromSchoolToReminder()?.let { reminder.getBooksForLesson(it) }
                     ?.map { desktopUseCase.getBookCopy(it) }
                     ?.filter { it.isSuccess }
@@ -132,7 +132,7 @@ class ReminderUseCase(
     suspend fun getEventsForSchoolSupply(supply: SchoolSupply) =
         accessUseCase.getLoggedUser().mapCatching {
             if (it.role == Role.PROFESSOR || it.role == Role.STUDENT) {
-                val reminder = reminderRepository.getReminder()
+                val reminder = reminderDomainRepository.getReminder()
                 when (supply) {
                     is BookCopy -> reminder.getLessonsForBook(supply.book.isbn)
                     else -> emptySet()
@@ -206,7 +206,7 @@ class ReminderUseCase(
     private suspend fun getMissingSchoolSupply(inBackpack: Set<SchoolSupply>, date: LocalDate): Set<SchoolSupply> {
         val result = schoolUseCase.getUserCalendarEventsForDate(date)
         if (result.isSuccess) {
-            val reminder = reminderRepository.getReminder()
+            val reminder = reminderDomainRepository.getReminder()
             return (
                 (
                     result.getOrNull()

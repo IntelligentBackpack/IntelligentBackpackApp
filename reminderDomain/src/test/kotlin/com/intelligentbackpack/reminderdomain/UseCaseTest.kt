@@ -11,7 +11,7 @@ import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import com.intelligentbackpack.reminderdomain.adapter.EventAdapter
 import com.intelligentbackpack.reminderdomain.entitites.Reminder
 import com.intelligentbackpack.reminderdomain.entitites.ReminderForLessonDate
-import com.intelligentbackpack.reminderdomain.repository.ReminderRepository
+import com.intelligentbackpack.reminderdomain.repository.ReminderDomainRepository
 import com.intelligentbackpack.reminderdomain.usecase.ReminderUseCase
 import com.intelligentbackpack.schooldomain.entities.Class
 import com.intelligentbackpack.schooldomain.entities.School
@@ -31,7 +31,7 @@ import java.time.LocalTime
 
 class UseCaseTest : StringSpec({
 
-    val repository = mockk<ReminderRepository>(relaxed = true)
+    val repository = mockk<ReminderDomainRepository>(relaxed = true)
     val accessUseCase = mockk<AccessUseCase>(relaxed = true)
     val desktopUseCase = mockk<DesktopUseCase>(relaxed = true)
     val schoolUseCase = mockk<SchoolUseCase>(relaxed = true)
