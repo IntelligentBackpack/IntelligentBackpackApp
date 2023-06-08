@@ -4,3 +4,6 @@
 [submodule "desktopData/src/main/proto/book"]
 	path = desktopData/src/main/proto/book
 	url = https://github.com/IntelligentBackpack/BookCommunication.git
+[submodule "reminderData/src/main/proto/calendar"]
+	path = reminderData/src/main/proto/calendar
+	url = https://github.com/IntelligentBackpack/CalendarCommunication.git
