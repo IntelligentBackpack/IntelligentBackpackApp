@@ -18,7 +18,7 @@ import com.intelligentbackpack.desktopdomain.exception.TypeException
 
 class DesktopLocalDataSourceImpl(
     private val database: DesktopDatabase,
-    private val storage: DesktopStorage
+    private val storage: DesktopStorage,
 ) : DesktopLocalDataSource {
 
     override fun getAllSchoolSupplies(): Set<SchoolSupply> =
@@ -66,6 +66,15 @@ class DesktopLocalDataSourceImpl(
         val type = database.desktopDao().getSchoolSupplyTypesFromName(schoolSupply.type).first().typeId
         when (schoolSupply) {
             is BookCopy -> {
+                if (database.desktopDao().getBook(schoolSupply.book.isbn) == null) {
+                    val authors = schoolSupply.book.authors.map { author ->
+                        database.desktopDao().addAuthor(Author(0, author))
+                    }
+                    database.desktopDao().addBook(schoolSupply.book.fromDomainToDB())
+                    authors.forEach { author ->
+                        database.desktopDao().addWrote(Wrote(schoolSupply.book.isbn, author.toInt()))
+                    }
+                }
                 database.desktopDao().addSchoolSupply(schoolSupply.fromDomainToDB(type))
             }
 

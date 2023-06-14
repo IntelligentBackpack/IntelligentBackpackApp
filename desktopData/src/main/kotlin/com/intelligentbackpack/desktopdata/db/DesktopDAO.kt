@@ -59,7 +59,7 @@ internal interface DesktopDAO {
      *
      * @param schoolSupply the school supply to add
      */
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addSchoolSupply(schoolSupply: SchoolSupply)
 
     /**
