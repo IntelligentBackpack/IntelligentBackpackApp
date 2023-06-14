@@ -26,11 +26,9 @@ object EventAdapter {
     /**
      * Lesson is a interface that represents lesson as calendar event.
      *
-     * @property className is a name of class.
      * @property subject is a name of subject.
      */
     interface Lesson : CalendarEvent {
-        val className: String
         val subject: String
     }
 
@@ -71,14 +69,12 @@ object EventAdapter {
      *
      * @param startTime is a start time of event.
      * @param endTime is a end time of event.
-     * @param className is a name of class.
      * @param subject is a name of subject.
      * @param date is a date of event.
      */
-    internal data class DateLessonImpl(
+    data class DateLessonImpl(
         override val startTime: LocalTime,
         override val endTime: LocalTime,
-        override val className: String,
         override val subject: String,
         override val date: LocalDate,
     ) : DateLesson
@@ -88,16 +84,14 @@ object EventAdapter {
      *
      * @param startTime is a start time of event.
      * @param endTime is a end time of event.
-     * @param className is a name of class.
      * @param subject is a name of subject.
      * @param fromDate is a date from which event is done.
      * @param toDate is a date to which event is done.
      * @param dayOfWeek is a day of week when event is done.
      */
-    internal data class WeekLessonImpl(
+    data class WeekLessonImpl(
         override val startTime: LocalTime,
         override val endTime: LocalTime,
-        override val className: String,
         override val subject: String,
         override val fromDate: LocalDate,
         override val toDate: LocalDate,
@@ -115,7 +109,6 @@ object EventAdapter {
             is SchoolDateLesson -> DateLessonImpl(
                 this.startTime,
                 this.endTime,
-                this.studentsClass.name,
                 this.subject,
                 this.date,
             )
@@ -123,7 +116,6 @@ object EventAdapter {
             is SchoolWeekLesson -> WeekLessonImpl(
                 this.startTime,
                 this.endTime,
-                this.studentsClass.name,
                 this.subject,
                 this.fromDate,
                 this.toDate,
