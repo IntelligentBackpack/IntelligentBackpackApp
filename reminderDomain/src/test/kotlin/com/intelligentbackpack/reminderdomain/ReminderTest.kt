@@ -22,7 +22,6 @@ class ReminderTest : StringSpec({
         dayOfWeek = DayOfWeek.MONDAY,
         fromDate = LocalDate.of(2021, 1, 1),
         toDate = LocalDate.of(2021, 1, 31),
-        className = className,
         subject = subject,
     )
 
@@ -56,7 +55,6 @@ class ReminderTest : StringSpec({
                 lesson = EventAdapter.DateLessonImpl(
                     startTime = LocalTime.of(10, 0),
                     endTime = LocalTime.of(11, 0),
-                    className = className,
                     subject = subject,
                     date = LocalDate.of(2021, 2, 1),
                 ),
@@ -186,7 +184,6 @@ class ReminderTest : StringSpec({
                     lesson = EventAdapter.DateLessonImpl(
                         startTime = LocalTime.of(10, 0),
                         endTime = LocalTime.of(11, 0),
-                        className = className,
                         subject = subject,
                         date = LocalDate.of(2021, 1, 2),
                     ),
@@ -257,7 +254,6 @@ class ReminderTest : StringSpec({
             lesson = EventAdapter.DateLessonImpl(
                 startTime = LocalTime.of(10, 0),
                 endTime = LocalTime.of(11, 0),
-                className = className,
                 subject = subject,
                 date = LocalDate.of(2021, 1, 2),
             ),
