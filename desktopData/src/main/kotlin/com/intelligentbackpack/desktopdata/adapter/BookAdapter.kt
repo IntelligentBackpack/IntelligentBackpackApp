@@ -1,9 +1,9 @@
 package com.intelligentbackpack.desktopdata.adapter
 
-import book.communication.Book as BookRemote
 import com.intelligentbackpack.desktopdata.adapter.AuthorAdapter.fromDBToDomain
-import com.intelligentbackpack.desktopdata.db.entities.Book as BookDB
 import com.intelligentbackpack.desktopdata.db.relations.BookWithAuthors
+import book.communication.Book as BookRemote
+import com.intelligentbackpack.desktopdata.db.entities.Book as BookDB
 import com.intelligentbackpack.desktopdomain.entities.Book as BookDomain
 
 /**
@@ -28,7 +28,7 @@ internal object BookAdapter {
     fun BookDomain.fromDomainToDB(): BookDB =
         BookDB(
             isbn = this.isbn,
-            title = this.title
+            title = this.title,
         )
 
     /**

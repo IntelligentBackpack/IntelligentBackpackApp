@@ -18,10 +18,9 @@ class BarcodeAnalyser(
     val onBarcodeFound: (String) -> Unit,
     val options: BarcodeScannerOptions = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(Barcode.FORMAT_QR_CODE, Barcode.FORMAT_EAN_13)
-        .build()
+        .build(),
 ) : ImageAnalysis.Analyzer {
     override fun analyze(imageProxy: ImageProxy) {
-
         val scanner = BarcodeScanning.getClient(options)
         val mediaImage = imageProxy.image
         mediaImage?.let {
