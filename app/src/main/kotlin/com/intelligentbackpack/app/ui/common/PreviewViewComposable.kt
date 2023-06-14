@@ -61,15 +61,18 @@ fun PreviewViewComposable(modifier: Modifier, barcodeAnalyser: BarcodeAnalyser) 
 
                     // Bind use cases to camera
                     cameraProvider?.bindToLifecycle(
-                        lifecycleOwner, cameraSelector, preview, imageCapture, imageAnalyzer
+                        lifecycleOwner,
+                        cameraSelector,
+                        preview,
+                        imageCapture,
+                        imageAnalyzer,
                     )
-
                 } catch (exc: Exception) {
                     Log.e("DEBUG", "Use case binding failed", exc)
                 }
             }, ContextCompat.getMainExecutor(context))
             previewView
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }

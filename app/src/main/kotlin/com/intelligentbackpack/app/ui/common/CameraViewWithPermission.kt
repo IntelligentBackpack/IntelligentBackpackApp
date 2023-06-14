@@ -68,7 +68,7 @@ fun CameraViewWithPermission(
             if (permissionState.status.shouldShowRationale) {
                 PermissionsDenied(
                     message = { Text(text = "Permission not available, please enable it in settings") },
-                    onBackMessage = { Text(text = "Insert ISBN manually") },
+                    onBackMessage = { Text(text = "Insert manually") },
                     onBack = onBack,
                     changePermissions = {
                         ContextCompat.startActivity(
@@ -87,7 +87,7 @@ fun CameraViewWithPermission(
             } else {
                 PermissionsDenied(
                     message = { Text(text = "Can't open camera without permission") },
-                    onBackMessage = { Text(text = "Insert ISBN manually") },
+                    onBackMessage = { Text(text = "Insert manually") },
                     onBack = onBack,
                     changePermissions = {
                         permissionState.launchPermissionRequest()
