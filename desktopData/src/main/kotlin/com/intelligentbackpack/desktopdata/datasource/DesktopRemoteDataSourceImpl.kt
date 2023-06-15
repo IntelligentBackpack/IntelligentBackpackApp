@@ -25,6 +25,8 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import okhttp3.RequestBody
+import org.json.JSONObject
 
 class DesktopRemoteDataSourceImpl(
     baseUrl: String,
@@ -144,18 +146,28 @@ class DesktopRemoteDataSourceImpl(
         }
 
     override fun associateBackpack(user: User, hash: String): String {
-        val response = backpackApi.associateBackpack(user.email, hash).execute()
+        val jsonParam = mapOf(Pair("email", user.email))
+        val request = RequestBody.create(
+            okhttp3.MediaType.parse("application/json; charset=utf-8"),
+            (JSONObject(jsonParam)).toString(),
+        )
+        val response = backpackApi.associateBackpack(request, hash).execute()
         if (response.isSuccessful) {
             return hash
         } else {
-            throw DownloadException(getError(response))
+            throw DownloadException(response.errorBody()?.string() ?: "")
         }
     }
 
     override fun disassociateBackpack(user: User, hash: String) {
-        val response = backpackApi.disassociateBackpack(user.email, hash).execute()
+        val jsonParam = mapOf(Pair("email", user.email))
+        val request = RequestBody.create(
+            okhttp3.MediaType.parse("application/json; charset=utf-8"),
+            (JSONObject(jsonParam)).toString(),
+        )
+        val response = backpackApi.disassociateBackpack(request, hash).execute()
         if (!response.isSuccessful) {
-            throw DownloadException(getError(response))
+            throw DownloadException(response.errorBody()?.string() ?: "")
         }
     }
 

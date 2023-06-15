@@ -100,9 +100,8 @@ class DesktopUseCase(private val accessUseCase: AccessUseCase, private val repos
      */
     suspend fun associateBackpack(hash: String): Result<Desktop> =
         accessUseCase.getLoggedUser().mapCatching { user ->
-            val returnedHash = repository.associateBackpack(user, hash)
-            val desktop = repository.getDesktop(user)
-            desktop.associateBackpack(returnedHash)
+            repository.associateBackpack(user, hash)
+            repository.getDesktop(user)
         }
 
     /**
