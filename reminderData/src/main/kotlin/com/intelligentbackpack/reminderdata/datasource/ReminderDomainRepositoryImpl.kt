@@ -20,12 +20,10 @@ class ReminderDomainRepositoryImpl(
         withContext(Dispatchers.IO) {
             localDataSource.deleteData()
             val year = remoteDataSource.downloadYear()
-            localDataSource.saveYear(year)
             val subjects = remoteDataSource.downloadSubjects()
             localDataSource.insertSubjects(subjects.map { it.fromRemoteToDB() })
             val lessons = remoteDataSource.downloadLessonsForStudent(user.email, year)
             if (lessons.isNotEmpty()) {
-                localDataSource.saveCalendarId(lessons[0].idCalendario)
                 localDataSource.saveLessons(lessons.map { it.fromRemoteToDB() })
                 lessons.map { lesson ->
                     val dbLesson = lesson.fromRemoteToDB()

@@ -16,14 +16,6 @@ interface ReminderLocalDataSource {
         subjects.forEach { insertSubject(it) }
     }
 
-    suspend fun saveYear(year: String)
-
-    suspend fun getYear(): String
-
-    suspend fun saveCalendarId(calendarId: Int)
-
-    suspend fun getCalendarId(): Int
-
     suspend fun saveLesson(lesson: Lesson)
 
     suspend fun saveLessons(lessons: List<Lesson>) {
