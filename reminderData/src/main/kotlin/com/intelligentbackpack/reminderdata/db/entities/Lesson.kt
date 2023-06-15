@@ -37,4 +37,6 @@ data class Lesson(
     @ColumnInfo(name = "to_date")
     val toDate: LocalDate,
     val professor: String,
+    @ColumnInfo(name = "calendar_id")
+    val calendarId: Int,
 )

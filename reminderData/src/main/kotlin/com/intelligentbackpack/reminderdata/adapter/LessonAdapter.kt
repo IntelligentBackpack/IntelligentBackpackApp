@@ -22,6 +22,7 @@ object LessonAdapter {
             toDate = LocalDate.parse(dataFine),
             professor = professore,
             module = nomeLezione,
+            calendarId = idCalendario,
         )
     }
 
