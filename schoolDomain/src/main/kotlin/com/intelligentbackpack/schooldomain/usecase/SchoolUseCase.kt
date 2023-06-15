@@ -6,7 +6,7 @@ import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.schooldomain.entities.School
 import com.intelligentbackpack.schooldomain.entities.calendar.CalendarEvent
 import com.intelligentbackpack.schooldomain.entities.calendar.alteration.AlterationEvent
-import com.intelligentbackpack.schooldomain.repository.SchoolRepository
+import com.intelligentbackpack.schooldomain.repository.SchoolDomainRepository
 import java.time.LocalDate
 
 /**
@@ -15,7 +15,7 @@ import java.time.LocalDate
  * @param accessUseCase the access use case
  * @param repository the school repository
  */
-class SchoolUseCase(private val accessUseCase: AccessUseCase, private val repository: SchoolRepository) {
+class SchoolUseCase(private val accessUseCase: AccessUseCase, private val repository: SchoolDomainRepository) {
 
     /**
      * Downloads the school of the user and its data.

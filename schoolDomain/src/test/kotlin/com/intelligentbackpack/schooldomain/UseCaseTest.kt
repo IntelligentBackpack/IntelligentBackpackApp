@@ -11,7 +11,7 @@ import com.intelligentbackpack.schooldomain.entities.calendar.SchoolCalendar
 import com.intelligentbackpack.schooldomain.entities.calendar.alteration.AlterationFactory
 import com.intelligentbackpack.schooldomain.entities.person.Professor
 import com.intelligentbackpack.schooldomain.entities.person.Student
-import com.intelligentbackpack.schooldomain.repository.SchoolRepository
+import com.intelligentbackpack.schooldomain.repository.SchoolDomainRepository
 import com.intelligentbackpack.schooldomain.usecase.SchoolUseCase
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -25,7 +25,7 @@ import java.time.LocalTime
 class UseCaseTest : StringSpec({
 
     val accessUseCase = mockk<AccessUseCase>(relaxed = true)
-    val repository = mockk<SchoolRepository>(relaxed = true)
+    val repository = mockk<SchoolDomainRepository>(relaxed = true)
 
     "should have an error when the user is not student or professor" {
         coEvery { accessUseCase.getLoggedUser() } returns Result.success(normalUser)

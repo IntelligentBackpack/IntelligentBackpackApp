@@ -8,7 +8,7 @@ import com.intelligentbackpack.schooldomain.entities.calendar.alteration.Alterat
  * Repository for the school module.
  *
  */
-interface SchoolRepository {
+interface SchoolDomainRepository {
     /**
      * Gets the school of the user.
      *
