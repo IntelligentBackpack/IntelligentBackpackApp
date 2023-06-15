@@ -74,7 +74,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
     implementation("com.google.firebase:firebase-database-ktx")
     implementation(project(":networkUtility"))
-    implementation(project(":reminderDomain"))
+    implementation(project(":schoolDomain"))
     implementation(project(":accessDomain"))
     testImplementation(gradleTestKit())
     testImplementation(libs.bundles.kotlin.testing)
