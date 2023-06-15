@@ -10,7 +10,7 @@ import com.intelligentbackpack.reminderdata.db.entities.Reminder
 import com.intelligentbackpack.reminderdata.db.entities.Subject
 
 /**
- * Desktop database
+ * Reminder database
  */
 @Database(
     entities = [Subject::class, Lesson::class, Reminder::class],
