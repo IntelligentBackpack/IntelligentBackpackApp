@@ -1,4 +1,4 @@
-package com.intelligentbackpack.reminderdata.api
+package com.intelligentbackpack.schooldata.api
 
 import calendar.communication.BasicMessage
 import calendar.communication.BooksForLesson

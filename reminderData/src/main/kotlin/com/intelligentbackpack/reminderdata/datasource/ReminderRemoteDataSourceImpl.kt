@@ -5,7 +5,7 @@ import calendar.communication.Subject
 import com.intelligentbackpack.networkutility.DownloadException
 import com.intelligentbackpack.networkutility.ErrorHandler
 import com.intelligentbackpack.networkutility.RetrofitHelper
-import com.intelligentbackpack.reminderdata.api.CalendarApi
+import com.intelligentbackpack.schooldata.api.CalendarApi
 
 class ReminderRemoteDataSourceImpl(
     baseUrl: String,

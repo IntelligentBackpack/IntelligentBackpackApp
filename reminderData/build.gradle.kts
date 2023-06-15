@@ -76,6 +76,7 @@ dependencies {
     implementation(project(":networkUtility"))
     implementation(project(":reminderDomain"))
     implementation(project(":accessDomain"))
+    implementation(project(":schoolData"))
     testImplementation(gradleTestKit())
     testImplementation(libs.bundles.kotlin.testing)
     androidTestImplementation(libs.bundles.androidTest)
