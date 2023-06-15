@@ -7,3 +7,6 @@
 [submodule "reminderData/src/main/proto/calendar"]
 	path = reminderData/src/main/proto/calendar
 	url = https://github.com/IntelligentBackpack/CalendarCommunication.git
+[submodule "schoolData/src/main/proto/calendar"]
+	path = schoolData/src/main/proto/calendar
+	url = https://github.com/IntelligentBackpack/CalendarCommunication.git
