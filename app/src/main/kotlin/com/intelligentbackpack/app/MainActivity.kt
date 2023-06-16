@@ -134,11 +134,11 @@ class MainActivity : ComponentActivity() {
                 intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
             }
             tag?.let { detectTagData(it) }
-                .let {
+                ?.let {
                     if (navController.currentDestination?.route != MainNavigation.login &&
                         navController.currentDestination?.route != MainNavigation.createUser
                     ) {
-                        navController.navigate(MainNavigation.schoolSupply(it?.rfidId)) { launchSingleTop = true }
+                        navController.navigate(MainNavigation.schoolSupply(it.rfidId)) { launchSingleTop = true }
                     }
                 }
         }
