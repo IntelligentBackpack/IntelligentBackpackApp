@@ -76,7 +76,6 @@ class DesktopDomainRepositoryImpl(
         withContext(Dispatchers.IO) {
             desktopLocalDataSource.getBackpack()?.let { backpack ->
                 desktopRemoteDataSource.subscribeToBackpackChanges(user, backpack)
-                    .flowOn(Dispatchers.IO)
                     .map { it.getOrDefault(setOf()) }
                     .map { rfidCodes ->
                         val taken = desktopLocalDataSource
@@ -85,6 +84,7 @@ class DesktopDomainRepositoryImpl(
                         desktopLocalDataSource.takeSchoolSuppliesFromBackpack(taken)
                         rfidCodes
                     }
+                    .flowOn(Dispatchers.IO)
             } ?: throw BackpackNotAssociatedException()
         }
 
