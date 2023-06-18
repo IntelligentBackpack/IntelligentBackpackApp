@@ -77,6 +77,7 @@ class DesktopRemoteDataSourceImpl(
                 .filter { it.second is Map<*, *> }
                 .map { it.first to it.second as Map<*, *> }
                 .map { it.first to it.second.keys }
+                .filter { it.first != null }
                 .map {
                     it.first to it.second
                         .map { rfid -> rfid as String }
