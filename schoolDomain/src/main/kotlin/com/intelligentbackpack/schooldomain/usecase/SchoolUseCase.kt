@@ -55,7 +55,8 @@ class SchoolUseCase(private val accessUseCase: AccessUseCase, private val reposi
             if (user.role == Role.STUDENT || user.role == Role.PROFESSOR) {
                 repository.getSchool(user).let { school ->
                     if (user.role == Role.STUDENT) {
-                        school.students.find { it.email == user.email }?.studentClass?.let {
+                        val student = school.students.find { it.email == user.email }
+                        school.classes.find { it.students.contains(student) }?.let {
                             school.calendar?.getStudentsEvents(
                                 it,
                                 date,
@@ -74,14 +75,6 @@ class SchoolUseCase(private val accessUseCase: AccessUseCase, private val reposi
                 throw ActionNotAllowedForUserException()
             }
         }
-
-    /**
-     * Gets the calendar events of the user for today.
-     *
-     * @return the result of the operation with the calendar events.
-     */
-    suspend fun getUserTodayCalendarEvents() =
-        getUserCalendarEventsForDate(LocalDate.now())
 
     /**
      * Adds an alteration event to the school calendar.
@@ -115,9 +108,10 @@ class SchoolUseCase(private val accessUseCase: AccessUseCase, private val reposi
             if (user.role == Role.STUDENT || user.role == Role.PROFESSOR) {
                 repository.getSchool(user).let { school ->
                     if (user.role == Role.STUDENT) {
-                        school.students.find { it.email == user.email }?.studentClass?.let { studentClass ->
+                        val student = school.students.find { it.email == user.email }
+                        school.classes.find { it.students.contains(student) }?.let { studentClass ->
                             school.calendar?.getAllStudentEvents(studentClass) ?: emptySet()
-                        }
+                        } ?: emptySet()
                     } else {
                         school.professors.find { it.email == user.email }?.let { professor ->
                             school.calendar?.getAllProfessorEvents(professor) ?: emptySet()

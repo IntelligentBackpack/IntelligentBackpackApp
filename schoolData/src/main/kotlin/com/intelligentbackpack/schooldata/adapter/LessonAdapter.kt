@@ -26,9 +26,10 @@ object LessonAdapter {
         )
     }
 
-    fun DBLesson.fromDBToDomain(professor: Professor, schoolClass: Class): WeekLesson {
+    fun DBLesson.fromDBToDomain(professor: Professor, schoolClass: Class, subject: String): WeekLesson {
         return createWeekLesson(
-            subject = module,
+            subject = subject,
+            module = module,
             professor = professor,
             studentsClass = schoolClass,
             startTime = startTime,

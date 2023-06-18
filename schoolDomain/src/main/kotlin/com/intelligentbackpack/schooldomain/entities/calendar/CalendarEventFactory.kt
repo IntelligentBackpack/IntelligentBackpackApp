@@ -115,21 +115,17 @@ object CalendarEventFactory {
         } else if (fromDate.isAfter(toDate)) {
             throw IllegalArgumentException("fromDate cannot be after toDate")
         } else {
-            if (!professor.professorSubjects.contains(subject)) {
-                throw IllegalArgumentException("professor must teach subject")
-            } else {
-                return WeekLessonImpl(
-                    subject,
-                    module,
-                    professor,
-                    studentsClass,
-                    startTime,
-                    endTime,
-                    day,
-                    fromDate,
-                    toDate,
-                )
-            }
+            return WeekLessonImpl(
+                subject,
+                module,
+                professor,
+                studentsClass,
+                startTime,
+                endTime,
+                day,
+                fromDate,
+                toDate,
+            )
         }
     }
 

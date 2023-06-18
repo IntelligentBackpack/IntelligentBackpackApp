@@ -1,7 +1,6 @@
 package com.intelligentbackpack.schooldomain
 
 import com.intelligentbackpack.schooldomain.entities.Class
-import com.intelligentbackpack.schooldomain.entities.School
 import com.intelligentbackpack.schooldomain.entities.calendar.CalendarEventFactory
 import com.intelligentbackpack.schooldomain.entities.calendar.SchoolCalendar
 import com.intelligentbackpack.schooldomain.entities.calendar.alteration.AlterationFactory
@@ -19,8 +18,6 @@ import java.time.LocalTime
 class RescheduleEventTest : StringSpec({
 
     val schoolYear = "2022-2023"
-    val schoolName = "ITI L. Da Vinci"
-    val schoolCity = "Rimini"
     val class1A = "1A"
     val email = "test@gmail.com"
     val name = "John"
@@ -28,10 +25,8 @@ class RescheduleEventTest : StringSpec({
     val math = "Math"
     val physics = "Physics"
     val calendar = SchoolCalendar.create(schoolYear)
-    val school = School.create(schoolName, schoolCity)
-        .replaceCalendar(calendar)
-    val studentClass = Class.create(class1A, school)
-    val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf(math, physics)))
+    val studentClass = Class.create(class1A)
+    val professor = Professor.create(email, name, surname)
     val mondayLesson1 = CalendarEventFactory.createWeekLesson(
         day = DayOfWeek.MONDAY,
         subject = math,

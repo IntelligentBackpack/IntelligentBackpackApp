@@ -1,7 +1,6 @@
 package com.intelligentbackpack.schooldomain
 
 import com.intelligentbackpack.schooldomain.entities.Class
-import com.intelligentbackpack.schooldomain.entities.School
 import com.intelligentbackpack.schooldomain.entities.calendar.CalendarEventFactory.createWeekLesson
 import com.intelligentbackpack.schooldomain.entities.calendar.SchoolCalendar
 import com.intelligentbackpack.schooldomain.entities.person.Professor
@@ -16,8 +15,6 @@ import java.time.LocalTime
 class CalendarTest : StringSpec({
 
     val schoolYear = "2022-2023"
-    val schoolName = "ITI L. Da Vinci"
-    val schoolCity = "Rimini"
     val class1A = "1A"
     val email = "test@gmail.com"
     val name = "John"
@@ -25,9 +22,8 @@ class CalendarTest : StringSpec({
     val math = "Math"
     val physics = "Physics"
     val calendar = SchoolCalendar.create(schoolYear)
-    val school = School.create(schoolName, schoolCity).replaceCalendar(calendar)
-    val studentClass = Class.create(class1A, school)
-    val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf(math, physics)))
+    val studentClass = Class.create(class1A)
+    val professor = Professor.create(email, name, surname)
     val singleMondayLesson = createWeekLesson(
         day = DayOfWeek.MONDAY,
         subject = math,
@@ -95,22 +91,6 @@ class CalendarTest : StringSpec({
         newCalendar.professorsTimeTableLesson shouldBe mapOf(professor to mapOf(DayOfWeek.MONDAY to lessons.toList()))
     }
 
-    "should have an error if a professor doesn't teach a subject" {
-        val exception = shouldThrow<IllegalArgumentException> {
-            createWeekLesson(
-                day = DayOfWeek.MONDAY,
-                subject = "Italian",
-                startTime = LocalTime.of(8, 30),
-                endTime = LocalTime.of(9, 30),
-                professor = professor,
-                fromDate = LocalDate.of(2022, 9, 12),
-                toDate = LocalDate.of(2022, 12, 23),
-                studentsClass = studentClass,
-            )
-        }
-        exception.message shouldBe "professor must teach subject"
-    }
-
     "should have an error if fromDate is after toDate" {
         val exception = shouldThrow<IllegalArgumentException> {
             createWeekLesson(
@@ -128,7 +108,7 @@ class CalendarTest : StringSpec({
     }
 
     "should have an error if a professor teaches more than one subject at the same time" {
-        val studentClass2 = Class.create("2A", school)
+        val studentClass2 = Class.create("2A")
         shouldThrow<EventOverlappingException> {
             val lessons = setOf(
                 singleMondayLesson,

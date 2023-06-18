@@ -249,16 +249,15 @@ class UseCaseTest : StringSpec({
         private val calendar = SchoolCalendar.create(schoolYear)
         private val school = School.create("School", "City")
             .replaceCalendar(calendar)
-        val studentClass = Class.create("1A", school)
+        val studentClass = Class.create("1A")
 
         val date: LocalDate = LocalDate.of(2022, 9, 12)
         const val math = "Math"
-        const val physics = "Physics"
+        private const val physics = "Physics"
         val professor = Professor.create(
             email = professorUser.email,
             name = professorUser.name,
             surname = professorUser.surname,
-            professorClasses = mapOf(studentClass to setOf(math, physics)),
         )
         private val singleMondayLesson = CalendarEventFactory.createWeekLesson(
             day = DayOfWeek.MONDAY,
@@ -302,7 +301,6 @@ class UseCaseTest : StringSpec({
                 email = studentUser.email,
                 name = studentUser.name,
                 surname = studentUser.surname,
-                studentClass = studentClass,
             )
             val lessons = mondayLessons + tuesday
             return school

@@ -19,7 +19,6 @@ object ProfessorAdapter {
             email = email,
             name = name,
             surname = surname,
-            professorClasses = emptyMap(),
         )
     }
 }

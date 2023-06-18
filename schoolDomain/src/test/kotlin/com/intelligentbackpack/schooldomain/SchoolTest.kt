@@ -38,44 +38,27 @@ class SchoolTest : StringSpec({
     }
 
     "should be able to create a Class" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
+        val studentClass = Class.create(class1A)
         studentClass.name shouldBe class1A
-        studentClass.school shouldBe school
     }
 
     "should have a error when creating a Class with blank name" {
-        val school = School.create(schoolName, schoolCity)
         val exception = shouldThrow<IllegalArgumentException> {
-            Class.create("", school)
+            Class.create("")
         }
         exception.message shouldBe "name cannot be blank"
     }
 
     "should add a student to a class" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
-        val student = Student.create(email, name, surname, studentClass)
+        val studentClass = Class.create(class1A)
+        val student = Student.create(email, name, surname)
         val newStudentClass = studentClass.addStudent(student)
-        student.studentClass shouldBe studentClass
         newStudentClass.students shouldBe setOf(student)
     }
 
-    "should have a error when adding a student to a class that is not his" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
-        val student = Student.create(email, name, surname, studentClass)
-        val studentClass2 = Class.create("2A", school)
-        val exception = shouldThrow<IllegalArgumentException> {
-            studentClass2.addStudent(student)
-        }
-        exception.message shouldBe "student is not in this class"
-    }
-
     "should have a error when adding a student to a class in which he is already in" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
-        val student = Student.create(email, name, surname, studentClass)
+        val studentClass = Class.create(class1A)
+        val student = Student.create(email, name, surname)
         val newStudentClass = studentClass.addStudent(student)
         val exception = shouldThrow<IllegalArgumentException> {
             newStudentClass.addStudent(student)
@@ -83,69 +66,20 @@ class SchoolTest : StringSpec({
         exception.message shouldBe "student is already in this class"
     }
 
-    "should have a error when adding a student to a class that is not in the same school" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
-        val student = Student.create(email, name, surname, studentClass)
-        val school2 = School.create("Liceo A. Einstein", "Rimini")
-        val studentClass2 = Class.create(class1A, school2)
-        val exception = shouldThrow<IllegalArgumentException> {
-            studentClass2.addStudent(student)
-        }
-        exception.message shouldBe "student is not in this class"
-    }
-
     "should add a professor to a class" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
-        val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf("Math", "Physics")))
-        val result = studentClass.addProfessor(professor, setOf("Math", "Physics"))
-        val newStudentClass = result.first
-        val newProfessor = result.second
+        val studentClass = Class.create(class1A)
+        val professor = Professor.create(email, name, surname)
+        val newStudentClass = studentClass.addProfessor(professor, setOf("Math", "Physics"))
         newStudentClass.professors shouldBe setOf(professor)
         newStudentClass.professorTeachSubjects[professor] shouldBe setOf("Math", "Physics")
-        newProfessor.professorClasses shouldBe setOf(newStudentClass)
-        newProfessor.professorSubjectsInClasses shouldBe mapOf(newStudentClass to setOf("Math", "Physics"))
-    }
-
-    "should be able to add a professor to a class even when the class isn't his" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
-        val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf("Math", "Physics")))
-        val studentClass2 = Class.create("2A", school)
-        val result = studentClass2.addProfessor(professor, setOf("Math", "Physics"))
-        val newProfessor = result.second
-        newProfessor.professorClasses shouldBe setOf(studentClass, studentClass2)
-    }
-
-    "should have a error when adding a professor to a class that is not in the same school" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
-        val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf("Math", "Physics")))
-        val school2 = School.create("Liceo A. Einstein", "Rimini")
-        val studentClass2 = Class.create(class1A, school2)
-        val exception = shouldThrow<IllegalArgumentException> {
-            studentClass2.addProfessor(professor, setOf("Math", "Physics"))
-        }
-        exception.message shouldBe "professor doesn't teach the subjects in this school"
     }
 
     "should have a error when adding a professor to a class with no subjects" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
-        val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf("Math")))
+        val studentClass = Class.create(class1A)
+        val professor = Professor.create(email, name, surname)
         val exception = shouldThrow<IllegalArgumentException> {
             studentClass.addProfessor(professor, setOf())
         }
         exception.message shouldBe "subjects cannot be empty"
-    }
-
-    "should update subject when adding a professor to a class in which he is already in" {
-        val school = School.create(schoolName, schoolCity)
-        val studentClass = Class.create(class1A, school)
-        val professor = Professor.create(email, name, surname, mapOf(studentClass to setOf("Math")))
-        studentClass.addProfessor(professor, setOf("Math"))
-        professor.addProfessorToClass(studentClass, setOf("Physics"))
-        studentClass.addProfessor(professor, setOf("Physics"))
     }
 })

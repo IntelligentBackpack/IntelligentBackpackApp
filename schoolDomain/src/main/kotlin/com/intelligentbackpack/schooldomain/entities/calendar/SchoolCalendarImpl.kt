@@ -63,38 +63,29 @@ internal data class SchoolCalendarImpl(
     }
 
     override fun addLessons(lessons: Set<WeekLesson>): SchoolCalendar {
-        if (lessons.any { lesson ->
-                lesson.professor.professorClasses.any {
-                    it.school.calendar?.schoolYear != schoolYear
+        if (lessons.any { lesson -> this.lessons.any { it == lesson } }) {
+            throw IllegalArgumentException("lessons must not be in current lessons")
+        } else {
+            val checkOverlappingStudents = lessons.any { lesson ->
+                areLessonsInTimeTableOverlapping(
+                    lessons,
+                    studentsTimeTableLesson[lesson.studentsClass] ?: emptyMap(),
+                ) {
+                    it.studentsClass == lesson.studentsClass
                 }
             }
-        ) {
-            throw IllegalArgumentException("lessons must be in the same school year")
-        } else {
-            if (lessons.any { lesson -> this.lessons.any { it == lesson } }) {
-                throw IllegalArgumentException("lessons must not be in current lessons")
+            val checkOverlappingProfessors = lessons.any { lesson ->
+                areLessonsInTimeTableOverlapping(
+                    lessons,
+                    professorsTimeTableLesson[lesson.professor] ?: emptyMap(),
+                ) {
+                    it.professor == lesson.professor
+                }
+            }
+            if (checkOverlappingStudents || checkOverlappingProfessors) {
+                throw EventOverlappingException()
             } else {
-                val checkOverlappingStudents = lessons.any { lesson ->
-                    areLessonsInTimeTableOverlapping(
-                        lessons,
-                        studentsTimeTableLesson[lesson.studentsClass] ?: emptyMap(),
-                    ) {
-                        it.studentsClass == lesson.studentsClass
-                    }
-                }
-                val checkOverlappingProfessors = lessons.any { lesson ->
-                    areLessonsInTimeTableOverlapping(
-                        lessons,
-                        professorsTimeTableLesson[lesson.professor] ?: emptyMap(),
-                    ) {
-                        it.professor == lesson.professor
-                    }
-                }
-                if (checkOverlappingStudents || checkOverlappingProfessors) {
-                    throw EventOverlappingException()
-                } else {
-                    return copy(lessons = this.lessons + lessons)
-                }
+                return copy(lessons = this.lessons + lessons)
             }
         }
     }
