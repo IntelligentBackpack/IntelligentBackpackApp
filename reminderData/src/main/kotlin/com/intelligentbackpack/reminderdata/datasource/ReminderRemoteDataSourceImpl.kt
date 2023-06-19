@@ -50,7 +50,39 @@ class ReminderRemoteDataSourceImpl(
     override suspend fun downloadBooksForLesson(lesson: Lesson): List<String> {
         val response = calendarApi.getBooksForLesson(lesson).execute()
         if (response.isSuccessful) {
-            return response.body()?.isbNsList ?: emptyList()
+            return response.body()?.message2List ?: emptyList()
+        } else {
+            throw DownloadException(ErrorHandler.getError(response))
+        }
+    }
+
+    override suspend fun createNewReminderForLesson(email: String, lesson: Lesson, isbn: String): String {
+        val jsonParam = mapOf(
+            ("Email" to email),
+            ("Nome_lezione" to lesson.nomeLezione),
+            ("Materia" to lesson.materia),
+            ("Giorno" to lesson.giorno),
+            ("Ora_inizio" to lesson.oraInizio),
+            ("Ora_fine" to lesson.oraFine),
+            ("Professore" to lesson.professore),
+            ("Data_Inizio" to lesson.dataInizio),
+            ("Data_Fine" to lesson.dataFine),
+            ("ID_Calendario" to lesson.idCalendario),
+        )
+        val lessonjson = JSONObject(jsonParam)
+        val isbnjson = JSONArray(listOf(isbn))
+        val jsonParamReminder = mapOf(
+            ("lesson" to lessonjson),
+            ("ISBNs" to isbnjson),
+            ("email_executor" to email),
+        )
+        val request = RequestBody.create(
+            okhttp3.MediaType.parse("application/json; charset=utf-8"),
+            (JSONObject(jsonParamReminder)).toString(),
+        )
+        val response = calendarApi.createReminderForLesson(request).execute()
+        if (response.isSuccessful) {
+            return response.body()?.message ?: ""
         } else {
             throw DownloadException(ErrorHandler.getError(response))
         }
