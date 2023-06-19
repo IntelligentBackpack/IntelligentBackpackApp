@@ -9,7 +9,7 @@ import java.time.LocalDate
  * @param lesson - lesson for which the book is assigned
  * @param date - date of the reminder
  */
-internal data class ReminderForLessonDateImpl(
+data class ReminderForLessonDateImpl(
     override val isbn: String,
     override val lesson: EventAdapter.Lesson,
     override val date: LocalDate,
