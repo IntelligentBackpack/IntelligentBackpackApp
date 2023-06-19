@@ -6,7 +6,15 @@ import com.intelligentbackpack.networkutility.DownloadException
 import com.intelligentbackpack.networkutility.ErrorHandler
 import com.intelligentbackpack.networkutility.RetrofitHelper
 import com.intelligentbackpack.schooldata.api.CalendarApi
+import okhttp3.RequestBody
+import org.json.JSONArray
+import org.json.JSONObject
 
+/**
+ * Implementation of Remote data source for the reminder module.
+ *
+ * @param baseUrl the base url of the api.
+ */
 class ReminderRemoteDataSourceImpl(
     baseUrl: String,
 ) : ReminderRemoteDataSource {
@@ -48,7 +56,22 @@ class ReminderRemoteDataSourceImpl(
     }
 
     override suspend fun downloadBooksForLesson(lesson: Lesson): List<String> {
-        val response = calendarApi.getBooksForLesson(lesson).execute()
+        val jsonParam = mapOf(
+            ("Nome_lezione" to lesson.nomeLezione),
+            ("Materia" to lesson.materia),
+            ("Giorno" to lesson.giorno),
+            ("Ora_inizio" to lesson.oraInizio),
+            ("Ora_fine" to lesson.oraFine),
+            ("Professore" to lesson.professore),
+            ("Data_Inizio" to lesson.dataInizio),
+            ("Data_Fine" to lesson.dataFine),
+            ("ID_Calendario" to lesson.idCalendario),
+        )
+        val request = RequestBody.create(
+            okhttp3.MediaType.parse("application/json; charset=utf-8"),
+            (JSONObject(jsonParam)).toString(),
+        )
+        val response = calendarApi.getBooksForLesson(request).execute()
         if (response.isSuccessful) {
             return response.body()?.message2List ?: emptyList()
         } else {
