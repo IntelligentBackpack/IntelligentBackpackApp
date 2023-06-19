@@ -54,7 +54,7 @@ interface CalendarApi {
      * @return the lessons as a [Lessons].
      */
     @GET("/utility/lessons/Professor")
-    suspend fun getLessonsForProfessor(@Query("email") email: String, @Query("year") year: String): Call<Lessons>
+    fun getLessonsForProfessor(@Query("email") email: String, @Query("year") year: String): Call<Lessons>
 
     /**
      * Gets the information of a professor.
