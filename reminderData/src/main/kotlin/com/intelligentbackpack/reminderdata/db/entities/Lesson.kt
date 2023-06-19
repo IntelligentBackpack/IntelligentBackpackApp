@@ -5,6 +5,23 @@ import androidx.room.PrimaryKey
 import java.time.LocalDate
 import java.time.LocalTime
 
+/**
+ * Represents a lesson in the database.
+ * Foreign key: [subjectId] -> [Subject.subjectId]
+ * Indices: ([day], [startTime], [endTime], [fromDate], [toDate]), [subjectId]
+ *
+ * @property id The ID of the lesson.
+ * @property subjectId The ID of the subject.
+ * @property module The module of the lesson.
+ * @property day The day of the lesson.
+ * @property startTime The start time of the lesson.
+ * @property endTime The end time of the lesson.
+ * @property fromDate The start date of the lesson.
+ * @property toDate The end date of the lesson.
+ * @property professor The professor of the lesson.
+ * @property calendarId The ID of the calendar of the lesson in the remote calendar service.
+ *
+ */
 @androidx.room.Entity(
     tableName = "Lessons",
     foreignKeys = [

@@ -11,7 +11,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 /**
- * Desktop DAO to access database
+ * Reminder DAO to access database
  */
 @Dao
 internal interface ReminderDAO {
@@ -22,15 +22,27 @@ internal interface ReminderDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSubject(subject: Subject)
 
+    /**
+     * Insert a lesson
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertLesson(lesson: Lesson)
 
+    /**
+     * Insert a reminder
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertReminder(reminders: Reminder)
 
+    /**
+     * Delete all subjects
+     */
     @Query("DELETE FROM Subjects")
     fun deleteReminders()
 
+    /**
+     * Delete all lessons
+     */
     @Query("DELETE FROM Lessons")
     fun deleteLessons()
 
@@ -40,6 +52,9 @@ internal interface ReminderDAO {
     @Query("SELECT * FROM Subjects")
     fun getSubjects(): List<Subject>
 
+    /**
+     * Get the lesson with the given parameters
+     */
     @Query(
         "SELECT * " +
             "FROM Lessons " +
@@ -51,6 +66,9 @@ internal interface ReminderDAO {
     )
     fun getLesson(day: Int, startTime: LocalTime, endTime: LocalTime, fromDate: LocalDate, toDate: LocalDate): Lesson?
 
+    /**
+     * Get the reminder with the given parameters
+     */
     @Query(
         "SELECT * " +
             "FROM Reminders " +
@@ -61,9 +79,15 @@ internal interface ReminderDAO {
     )
     fun getReminder(lessonId: Int, isbn: String, fromDate: String, toDate: String): Reminder?
 
+    /**
+     * Get all lessons
+     */
     @Query("SELECT * FROM Lessons")
     fun getLessons(): List<Lesson>
 
+    /**
+     * Get all reminders
+     */
     @Query("SELECT * FROM Reminders")
     fun getReminders(): List<Reminder>
 }

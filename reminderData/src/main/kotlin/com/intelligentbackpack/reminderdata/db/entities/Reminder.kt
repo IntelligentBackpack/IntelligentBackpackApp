@@ -2,6 +2,17 @@ package com.intelligentbackpack.reminderdata.db.entities
 
 import java.time.LocalDate
 
+/**
+ * Represents a reminder.
+ * Foreign key: [lessonId] -> [Lesson.id]
+ * Indices: [lessonId]
+ *
+ * @property id The ID of the reminder.
+ * @property lessonId The ID of the lesson.
+ * @property isbn The ISBN of the book.
+ * @property fromDate The start date of the reminder.
+ * @property toDate The end date of the reminder.
+ */
 @androidx.room.Entity(
     tableName = "Reminders",
     foreignKeys = [

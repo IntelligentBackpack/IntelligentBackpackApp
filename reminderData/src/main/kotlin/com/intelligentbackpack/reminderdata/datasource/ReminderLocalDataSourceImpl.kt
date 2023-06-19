@@ -7,6 +7,9 @@ import com.intelligentbackpack.reminderdata.db.entities.Subject
 import java.time.LocalDate
 import java.time.LocalTime
 
+/**
+ * Local data source for the reminder module.
+ */
 class ReminderLocalDataSourceImpl(
     private val database: ReminderDatabase,
 ) : ReminderLocalDataSource {

@@ -4,6 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * Represents a subject.
+ *
+ * @property subjectId The ID of the subject.
+ * @property name The name of the subject.
+ */
 @Entity(
     tableName = "Subjects",
 )
