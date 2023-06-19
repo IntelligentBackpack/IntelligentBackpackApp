@@ -225,4 +225,24 @@ class ReminderUseCase(
             throw IllegalStateException()
         }
     }
+
+    /**
+     * Check if the backpack is associated
+     *
+     * @return the result of the operation with the boolean value
+     */
+    suspend fun isBackpackAssociated() =
+        desktopUseCase.getDesktop().mapCatching {
+            it.isBackpackAssociated
+        }
+
+    /**
+     * Check if the user is a professor
+     *
+     * @return the result of the operation with the boolean value
+     */
+    suspend fun isUserProfessor() =
+        accessUseCase.getLoggedUser().mapCatching {
+            it.role == Role.PROFESSOR
+        }
 }
