@@ -132,7 +132,10 @@ fun CalendarTopBar(
                     )
                 }
             }
-            IconButton(onClick = { selectedDate = today }) {
+            IconButton(onClick = {
+                selectedDate = today
+                onDateChange(selectedDate)
+            }) {
                 Row(
                     modifier = Modifier,
                     verticalAlignment = Alignment.CenterVertically,
@@ -146,14 +149,20 @@ fun CalendarTopBar(
                 modifier = Modifier,
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                IconButton(onClick = { selectedDate = selectedDate.minusDays(1) }) {
+                IconButton(onClick = {
+                    selectedDate = selectedDate.minusDays(1)
+                    onDateChange(selectedDate)
+                }) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowLeft,
                         contentDescription = "Previous day",
                         tint = textColor,
                     )
                 }
-                IconButton(onClick = { selectedDate = selectedDate.plusDays(1) }) {
+                IconButton(onClick = {
+                    selectedDate = selectedDate.plusDays(1)
+                    onDateChange(selectedDate)
+                }) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowRight,
                         contentDescription = "Next day",
