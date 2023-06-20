@@ -24,25 +24,26 @@ import com.intelligentbackpack.app.viewdata.SchoolSupplyView
 fun SchoolSupplyCard(
     navHostController: NavHostController,
     schoolSupply: SchoolSupplyView,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
         onClick = {
             navHostController.navigate(MainNavigation.schoolSupply(schoolSupply.rfidCode))
-        }
+        },
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .padding(8.dp),
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.Start,
         ) {
             Text(text = schoolSupply.type)
             Divider(
                 modifier = Modifier
                     .fillMaxWidth(),
-                thickness = 1.dp, color = Color.Black
+                thickness = 1.dp,
+                color = Color.Black,
             )
             schoolSupply.book?.let { BookDetails(it) }
         }
@@ -61,7 +62,7 @@ fun SchoolSupplyCardPreview() {
                 title = "The Intelligent Backpack",
                 authors = setOf("John Doe"),
                 isbn = "1234567890",
-            )
+            ),
         ),
         Modifier.fillMaxWidth(0.9f),
     )

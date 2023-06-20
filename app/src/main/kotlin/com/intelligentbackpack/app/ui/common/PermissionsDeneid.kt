@@ -27,9 +27,8 @@ fun PermissionsDenied(
             .fillMaxSize(0.8f)
             .padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
-    )
-    {
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         message()
         Button(
             onClick = onBack,
@@ -38,12 +37,11 @@ fun PermissionsDenied(
             enabled = true,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.primary
+                contentColor = MaterialTheme.colorScheme.primary,
             ),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
             shape = MaterialTheme.shapes.medium,
-        )
-        {
+        ) {
             onBackMessage()
         }
         Button(
@@ -55,11 +53,10 @@ fun PermissionsDenied(
             enabled = true,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.background
+                contentColor = MaterialTheme.colorScheme.background,
             ),
             shape = MaterialTheme.shapes.medium,
-        )
-        {
+        ) {
             changePermissionsMessage()
         }
     }

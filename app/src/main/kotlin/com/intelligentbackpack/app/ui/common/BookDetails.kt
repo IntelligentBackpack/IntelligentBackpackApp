@@ -6,17 +6,18 @@ import com.intelligentbackpack.app.viewdata.BookView
 
 @Composable
 fun BookDetails(
-    book: BookView
+    book: BookView,
 ) {
     Text(text = "Title: ${book.title}")
     Text(text = "ISBN: ${book.isbn}")
-    if (book.authors.isNotEmpty())
-        if (book.authors.size == 1)
+    if (book.authors.isNotEmpty()) {
+        if (book.authors.size == 1) {
             Text(text = "Author: ${book.authors.first()}")
-        else {
+        } else {
             Text(text = "Authors:")
             for (author in book.authors) {
                 Text(text = "- $author")
             }
         }
+    }
 }
