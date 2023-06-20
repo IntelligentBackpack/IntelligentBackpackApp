@@ -40,7 +40,7 @@ fun CameraViewWithPermission(
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.End,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
