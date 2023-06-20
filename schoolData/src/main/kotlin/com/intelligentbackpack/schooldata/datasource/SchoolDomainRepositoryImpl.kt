@@ -107,6 +107,7 @@ class SchoolDomainRepositoryImpl(
 
     private suspend fun downloadForProfessor(user: User, year: String) {
         val professor = remoteDataSource.downloadProfessor(user.email, year)
+        localDataSource.insertProfessor(professor.professorFromRemoteToDB())
         localDataSource.saveSchool(professor.getInsitutesName(0), professor.getInsitutesCitta(0))
         val lessons = remoteDataSource.downloadLessonsForProfessor(user.email, year)
         lessons.groupBy { it.idCalendario }.forEach { (calendar, lessonsForClass) ->
