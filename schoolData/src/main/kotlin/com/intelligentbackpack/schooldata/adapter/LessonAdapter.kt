@@ -11,8 +11,16 @@ import java.util.Locale
 import calendar.communication.Lesson as RemoteLesson
 import com.intelligentbackpack.schooldata.db.entities.Lesson as DBLesson
 
+/**
+ * Adapter for the lesson entity.
+ */
 object LessonAdapter {
 
+    /**
+     * Converts a lesson from the remote to the database.
+     *
+     * @return the lesson for the database.
+     */
     fun RemoteLesson.fromRemoteToDB(teachId: Int): DBLesson {
         return DBLesson(
             id = 0,
@@ -26,6 +34,11 @@ object LessonAdapter {
         )
     }
 
+    /**
+     * Converts a lesson from the database to the domain.
+     *
+     * @return the lesson for the domain.
+     */
     fun DBLesson.fromDBToDomain(professor: Professor, schoolClass: Class, subject: String): WeekLesson {
         return createWeekLesson(
             subject = subject,
