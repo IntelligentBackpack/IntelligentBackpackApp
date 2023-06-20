@@ -7,6 +7,8 @@ import com.intelligentbackpack.networkutility.DownloadException
 import com.intelligentbackpack.networkutility.ErrorHandler
 import com.intelligentbackpack.networkutility.RetrofitHelper
 import com.intelligentbackpack.schooldata.api.CalendarApi
+import okhttp3.RequestBody
+import org.json.JSONObject
 
 class SchoolRemoteDataSourceImpl(
     baseUrl: String,
@@ -49,7 +51,7 @@ class SchoolRemoteDataSourceImpl(
     }
 
     override suspend fun downloadStudent(email: String, year: String): UserInformations {
-        val response = calendarApi.getStudentInformations(email, year).execute()
+        val response = calendarApi.getStudentInformation(email, year).execute()
         if (response.isSuccessful) {
             return response.body()!!
         } else {
@@ -58,7 +60,7 @@ class SchoolRemoteDataSourceImpl(
     }
 
     override suspend fun downloadProfessor(email: String, year: String): UserInformations {
-        val response = calendarApi.getProfessorInformations(email, year).execute()
+        val response = calendarApi.getProfessorInformation(email, year).execute()
         if (response.isSuccessful) {
             return response.body()!!
         } else {
@@ -67,7 +69,22 @@ class SchoolRemoteDataSourceImpl(
     }
 
     override suspend fun getClass(lesson: Lesson): String {
-        val response = calendarApi.getClassByLesson(lesson).execute()
+        val jsonParam = mapOf(
+            ("Nome_lezione" to lesson.nomeLezione),
+            ("Materia" to lesson.materia),
+            ("Giorno" to lesson.giorno),
+            ("Ora_inizio" to lesson.oraInizio),
+            ("Ora_fine" to lesson.oraFine),
+            ("Professore" to lesson.professore),
+            ("Data_Inizio" to lesson.dataInizio),
+            ("Data_Fine" to lesson.dataFine),
+            ("ID_Calendario" to lesson.idCalendario),
+        )
+        val request = RequestBody.create(
+            okhttp3.MediaType.parse("application/json; charset=utf-8"),
+            (JSONObject(jsonParam)).toString(),
+        )
+        val response = calendarApi.getClassByLesson(request).execute()
         if (response.isSuccessful) {
             return response.body()?.message ?: ""
         } else {
