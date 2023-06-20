@@ -56,13 +56,14 @@ class ReminderDomainRepositoryImpl(
             }
         }
 
-    override suspend fun getReminder(): Reminder {
-        val lessons = localDataSource.getLessons()
-        val subjects = localDataSource.getSubjects()
-        return DomainReminder.create(
-            localDataSource.getReminders().map { it.fromDBToDomain(lessons, subjects) }.toSet(),
-        )
-    }
+    override suspend fun getReminder(): Reminder =
+        withContext(Dispatchers.IO) {
+            val lessons = localDataSource.getLessons()
+            val subjects = localDataSource.getSubjects()
+            DomainReminder.create(
+                localDataSource.getReminders().map { it.fromDBToDomain(lessons, subjects) }.toSet(),
+            )
+        }
 
     override suspend fun addBookForLesson(reminderForLesson: ReminderForLesson, user: User) {
         TODO("Not yet implemented")
