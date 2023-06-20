@@ -12,6 +12,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.intelligentbackpack.reminderdomain.entitites.Reminder as DomainReminder
 
+/**
+ * Reminder domain repository implementation
+ *
+ * @param remoteDataSource the remote data source
+ * @param localDataSource the local data source
+ */
 class ReminderDomainRepositoryImpl(
     private val remoteDataSource: ReminderRemoteDataSource,
     private val localDataSource: ReminderLocalDataSource,
