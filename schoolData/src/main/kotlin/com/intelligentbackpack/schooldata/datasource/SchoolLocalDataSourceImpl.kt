@@ -59,6 +59,10 @@ class SchoolLocalDataSourceImpl(
 
     override suspend fun deleteData() {
         database.schoolDao().deleteLessons()
+        database.schoolDao().deleteTeaches()
+        database.schoolDao().deleteProfessors()
+        database.schoolDao().deleteClasses()
+        database.schoolDao().deleteSubjects()
     }
 
     override suspend fun saveSchool(school: String, city: String) {
