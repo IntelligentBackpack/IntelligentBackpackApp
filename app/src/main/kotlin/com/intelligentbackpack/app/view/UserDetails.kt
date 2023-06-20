@@ -20,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,13 +34,13 @@ import androidx.navigation.compose.rememberNavController
 import com.intelligentbackpack.accessdomain.entities.Role
 import com.intelligentbackpack.app.ui.navigation.MainNavigation
 import com.intelligentbackpack.app.viewdata.UserView
-import com.intelligentbackpack.app.viewmodel.LoginViewModel
+import com.intelligentbackpack.app.viewmodel.UserViewModel
 
 @Composable
 fun UserDetails(
     navController: NavHostController,
-    loginViewModel: LoginViewModel = viewModel(
-        factory = LoginViewModel.Factory,
+    userViewModel: UserViewModel = viewModel(
+        factory = UserViewModel.Factory,
     ),
 ) {
     val openDialog = remember { mutableStateOf(false) }
@@ -50,7 +51,7 @@ fun UserDetails(
                 openDialog.value = false
             },
             title = {
-                Text(text = "OOperation error")
+                Text(text = "Operation error")
             },
             text = {
                 Text(error.value)
@@ -68,30 +69,35 @@ fun UserDetails(
             },
         )
     }
-    val user = loginViewModel.user.observeAsState()
-    if (user.value == null) {
-        navController.navigate(MainNavigation.login)
+    LaunchedEffect(key1 = null) {
+        userViewModel.getUser({}, {
+            openDialog.value = true
+            error.value = it
+        })
     }
-    UserDetailsPage(
-        navController = navController,
-        user = user.value!!,
-        logout = {
-            loginViewModel.logout({
-                navController.navigate(MainNavigation.login)
-            }, {
-                openDialog.value = true
-                error.value = it
-            })
-        },
-        delete = {
-            loginViewModel.deleteUser({
-                navController.navigate(MainNavigation.login)
-            }, {
-                openDialog.value = true
-                error.value = it
-            })
-        },
-    )
+    val user = userViewModel.user.observeAsState()
+    user.value?.let {
+        UserDetailsPage(
+            navController = navController,
+            user = user.value!!,
+            logout = {
+                userViewModel.logout({
+                    navController.navigate(MainNavigation.login)
+                }, {
+                    openDialog.value = true
+                    error.value = it
+                })
+            },
+            delete = {
+                userViewModel.deleteUser({
+                    navController.navigate(MainNavigation.login)
+                }, {
+                    openDialog.value = true
+                    error.value = it
+                })
+            },
+        )
+    }
 }
 
 @Composable
