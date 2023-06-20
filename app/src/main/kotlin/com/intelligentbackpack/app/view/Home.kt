@@ -44,6 +44,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -67,17 +69,17 @@ import com.intelligentbackpack.app.ui.navigation.MainNavigation
 import com.intelligentbackpack.app.ui.navigation.NavigationItem
 import com.intelligentbackpack.app.ui.navigation.TabNavigation
 import com.intelligentbackpack.app.viewdata.UserView
-import com.intelligentbackpack.app.viewmodel.LoginViewModel
+import com.intelligentbackpack.app.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun Home(
     navController: NavHostController,
-    loginViewModel: LoginViewModel = viewModel(
-        factory = LoginViewModel.Factory,
+    homeViewModel: HomeViewModel = viewModel(
+        factory = HomeViewModel.Factory,
     ),
 ) {
-    val user = loginViewModel.user.observeAsState()
+    val user = homeViewModel.user.observeAsState()
     val context = LocalContext.current
     val pInfo: PackageInfo = context.packageManager.getPackageInfoCompat(context.packageName, 0)
     val version = pInfo.versionName
@@ -91,7 +93,7 @@ fun Home(
                 openErrorDialog = false
             },
             title = {
-                Text(text = "Delete error")
+                Text(text = "Error")
             },
             text = {
                 Text(error)
@@ -109,18 +111,29 @@ fun Home(
             },
         )
     }
+    LaunchedEffect(key1 = Unit) {
+        homeViewModel.getUser({
+            /*homeViewModel.getReminders {
+                error = it
+                openErrorDialog = true
+            }*/
+        }, {
+            navController.navigate(MainNavigation.login)
+        })
+    }
     user.value?.let { userNotNull ->
         HomePage(
             navController = navController,
             user = userNotNull,
             logout = {
-                loginViewModel.logout({
+                homeViewModel.logout({
                     navController.navigate(MainNavigation.login)
                 }, {
                     error = it
                     openErrorDialog = true
                 })
             },
+            missingItems = homeViewModel.missing.observeAsState(),
             version = version,
             versionCode = versionCode,
         )
@@ -133,6 +146,7 @@ fun HomePage(
     navController: NavHostController,
     user: UserView,
     logout: () -> Unit,
+    missingItems: State<Int?>,
     version: String,
     versionCode: Long,
 ) {
@@ -290,9 +304,12 @@ fun HomePage(
                             tabs.forEachIndexed { index, item ->
                                 NavigationBarItem(
                                     icon = {
-                                        if (item.route == TabNavigation.forget) {
+                                        if (item.route == TabNavigation.forget &&
+                                            missingItems.value != null &&
+                                            missingItems.value!! > 0
+                                        ) {
                                             BadgedBox(
-                                                badge = { Badge { Text("5") } },
+                                                badge = { Badge { Text(missingItems.toString()) } },
                                             ) {
                                                 Icon(imageVector = item.icon, contentDescription = item.title)
                                             }
@@ -383,5 +400,8 @@ fun HomePreview() {
         email = "JohnDoe@gmail.com",
         password = "Test#1234",
     )
-    HomePage(navController, user, {}, "1.0.0", 1)
+    val missing = remember {
+        mutableStateOf(0)
+    }
+    HomePage(navController, user, {}, missing, "1.0.0", 1)
 }
