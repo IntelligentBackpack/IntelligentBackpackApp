@@ -15,74 +15,75 @@ import com.intelligentbackpack.schooldomain.entities.School
 import com.intelligentbackpack.schooldomain.entities.calendar.SchoolCalendar
 import com.intelligentbackpack.schooldomain.entities.calendar.alteration.AlterationEvent
 import com.intelligentbackpack.schooldomain.repository.SchoolDomainRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
+/**
+ * Implementation of the school domain repository.
+ *
+ * @param remoteDataSource the remote data source.
+ * @param localDataSource the local data source.
+ */
 class SchoolDomainRepositoryImpl(
     private val remoteDataSource: SchoolRemoteDataSource,
     private val localDataSource: SchoolLocalDataSource,
 ) : SchoolDomainRepository {
-    override suspend fun getSchool(user: User): School {
-        val schoolName = localDataSource.getSchool()
-        val schoolCity = localDataSource.getCity()
-        val school = School.create(schoolName, schoolCity)
-        val teaches = localDataSource.getTeaches()
-        val teachesByProfessor = teaches.groupBy { it.professorEmail }
-        val lessons = localDataSource.getLessons()
-        val subjects = localDataSource.getSubjects()
-        val year = localDataSource.getYear()
-        val classes = localDataSource.getClasses().map { it.fromDBToDomain(school) }.let {
-            if (user.role == Role.STUDENT) {
-                val userClass = localDataSource.getUserClass()
-                it.map { schoolClass ->
-                    if (schoolClass.name == userClass) {
-                        schoolClass.addStudent(user.fromAccessToSchool(schoolClass))
-                    } else {
-                        schoolClass
+    override suspend fun getSchool(user: User): School =
+        withContext(Dispatchers.IO) {
+            val schoolName = localDataSource.getSchool()
+            val schoolCity = localDataSource.getCity()
+            val school = School.create(schoolName, schoolCity)
+            val teaches = localDataSource.getTeaches()
+            val lessons = localDataSource.getLessons()
+            val subjects = localDataSource.getSubjects()
+            val year = localDataSource.getYear()
+            val classes = localDataSource.getClasses().map { it.fromDBToDomain() }.let {
+                if (user.role == Role.STUDENT) {
+                    val userClass = localDataSource.getUserClass()
+                    it.map { schoolClass ->
+                        if (schoolClass.name == userClass) {
+                            schoolClass.addStudent(user.fromAccessToSchool())
+                        } else {
+                            schoolClass
+                        }
                     }
+                } else {
+                    it
                 }
-            } else {
-                it
+            }
+            val professors = localDataSource.getProfessors().map { it.fromDBToDomain() }
+            val domainLessons = lessons.map { lesson ->
+                lesson.fromDBToDomain(
+                    professors.first { professor ->
+                        professor.email == teaches.first {
+                            lesson.teachId == it.id
+                        }.professorEmail
+                    },
+                    classes.first { schoolClass ->
+                        schoolClass.name == teaches.first {
+                            lesson.teachId == it.id
+                        }.schoolClass
+                    },
+                    subjects.first { subject ->
+                        subject.subjectId == teaches.first {
+                            lesson.teachId == it.id
+                        }.subjectId
+                    }.name,
+                )
+            }
+            val calendar = SchoolCalendar.create(year)
+            classes.fold(school) { acc, schoolClass ->
+                acc.addClass(schoolClass)
+            }.let { schoolWithClasses ->
+                professors.fold(schoolWithClasses) { acc, professor ->
+                    acc.addProfessor(professor)
+                }
+            }.let { schoolWithClassesAndProfessors ->
+                calendar.addLessons(domainLessons.toSet()).let {
+                    schoolWithClassesAndProfessors.replaceCalendar(it)
+                }
             }
         }
-        val professors = localDataSource.getProfessors().map { it.fromDBToDomain() }
-            .map { professor ->
-                teachesByProfessor[professor.email]?.let { teach ->
-                    teach.groupBy { it.schoolClass }.entries.fold(professor) { acc, entry ->
-                        val className = classes.first { it.name == entry.key }
-                        val subjectsForClass = entry.value.map {
-                            subjects.first { subject -> subject.subjectId == it.subjectId }.name
-                        }.toSet()
-                        acc.addProfessorToClass(className, subjectsForClass)
-                    }
-                } ?: professor
-            }
-        val domainLessons = lessons.map { lesson ->
-            lesson.fromDBToDomain(
-                professors.first { professor ->
-                    professor.email == teaches.first {
-                        lesson.teachId == it.id
-                    }.professorEmail
-                },
-                classes.first { schoolClass ->
-                    schoolClass.name == teaches.first {
-                        lesson.teachId == it.id
-                    }.schoolClass
-                },
-
-            )
-        }
-        val calendar = SchoolCalendar.create(year)
-        return classes.fold(school) { acc, schoolClass ->
-            acc.addClass(schoolClass)
-        }.let { schoolWithClasses ->
-            professors.fold(schoolWithClasses) { acc, professor ->
-                acc.addProfessor(professor)
-            }
-        }.let { schoolWithClassesAndProfessors ->
-            calendar.addLessons(domainLessons.toSet()).let {
-                schoolWithClassesAndProfessors.replaceCalendar(it)
-            }
-        }
-    }
 
     private suspend fun downloadForStudent(user: User, year: String) {
         val student = remoteDataSource.downloadStudent(user.email, year)
@@ -122,21 +123,23 @@ class SchoolDomainRepositoryImpl(
         }
     }
 
-    override suspend fun downloadSchool(user: User) {
-        val year = remoteDataSource.downloadYear()
-        localDataSource.saveYear(year)
-        val subjects = remoteDataSource.downloadSubjects()
-        localDataSource.insertSubjects(subjects.map { it.fromRemoteToDB() })
-        when (user.role) {
-            Role.STUDENT ->
-                downloadForStudent(user, year)
+    override suspend fun downloadSchool(user: User) =
+        withContext(Dispatchers.IO) {
+            localDataSource.deleteData()
+            val year = remoteDataSource.downloadYear()
+            localDataSource.saveYear(year)
+            val subjects = remoteDataSource.downloadSubjects()
+            localDataSource.insertSubjects(subjects.map { it.fromRemoteToDB() })
+            when (user.role) {
+                Role.STUDENT ->
+                    downloadForStudent(user, year)
 
-            Role.PROFESSOR ->
-                downloadForProfessor(user, year)
+                Role.PROFESSOR ->
+                    downloadForProfessor(user, year)
 
-            else -> {}
+                else -> {}
+            }
         }
-    }
 
     override suspend fun addAlterationEvent(alterationEvent: AlterationEvent) {
         TODO("Not yet implemented")
