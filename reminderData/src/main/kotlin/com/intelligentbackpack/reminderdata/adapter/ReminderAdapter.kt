@@ -50,4 +50,27 @@ object ReminderAdapter {
             lesson = lessons.first { it.id == lessonId }.fromDBToDomain(subjects),
         )
     }
+
+    /**
+     * Converts a [ReminderForLesson] to a [DBReminder].
+     *
+     * @param lesson The [DBLesson] to get the [DBLesson.id] from.
+     */
+    fun ReminderForLesson.fromDomainToDB(lesson: DBLesson): DBReminder {
+        return DBReminder(
+            id = 0,
+            lessonId = lesson.id,
+            isbn = isbn,
+            fromDate = when (this) {
+                is ReminderForLessonDate -> date
+                is ReminderForLessonIntervalPeriod -> startDate
+                else -> throw IllegalStateException("Unknown type of reminder")
+            },
+            toDate = when (this) {
+                is ReminderForLessonDate -> date
+                is ReminderForLessonIntervalPeriod -> endDate
+                else -> throw IllegalStateException("Unknown type of reminder")
+            },
+        )
+    }
 }
