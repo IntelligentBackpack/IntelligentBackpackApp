@@ -1,8 +1,11 @@
 package com.intelligentbackpack.reminderdata.datasource
 
 import com.intelligentbackpack.accessdomain.entities.User
+import com.intelligentbackpack.reminderdata.adapter.LessonAdapter.fromDBToRemote
+import com.intelligentbackpack.reminderdata.adapter.LessonAdapter.fromDomainToDB
 import com.intelligentbackpack.reminderdata.adapter.LessonAdapter.fromRemoteToDB
 import com.intelligentbackpack.reminderdata.adapter.ReminderAdapter.fromDBToDomain
+import com.intelligentbackpack.reminderdata.adapter.ReminderAdapter.fromDomainToDB
 import com.intelligentbackpack.reminderdata.adapter.ReminderAdapter.fromRemoteToDB
 import com.intelligentbackpack.reminderdata.adapter.SubjectAdapter.fromRemoteToDB
 import com.intelligentbackpack.reminderdomain.entitites.Reminder
@@ -65,9 +68,28 @@ class ReminderDomainRepositoryImpl(
             )
         }
 
-    override suspend fun addBookForLesson(reminderForLesson: ReminderForLesson, user: User) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun addBookForLesson(reminderForLesson: ReminderForLesson, user: User) =
+        withContext(Dispatchers.IO) {
+            val subjects = localDataSource.getSubjects()
+            val abstractLessonDB = reminderForLesson.lesson.fromDomainToDB(subjects)
+            val lesson = localDataSource.getLesson(
+                abstractLessonDB.day,
+                abstractLessonDB.startTime,
+                abstractLessonDB.endTime,
+                abstractLessonDB.fromDate,
+                abstractLessonDB.toDate,
+            )
+            if (lesson != null) {
+                localDataSource.saveReminder(
+                    reminderForLesson.fromDomainToDB(lesson),
+                )
+                remoteDataSource.createNewReminderForLesson(
+                    user.email,
+                    lesson.fromDBToRemote(),
+                    reminderForLesson.isbn,
+                )
+            }
+        }
 
     override suspend fun removeBookForLesson(reminderForLesson: ReminderForLesson, user: User) {
         TODO("Not yet implemented")
