@@ -15,6 +15,12 @@ import com.intelligentbackpack.reminderdomain.usecase.ReminderUseCase
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+/**
+ * View model for the home screen.
+ *
+ * @param accessUseCase the access use case.
+ * @param reminderUseCase the reminder use case.
+ */
 class HomeViewModel(
     private val accessUseCase: AccessUseCase,
     private val reminderUseCase: ReminderUseCase,
@@ -51,9 +57,14 @@ class HomeViewModel(
         }
     }
 
+    /**
+     * Gets the reminders.
+     *
+     * @param error the error callback.
+     */
     fun getReminders(error: (String) -> Unit) {
         viewModelScope.launch {
-            reminderUseCase.subscribeToRemindUserOfMissingSchoolSupplyForDate(LocalDate.now().plusDays(1))
+            reminderUseCase.subscribeToRemindUserOfMissingSchoolSupplyForDate(LocalDate.now())
                 .onSuccess { flow ->
                     flow?.collect { reminders ->
                         missingImpl.postValue(reminders.size)
