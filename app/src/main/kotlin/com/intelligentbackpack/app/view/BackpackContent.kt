@@ -144,7 +144,7 @@ fun BackpackContent(
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                             shape = MaterialTheme.shapes.medium,
                         ) {
-                            Text("Associate backpack")
+                            Text("Disassociated backpack")
                         }
                     }
                 }
