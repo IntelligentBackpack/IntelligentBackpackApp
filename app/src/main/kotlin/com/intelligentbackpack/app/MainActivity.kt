@@ -24,6 +24,7 @@ import com.intelligentbackpack.app.sensor.NFCTag.Companion.detectTagData
 import com.intelligentbackpack.app.ui.navigation.MainNavigation
 import com.intelligentbackpack.app.ui.theme.IntelligentBackpackAppTheme
 import com.intelligentbackpack.app.view.CreateUser
+import com.intelligentbackpack.app.view.EventDetails
 import com.intelligentbackpack.app.view.Home
 import com.intelligentbackpack.app.view.Login
 import com.intelligentbackpack.app.view.SchoolSupplyDetails
@@ -107,6 +108,19 @@ class MainActivity : ComponentActivity() {
                                 LocalViewModelStoreOwner provides viewModelStoreOwner,
                             ) {
                                 SchoolSupplyDetails(navController = navController, rfid = rfid)
+                            }
+                        }
+                        composable(
+                            MainNavigation.event,
+                            arguments = listOf(navArgument(MainNavigation.eventParam) { nullable = false }),
+                        ) {
+                            CompositionLocalProvider(
+                                LocalViewModelStoreOwner provides viewModelStoreOwner,
+                            ) {
+                                EventDetails(
+                                    navController = navController,
+                                    eventIndex = it.arguments?.getInt(MainNavigation.eventParam) ?: 0,
+                                )
                             }
                         }
                     }
