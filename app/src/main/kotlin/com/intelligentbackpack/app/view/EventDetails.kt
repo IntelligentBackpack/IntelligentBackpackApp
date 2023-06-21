@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -68,6 +69,32 @@ fun EventDetails(
         factory = CalendarViewModel.Factory,
     ),
 ) {
+    var openErrorDialog by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
+    if (openErrorDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                openErrorDialog = false
+            },
+            title = {
+                Text(text = "Event error")
+            },
+            text = {
+                Text(error)
+            },
+            confirmButton = {
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        openErrorDialog = false
+                    },
+                ) {
+                    Text("Ok")
+                }
+            },
+        )
+    }
     var eventView: EventView? by rememberSaveable { mutableStateOf(null) }
     var books: List<BookView> by rememberSaveable { mutableStateOf(emptyList()) }
     var isUserProfessor by rememberSaveable { mutableStateOf(false) }
@@ -77,8 +104,12 @@ fun EventDetails(
         calendarViewModel.getSuppliesForEvent(eventIndex, { supplies ->
             books = supplies.filter { it.book != null }.map { it.book!! }
         }) {
+            error = it
+            openErrorDialog = true
         }
         calendarViewModel.isUserProfessor({ isUserProfessor = it }) {
+            error = it
+            openErrorDialog = true
         }
     }
     if (openBookDialog) {
@@ -106,6 +137,8 @@ fun EventDetails(
                             allBooks = all
                             selectedBook = allBooks.first()
                         }) {
+                            error = it
+                            openErrorDialog = true
                         }
                     }
                     Text(text = "Select book to add to event")
@@ -156,9 +189,14 @@ fun EventDetails(
                                         calendarViewModel.getSuppliesForEvent(eventIndex, { supplies ->
                                             books = supplies.filter { it.book != null }.map { it.book!! }
                                         }) {
+                                            error = it
+                                            openErrorDialog = true
                                         }
                                     },
-                                    { },
+                                    {
+                                        error = it
+                                        openErrorDialog = true
+                                    },
                                 )
                             },
                             colors = ButtonDefaults.buttonColors(
