@@ -113,10 +113,10 @@ fun Home(
     }
     LaunchedEffect(key1 = Unit) {
         homeViewModel.getUser({
-            /*homeViewModel.getReminders {
+            homeViewModel.getReminders {
                 error = it
                 openErrorDialog = true
-            }*/
+            }
         }, {
             navController.navigate(MainNavigation.login)
         })
@@ -309,7 +309,7 @@ fun HomePage(
                                             missingItems.value!! > 0
                                         ) {
                                             BadgedBox(
-                                                badge = { Badge { Text(missingItems.toString()) } },
+                                                badge = { Badge { Text(missingItems.value.toString()) } },
                                             ) {
                                                 Icon(imageVector = item.icon, contentDescription = item.title)
                                             }
