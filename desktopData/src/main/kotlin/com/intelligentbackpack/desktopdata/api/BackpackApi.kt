@@ -3,7 +3,7 @@ package com.intelligentbackpack.desktopdata.api
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.DELETE
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -20,6 +20,6 @@ interface BackpackApi {
     /**
      * Disassociates a backpack from an email.
      */
-    @DELETE("/unregister/{hash}")
+    @HTTP(method = "DELETE", path = "/unregister/{hash}", hasBody = true)
     fun disassociateBackpack(@Body email: RequestBody, @Path("hash") hash: String): Call<Void>
 }
