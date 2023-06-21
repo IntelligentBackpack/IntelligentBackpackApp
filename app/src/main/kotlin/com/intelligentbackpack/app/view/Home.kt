@@ -356,7 +356,7 @@ fun HomePage(
                                     CompositionLocalProvider(
                                         LocalViewModelStoreOwner provides viewModelStoreOwner,
                                     ) {
-                                        Calendar()
+                                        Calendar(navController = navController)
                                     }
                                 }
                                 composable(TabNavigation.backpack) {
@@ -370,7 +370,7 @@ fun HomePage(
                                     CompositionLocalProvider(
                                         LocalViewModelStoreOwner provides viewModelStoreOwner,
                                     ) {
-                                        Text(text = "Forget")
+                                        Reminder(navController = navController)
                                     }
                                 }
                             }
