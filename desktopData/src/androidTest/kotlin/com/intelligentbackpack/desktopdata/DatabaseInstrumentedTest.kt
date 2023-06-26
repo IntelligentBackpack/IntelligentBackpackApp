@@ -8,7 +8,8 @@ import com.intelligentbackpack.desktopdata.db.entities.Author
 import com.intelligentbackpack.desktopdata.db.entities.Book
 import com.intelligentbackpack.desktopdata.db.entities.SchoolSupply
 import com.intelligentbackpack.desktopdata.db.entities.Wrote
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -20,29 +21,29 @@ import org.junit.runner.RunWith
 class DatabaseInstrumentedTest {
     private val author1 = Author(
         authorId = 1,
-        name = "Author 1"
+        name = "Author 1",
     )
     private val author2 = Author(
         authorId = 2,
-        name = "Author 2"
+        name = "Author 2",
     )
     private val book = Book(
         isbn = "1234567890",
-        title = "The Book"
+        title = "The Book",
     )
     private val wrote1 = Wrote(
         isbn = book.isbn,
-        authorId = author1.authorId
+        authorId = author1.authorId,
     )
     private val wrote2 = Wrote(
         isbn = book.isbn,
-        authorId = author2.authorId
+        authorId = author2.authorId,
     )
     private val schoolSupply = SchoolSupply(
         rfid = "FF:FF:FF:FF",
         type = 0,
         isbn = book.isbn,
-        inBackpack = false
+        inBackpack = false,
     )
 
     private fun insertBook(db: DesktopDatabase) {
@@ -106,7 +107,7 @@ class DatabaseInstrumentedTest {
         insertBook(db)
         val author = Author(
             authorId = 0,
-            name = "Author 3"
+            name = "Author 3",
         )
         val authorId = db.desktopDao().addAuthor(author)
         val authorFromDB = db.desktopDao().getAuthor(authorId)
