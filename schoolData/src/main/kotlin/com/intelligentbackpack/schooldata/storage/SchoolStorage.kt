@@ -36,9 +36,9 @@ interface SchoolStorage {
     /**
      * Saves the student class.
      *
-     * @param name the name of the class.
+     * @param className the name of the class.
      */
-    fun saveClass(name: String)
+    fun saveClass(className: String)
 
     /**
      * Gets the student class.

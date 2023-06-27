@@ -28,10 +28,10 @@ class SchoolStorageImpl(private val context: Context) : SchoolStorage {
         return sp.contains("class")
     }
 
-    override fun saveClass(name: String) {
+    override fun saveClass(className: String) {
         val sp = context.getSharedPreferences(name, Context.MODE_PRIVATE)
         val edit = sp.edit()
-        edit.putString("class", name)
+        edit.putString("class", className)
         edit.apply()
     }
 
