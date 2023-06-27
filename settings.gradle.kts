@@ -7,8 +7,8 @@ pluginManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.11.1"
-    id("org.danilopianini.gradle-pre-commit-git-hooks") version "1.0.23"
+    id("com.gradle.enterprise") version "3.13.3"
+    id("org.danilopianini.gradle-pre-commit-git-hooks") version "1.1.8"
 }
 
 dependencyResolutionManagement {
@@ -36,3 +36,12 @@ gitHooks {
 
 rootProject.name = "IntelligentBackpackApp"
 include(":app")
+include(":accessDomain")
+include(":accessData")
+include(":desktopDomain")
+include(":desktopData")
+include(":schoolDomain")
+include(":schoolData")
+include(":reminderDomain")
+include(":reminderData")
+include(":networkUtility")

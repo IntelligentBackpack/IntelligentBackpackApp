@@ -6,6 +6,27 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.qa)
     alias(libs.plugins.taskTree)
+    jacoco
+}
+
+subprojects {
+    apply(plugin = "org.danilopianini.gradle-kotlin-qa")
+    apply(plugin = "jacoco")
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(false)
+        csv.required.set(false)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
 }
 
 buildscript {
@@ -17,5 +38,8 @@ buildscript {
     dependencies {
         classpath(libs.build.gradle)
         classpath(libs.gradle.plugin)
+        classpath(libs.google.services)
+        classpath(libs.firebase.crashlytics.gradle)
+        classpath(libs.org.jacoco.core)
     }
 }

@@ -1,0 +1,9 @@
+[submodule "accessData/src/main/proto"]
+	path = accessData/src/main/proto
+	url = https://github.com/IntelligentBackpack/AccessCommunication.git
+[submodule "desktopData/src/main/proto/book"]
+	path = desktopData/src/main/proto/book
+	url = https://github.com/IntelligentBackpack/BookCommunication.git
+[submodule "schoolData/src/main/proto/calendar"]
+	path = schoolData/src/main/proto/calendar
+	url = https://github.com/IntelligentBackpack/CalendarCommunication.git
