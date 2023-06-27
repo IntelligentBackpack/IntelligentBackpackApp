@@ -14,9 +14,7 @@ import com.intelligentbackpack.reminderdomain.entitites.ReminderForLessonDate
 import com.intelligentbackpack.reminderdomain.repository.ReminderDomainRepository
 import com.intelligentbackpack.reminderdomain.usecase.ReminderUseCase
 import com.intelligentbackpack.schooldomain.entities.Class
-import com.intelligentbackpack.schooldomain.entities.School
 import com.intelligentbackpack.schooldomain.entities.calendar.CalendarEventFactory
-import com.intelligentbackpack.schooldomain.entities.calendar.SchoolCalendar
 import com.intelligentbackpack.schooldomain.entities.person.Professor
 import com.intelligentbackpack.schooldomain.usecase.SchoolUseCase
 import io.kotest.core.spec.style.StringSpec
@@ -470,19 +468,14 @@ class UseCaseTest : StringSpec({
             dayOfWeek = DayOfWeek.MONDAY,
             fromDate = LocalDate.of(2021, 1, 1),
             toDate = LocalDate.of(2021, 1, 31),
-            className = className,
             subject = math,
         )
         private const val schoolYear = "2022-2023"
-        private val calendar = SchoolCalendar.create(schoolYear)
-        private val school = School.create("School", "City")
-            .replaceCalendar(calendar)
-        val studentClass = Class.create(className, school)
+        val studentClass = Class.create(className)
         val professor = Professor.create(
             email = professorUser.email,
             name = professorUser.name,
             surname = professorUser.surname,
-            professorClasses = mapOf(studentClass to setOf(math)),
         )
 
         val copy = BookCopy.build {
