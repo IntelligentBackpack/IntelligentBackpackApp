@@ -28,6 +28,7 @@ class SchoolDomainRepositoryImpl(
     private val remoteDataSource: SchoolRemoteDataSource,
     private val localDataSource: SchoolLocalDataSource,
 ) : SchoolDomainRepository {
+
     override suspend fun getSchool(user: User): School =
         withContext(Dispatchers.IO) {
             val schoolName = localDataSource.getSchool()
@@ -81,6 +82,12 @@ class SchoolDomainRepositoryImpl(
             }.let { schoolWithClassesAndProfessors ->
                 calendar.addLessons(domainLessons.toSet()).let {
                     schoolWithClassesAndProfessors.replaceCalendar(it)
+                }
+            }.let {
+                if (user.role == Role.STUDENT) {
+                    it.addStudent(user.fromAccessToSchool())
+                } else {
+                    it
                 }
             }
         }
