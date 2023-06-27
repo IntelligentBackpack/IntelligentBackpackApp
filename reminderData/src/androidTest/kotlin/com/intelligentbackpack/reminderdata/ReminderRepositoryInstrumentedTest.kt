@@ -27,9 +27,8 @@ import com.intelligentbackpack.reminderdata.db.entities.Lesson as DBLesson
 import com.intelligentbackpack.reminderdata.db.entities.Subject as DBSubject
 
 /**
- * Instrumented test, which will execute on an Android device.
+ * Instrumented test for reminder repository
  *
- * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
 class ReminderRepositoryInstrumentedTest {
