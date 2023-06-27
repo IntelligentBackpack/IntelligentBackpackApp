@@ -8,6 +8,9 @@ import com.intelligentbackpack.accessdata.datasource.AccessRemoteDataSource
 import com.intelligentbackpack.accessdata.exception.MissingUserException
 import com.intelligentbackpack.accessdata.storage.UserStorageImpl
 import com.intelligentbackpack.accessdomain.entities.User
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -15,11 +18,6 @@ import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -34,24 +32,21 @@ class AccessDomainRepositoryInstrumentedTest {
         name = "test"
         surname = "test"
     }
+    private val accessRemoteDataSource = mockk<AccessRemoteDataSource>(relaxed = true)
 
     @Test
     fun loginWithData() = runBlocking {
         val appContext = InstrumentationRegistry
             .getInstrumentation()
             .targetContext
-        val accessRemoteDataSource = mock(AccessRemoteDataSource::class.java)
-        `when`(
-            accessRemoteDataSource.accessWithData(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(),
-            ),
-        ).thenReturn(expectedUser)
+        coEvery { accessRemoteDataSource.accessWithData(any(), any()) } returns expectedUser
         val localAccessDataSource = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         val accessDomainRepository = AccessDomainRepositoryImpl(localAccessDataSource, accessRemoteDataSource)
         assertFalse(localAccessDataSource.isUserSaved())
         val user = accessDomainRepository.loginWithData("test@gmail.com", "Test#1234")
-        verify(accessRemoteDataSource).accessWithData("test@gmail.com", "Test#1234")
+        coVerify {
+            accessRemoteDataSource.accessWithData("test@gmail.com", "Test#1234")
+        }
         assertEquals(expectedUser, user)
         assertEquals(expectedUser, localAccessDataSource.getUser())
         assertTrue(localAccessDataSource.isUserSaved())
@@ -62,19 +57,15 @@ class AccessDomainRepositoryInstrumentedTest {
         val appContext = InstrumentationRegistry
             .getInstrumentation()
             .targetContext
-        val accessRemoteDataSource = mock(AccessRemoteDataSource::class.java)
-        `when`(
-            accessRemoteDataSource.accessWithData(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(),
-            ),
-        ).thenReturn(expectedUser)
+        coEvery { accessRemoteDataSource.accessWithData(any(), any()) } returns expectedUser
         val accessLocalDataSource = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         accessLocalDataSource.saveUser(expectedUser)
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataSource, accessRemoteDataSource)
         assertTrue(accessLocalDataSource.isUserSaved())
         val user = accessDomainRepository.automaticLogin()
-        verify(accessRemoteDataSource, times(1)).accessWithData("test@gmail.com", "Test#1234")
+        coVerify(exactly = 1) {
+            accessRemoteDataSource.accessWithData("test@gmail.com", "Test#1234")
+        }
         assertEquals(expectedUser, user)
     }
 
@@ -83,7 +74,6 @@ class AccessDomainRepositoryInstrumentedTest {
         val appContext = InstrumentationRegistry
             .getInstrumentation()
             .targetContext
-        val accessRemoteDataSource = mock(AccessRemoteDataSource::class.java)
         val accessLocalDataStorage = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataStorage, accessRemoteDataSource)
         assertFalse(accessLocalDataStorage.isUserSaved())
@@ -100,7 +90,6 @@ class AccessDomainRepositoryInstrumentedTest {
             InstrumentationRegistry
                 .getInstrumentation()
                 .targetContext
-        val accessRemoteDataSource = mock(AccessRemoteDataSource::class.java)
         val accessLocalDataSource = AccessLocalDataSourceImpl(UserStorageImpl(appContext))
         accessLocalDataSource.saveUser(expectedUser)
         val accessDomainRepository = AccessDomainRepositoryImpl(accessLocalDataSource, accessRemoteDataSource)
