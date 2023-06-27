@@ -11,7 +11,7 @@ plugins {
 }
 
 android {
-    namespace = "com.intelligentbackpack.schooldata"
+    namespace = "com.intelligentbackpack.schoolData"
     compileSdk = 33
 
     defaultConfig {
@@ -56,6 +56,8 @@ android {
     packaging {
         resources {
             merges += "META-INF/INDEX.LIST"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -71,15 +73,13 @@ dependencies {
     implementation(libs.bundles.grpc)
     implementation(libs.bundles.room)
     kapt(libs.androidx.room.compiler)
-    implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
-    implementation("com.google.firebase:firebase-database-ktx")
     implementation(project(":networkUtility"))
-    implementation(project(":schoolDomain"))
     implementation(project(":accessDomain"))
+    implementation(project(":schoolDomain"))
     testImplementation(gradleTestKit())
     testImplementation(libs.bundles.kotlin.testing)
     androidTestImplementation(libs.bundles.androidTest)
-    androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.mockk.android)
     androidTestUtil(libs.orchestrator)
 }
 

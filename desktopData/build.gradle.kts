@@ -56,6 +56,8 @@ android {
     packaging {
         resources {
             merges += "META-INF/INDEX.LIST"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -79,7 +81,7 @@ dependencies {
     testImplementation(gradleTestKit())
     testImplementation(libs.bundles.kotlin.testing)
     androidTestImplementation(libs.bundles.androidTest)
-    androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.mockk.android)
     androidTestUtil(libs.orchestrator)
 }
 
