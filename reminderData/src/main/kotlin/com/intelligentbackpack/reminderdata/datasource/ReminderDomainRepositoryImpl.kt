@@ -1,5 +1,6 @@
 package com.intelligentbackpack.reminderdata.datasource
 
+import com.intelligentbackpack.accessdomain.entities.Role
 import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.reminderdata.adapter.LessonAdapter.fromDBToRemote
 import com.intelligentbackpack.reminderdata.adapter.LessonAdapter.fromDomainToDB
@@ -31,7 +32,11 @@ class ReminderDomainRepositoryImpl(
             val year = remoteDataSource.downloadYear()
             val subjects = remoteDataSource.downloadSubjects()
             localDataSource.insertSubjects(subjects.map { it.fromRemoteToDB() })
-            val lessons = remoteDataSource.downloadLessonsForStudent(user.email, year)
+            val lessons = if (user.role == Role.STUDENT) {
+                remoteDataSource.downloadLessonsForStudent(user.email, year)
+            } else {
+                remoteDataSource.downloadLessonsForProfessor(user.email, year)
+            }
             if (lessons.isNotEmpty()) {
                 localDataSource.saveLessons(lessons.map { it.fromRemoteToDB() })
                 lessons.map { lesson ->
