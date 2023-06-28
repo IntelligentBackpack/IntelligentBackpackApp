@@ -127,7 +127,10 @@ jobs:
       - build
       - test
       - device-test-latest
-    if: always() && github.ref == 'refs/heads/main'
+    if: |
+      always() &&
+      (needs.device-test-latest.result == 'success' || needs.device-test-latest.result == 'skipped') &&
+      github.ref == 'refs/heads/main'
     concurrency:
       group: release
       cancel-in-progress: false
