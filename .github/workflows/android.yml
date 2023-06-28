@@ -66,6 +66,7 @@ jobs:
   device-test-latest:
     runs-on: macos-latest
     needs: gen-api-latest
+    if: github.ref != 'refs/heads/main'
     strategy:
       matrix:
         api-level: ${{ fromJson(needs.gen-api-latest.outputs.api) }}
@@ -86,10 +87,37 @@ jobs:
           echo $GOOGLE_SERVICES > app/google-services.json
         env:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
-      - name: Device test with Gradle
-        uses: ReactiveCircus/android-emulator-runner@v2
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
         with:
-          api-level: ${{matrix.api-level}}
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          target: google_apis
+          arch: x86_64
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Device test with Gradle
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
           target: google_apis
           arch: x86_64
           script: ./gradlew connectedCheck

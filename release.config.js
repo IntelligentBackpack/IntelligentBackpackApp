@@ -1,7 +1,7 @@
 var publishCmd = `
 git tag -a -f \${nextRelease.version} \${nextRelease.version} -F CHANGELOG.md || exit 1
-./gradlew assembleRelease --stacktrace -PstorePassword="${KEY_STORE_PASSWORD}" -PkeyPassword="${KEY_PASSWORD}" -PkeyAlias="${ALIAS}" || exit 2
-./gradlew bundleRelease --stacktrace -PstorePassword="${KEY_STORE_PASSWORD}" -PkeyPassword="${KEY_PASSWORD}" -PkeyAlias="${ALIAS}" || exit 3
+./gradlew assembleRelease --stacktrace -PstorePassword="$KEY_STORE_PASSWORD" -PkeyPassword="$KEY_PASSWORD" -PkeyAlias="$ALIAS" || exit 2
+./gradlew bundleRelease --stacktrace -PstorePassword="$KEY_STORE_PASSWORD" -PkeyPassword="$KEY_PASSWORD" -PkeyAlias="$ALIAS" || exit 3
 git push --force origin \${nextRelease.version} || exit 4
 `
 var config = require('semantic-release-preconfigured-conventional-commits');
