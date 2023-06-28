@@ -1,5 +1,5 @@
 {
-  "schedule": ["before 7pm every weekend"],
+  "schedule": ["every weekend"],
   "groupName": "all dependencies",
   "groupSlug": "all",
   "lockFileMaintenance": {
