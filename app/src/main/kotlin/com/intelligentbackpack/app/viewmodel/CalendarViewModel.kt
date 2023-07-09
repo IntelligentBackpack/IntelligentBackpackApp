@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.intelligentbackpack.app.App
+import com.intelligentbackpack.app.exceptionhandler.ExceptionMessage.messageOrDefault
 import com.intelligentbackpack.app.viewdata.BookView
 import com.intelligentbackpack.app.viewdata.EventView
 import com.intelligentbackpack.app.viewdata.SchoolSupplyView
@@ -70,7 +71,7 @@ class CalendarViewModel(
                     )
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -108,7 +109,7 @@ class CalendarViewModel(
                         )
                     }
                     .onFailure {
-                        error(it.message ?: "Unknown error")
+                        error(it.messageOrDefault())
                     }
             }
         }
@@ -154,7 +155,7 @@ class CalendarViewModel(
                         success()
                     }
                     .onFailure {
-                        error(it.message ?: "Unknown error")
+                        error(it.messageOrDefault())
                     }
             }
         }
@@ -183,7 +184,7 @@ class CalendarViewModel(
                     )
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -201,7 +202,7 @@ class CalendarViewModel(
                     success(it)
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.intelligentbackpack.accessdomain.entities.User
 import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.app.App
+import com.intelligentbackpack.app.exceptionhandler.ExceptionMessage.messageOrDefault
 import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromViewToDomain
 import kotlinx.coroutines.launch
@@ -39,16 +40,23 @@ class LoginViewModel(
                 .onSuccess { user ->
                     success(user)
                 }.onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
 
+    /**
+     * Check if the user is logged.
+     *
+     * @param success the success callback.
+     */
     fun isUserLogged(success: (Boolean) -> Unit) {
         viewModelScope.launch {
             accessUseCase.isUserLogged()
                 .onSuccess {
                     success(it)
+                }.onFailure {
+                    success(false)
                 }
         }
     }
@@ -69,7 +77,7 @@ class LoginViewModel(
                     success(user)
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -92,7 +100,7 @@ class LoginViewModel(
                     success(it)
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.app.App
+import com.intelligentbackpack.app.exceptionhandler.ExceptionMessage.messageOrDefault
 import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromDomainToView
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class UserViewModel(
                     success(user.fromDomainToView())
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -56,7 +57,7 @@ class UserViewModel(
                     success()
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -73,7 +74,7 @@ class UserViewModel(
                     userImpl.postValue(null)
                     success()
                 }.onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
