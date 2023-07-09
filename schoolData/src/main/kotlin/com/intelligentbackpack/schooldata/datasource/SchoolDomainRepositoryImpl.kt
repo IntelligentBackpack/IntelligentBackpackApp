@@ -144,7 +144,9 @@ class SchoolDomainRepositoryImpl(
                 Role.PROFESSOR ->
                     downloadForProfessor(user, year)
 
-                else -> {}
+                else -> {
+                    error("User role not supported")
+                }
             }
         }
 

@@ -45,11 +45,8 @@ interface Class {
          * @throws IllegalArgumentException if the name is blank
          */
         fun create(name: String): Class {
-            if (name.isBlank()) {
-                throw IllegalArgumentException("name cannot be blank")
-            } else {
-                return ClassImpl(name)
-            }
+            check(name.isBlank()) { "name cannot be blank" }
+            return ClassImpl(name)
         }
     }
 }

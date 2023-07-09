@@ -34,7 +34,7 @@ internal data class ClassImpl(
      */
     override fun addStudent(student: Student): Class {
         if (students.contains(student)) {
-            throw IllegalArgumentException("student is already in this class")
+            error("student is already in this class")
         } else {
             return copy().apply {
                 students = students + student
@@ -52,10 +52,10 @@ internal data class ClassImpl(
      */
     override fun addProfessor(professor: Professor, subjects: Set<Subject>): Class {
         if (subjects.isEmpty()) {
-            throw IllegalArgumentException("subjects cannot be empty")
+            error("subjects cannot be empty")
         } else {
             val newClass = if (professors.contains(professor)) {
-                val oldSubjects = professorTeachSubjects[professor]!!
+                val oldSubjects = professorTeachSubjects[professor] ?: error("professor is not in this class")
                 copy().apply {
                     professorTeachSubjects = professorTeachSubjects + (professor to oldSubjects + subjects)
                 }
