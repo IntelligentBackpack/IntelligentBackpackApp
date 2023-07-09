@@ -69,6 +69,15 @@ class SchoolRemoteDataSourceImpl(
     }
 
     override suspend fun getClass(lesson: Lesson): String {
+        val response = calendarApi.getClassByLesson(createJsonForLesson(lesson)).execute()
+        if (response.isSuccessful) {
+            return response.body()?.message ?: ""
+        } else {
+            throw DownloadException(ErrorHandler.getError(response))
+        }
+    }
+
+    fun createJsonForLesson(lesson: Lesson): RequestBody {
         val jsonParam = mapOf(
             ("Nome_lezione" to lesson.nomeLezione),
             ("Materia" to lesson.materia),
@@ -80,15 +89,9 @@ class SchoolRemoteDataSourceImpl(
             ("Data_Fine" to lesson.dataFine),
             ("ID_Calendario" to lesson.idCalendario),
         )
-        val request = RequestBody.create(
+        return RequestBody.create(
             okhttp3.MediaType.parse("application/json; charset=utf-8"),
             (JSONObject(jsonParam)).toString(),
         )
-        val response = calendarApi.getClassByLesson(request).execute()
-        if (response.isSuccessful) {
-            return response.body()?.message ?: ""
-        } else {
-            throw DownloadException(ErrorHandler.getError(response))
-        }
     }
 }
