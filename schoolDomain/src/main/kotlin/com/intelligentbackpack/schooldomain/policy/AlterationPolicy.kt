@@ -29,6 +29,13 @@ object AlterationPolicy {
         return (initialDate..finalDate).contains(date)
     }
 
+    private fun isNewLessonOverlapping(newLesson: CalendarEvent, lesson: CalendarEvent) =
+        when (newLesson) {
+            is WeekLesson -> isNewLessonOverlapping(newLesson, lesson)
+            is DateLesson -> isNewLessonOverlapping(newLesson, lesson)
+            else -> false
+        }
+
     private fun isNewLessonOverlapping(newLesson: WeekLesson, lesson: CalendarEvent) =
         when (lesson) {
             is WeekLesson -> lesson.day == newLesson.day && isOverlappingDate(newLesson, lesson)
@@ -90,8 +97,8 @@ object AlterationPolicy {
     ): Boolean {
         val allLesson = (
             lessons +
-                newEvents.mapNotNull { it.event as Lesson? } +
-                rescheduleEvents.mapNotNull { it.event as Lesson? }
+                newEvents.map { it.event } +
+                rescheduleEvents.map { it.event }
             ).filter { lesson ->
             cancelEvents.none {
                 it.event == lesson &&
@@ -105,28 +112,16 @@ object AlterationPolicy {
                 }
             }
         return when (newLesson) {
-            is WeekLesson ->
-                checkOverlapping(newLesson, allLesson) {
+            is WeekLesson, is DateLesson ->
+                allLesson.filter {
                     isNewLessonOverlapping(newLesson, it)
-                }
-
-            is DateLesson ->
-                checkOverlapping(newLesson, allLesson) {
-                    isNewLessonOverlapping(newLesson, it)
+                }.any {
+                    isOverlappingTime(it, newLesson)
                 }
 
             else -> true
         }
     }
-
-    private fun checkOverlapping(
-        newLesson: CalendarEvent,
-        allLesson: List<CalendarEvent>,
-        filter: (CalendarEvent) -> Boolean,
-    ) =
-        allLesson.filter(filter).any {
-            isOverlappingTime(it, newLesson)
-        }
 
     /**
      * Checks if the event in the interval is already cancelled or rescheduled.
