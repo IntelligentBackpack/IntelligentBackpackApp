@@ -81,7 +81,7 @@ interface BookCopy : SchoolSupply {
                     throw TypeException(type)
                 }
             } else {
-                throw IllegalStateException("Not all properties are initialized")
+                error("Not all properties are initialized")
             }
     }
 }
