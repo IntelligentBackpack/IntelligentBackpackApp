@@ -106,23 +106,27 @@ object AlterationPolicy {
             }
         return when (newLesson) {
             is WeekLesson ->
-                allLesson
-                    .filter { lesson ->
-                        isNewLessonOverlapping(newLesson, lesson)
-                    }.any {
-                        isOverlappingTime(it, newLesson)
-                    }
+                checkOverlapping(newLesson, allLesson) {
+                    isNewLessonOverlapping(newLesson, it)
+                }
 
             is DateLesson ->
-                allLesson.filter { lesson ->
-                    isNewLessonOverlapping(newLesson, lesson)
-                }.any {
-                    isOverlappingTime(it, newLesson)
+                checkOverlapping(newLesson, allLesson) {
+                    isNewLessonOverlapping(newLesson, it)
                 }
 
             else -> true
         }
     }
+
+    private fun checkOverlapping(
+        newLesson: CalendarEvent,
+        allLesson: List<CalendarEvent>,
+        filter: (CalendarEvent) -> Boolean,
+    ) =
+        allLesson.filter(filter).any {
+            isOverlappingTime(it, newLesson)
+        }
 
     /**
      * Checks if the event in the interval is already cancelled or rescheduled.
