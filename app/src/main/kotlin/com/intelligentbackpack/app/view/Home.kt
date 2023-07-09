@@ -236,14 +236,6 @@ fun HomePage(
                             selected = item == selectedItem.value,
                             onClick = {
                                 item.action()
-                                /*scope.launch {
-                                    if (item == "Logout") {
-                                        logout()
-                                    } else {
-                                        drawerState.close()
-                                        selectedItem.value = item
-                                    }
-                                }*/
                             },
                             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                             colors = NavigationDrawerItemDefaults.colors(
