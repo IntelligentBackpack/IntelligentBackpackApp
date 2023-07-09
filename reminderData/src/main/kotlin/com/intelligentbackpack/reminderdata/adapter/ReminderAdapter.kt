@@ -64,12 +64,12 @@ object ReminderAdapter {
             fromDate = when (this) {
                 is ReminderForLessonDate -> date
                 is ReminderForLessonIntervalPeriod -> startDate
-                else -> throw IllegalStateException("Unknown type of reminder")
+                else -> error("Unknown type of reminder")
             },
             toDate = when (this) {
                 is ReminderForLessonDate -> date
                 is ReminderForLessonIntervalPeriod -> endDate
-                else -> throw IllegalStateException("Unknown type of reminder")
+                else -> error("Unknown type of reminder")
             },
         )
     }

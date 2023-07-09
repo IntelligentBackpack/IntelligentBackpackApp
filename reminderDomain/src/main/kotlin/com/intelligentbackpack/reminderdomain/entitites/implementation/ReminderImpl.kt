@@ -42,34 +42,34 @@ data class ReminderImpl(
         oldReminderForLesson: ReminderForLesson,
         newReminderForLesson: ReminderForLesson,
     ): Reminder {
-        if (oldReminderForLesson.lesson !in booksForLesson) {
-            throw IllegalArgumentException("Lesson ${oldReminderForLesson.lesson} not found")
-        } else if (oldReminderForLesson !in booksForLesson[oldReminderForLesson.lesson]!!) {
-            throw IllegalArgumentException("Book ${oldReminderForLesson.isbn} not found in lesson")
-        } else if (oldReminderForLesson.lesson != newReminderForLesson.lesson) {
-            throw IllegalArgumentException(
-                "Lessons ${oldReminderForLesson.lesson} and ${newReminderForLesson.lesson} are not equal",
-            )
-        } else if (oldReminderForLesson.isbn != newReminderForLesson.isbn) {
-            throw IllegalArgumentException(
-                "Books ${oldReminderForLesson.isbn} and ${newReminderForLesson.isbn} are not equal",
-            )
-        } else if (oldReminderForLesson == newReminderForLesson) {
-            return this
+        require(oldReminderForLesson.lesson in booksForLesson) { "Lesson ${oldReminderForLesson.lesson} not found" }
+        require(oldReminderForLesson in (booksForLesson[oldReminderForLesson.lesson] ?: setOf())) {
+            "Book ${oldReminderForLesson.isbn} not found in lesson"
+        }
+        require(oldReminderForLesson.lesson == newReminderForLesson.lesson) {
+            "Lessons ${oldReminderForLesson.lesson} and ${newReminderForLesson.lesson} are not equal"
+        }
+        require(oldReminderForLesson.isbn == newReminderForLesson.isbn) {
+            "Books ${oldReminderForLesson.isbn} and ${newReminderForLesson.isbn} are not equal"
+        }
+        return if (oldReminderForLesson == newReminderForLesson) {
+            this
         } else {
-            return ReminderImpl(
+            ReminderImpl(
                 booksForLesson = booksForLesson + (
                     oldReminderForLesson.lesson to (
-                        booksForLesson[oldReminderForLesson.lesson]!!
-                            .filter { it != oldReminderForLesson }
-                            .toSet()
+                        booksForLesson[oldReminderForLesson.lesson]
+                            ?.filter { it != oldReminderForLesson }
+                            ?.toSet()
+                            ?: setOf()
                         ) + newReminderForLesson
                     ),
                 lessonsForBook = lessonsForBook + (
                     oldReminderForLesson.isbn to (
-                        lessonsForBook[oldReminderForLesson.isbn]!!
-                            .filter { it != oldReminderForLesson }
-                            .toSet()
+                        lessonsForBook[oldReminderForLesson.isbn]
+                            ?.filter { it != oldReminderForLesson }
+                            ?.toSet()
+                            ?: setOf()
                         ) + newReminderForLesson
                     ),
             )
@@ -85,28 +85,28 @@ data class ReminderImpl(
      * @throws IllegalArgumentException if book not found
      */
     override fun removeBookForLesson(reminderForLesson: ReminderForLesson): Reminder {
-        if (reminderForLesson.lesson !in booksForLesson) {
-            throw IllegalArgumentException("Lesson ${reminderForLesson.lesson} not found")
-        } else if (reminderForLesson !in booksForLesson[reminderForLesson.lesson]!!) {
-            throw IllegalArgumentException("Book ${reminderForLesson.isbn} not found")
-        } else {
-            return ReminderImpl(
-                booksForLesson = booksForLesson + (
-                    reminderForLesson.lesson to (
-                        booksForLesson[reminderForLesson.lesson]!!
-                            .filter { it != reminderForLesson }
-                            .toSet()
-                        )
-                    ),
-                lessonsForBook = lessonsForBook + (
-                    reminderForLesson.isbn to (
-                        lessonsForBook[reminderForLesson.isbn]!!
-                            .filter { it != reminderForLesson }
-                            .toSet()
-                        )
-                    ),
-            )
+        require(reminderForLesson.lesson in booksForLesson) { "Lesson ${reminderForLesson.lesson} not found" }
+        require(reminderForLesson in (booksForLesson[reminderForLesson.lesson] ?: setOf())) {
+            "Book ${reminderForLesson.isbn} not found in lesson"
         }
+        return ReminderImpl(
+            booksForLesson = booksForLesson + (
+                reminderForLesson.lesson to (
+                    booksForLesson[reminderForLesson.lesson]
+                        ?.filter { it != reminderForLesson }
+                        ?.toSet()
+                        ?: setOf()
+                    )
+                ),
+            lessonsForBook = lessonsForBook + (
+                reminderForLesson.isbn to (
+                    lessonsForBook[reminderForLesson.isbn]
+                        ?.filter { it != reminderForLesson }
+                        ?.toSet()
+                        ?: setOf()
+                    )
+                ),
+        )
     }
 
     override fun getBooksForLesson(event: EventAdapter.CalendarEvent): Set<String> {

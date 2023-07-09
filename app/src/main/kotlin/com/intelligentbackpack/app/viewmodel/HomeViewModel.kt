@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.intelligentbackpack.accessdomain.usecase.AccessUseCase
 import com.intelligentbackpack.app.App
+import com.intelligentbackpack.app.exceptionhandler.ExceptionMessage.messageOrDefault
 import com.intelligentbackpack.app.viewdata.UserView
 import com.intelligentbackpack.app.viewdata.adapter.UserAdapter.fromDomainToView
 import com.intelligentbackpack.reminderdomain.usecase.ReminderUseCase
@@ -52,7 +53,7 @@ class HomeViewModel(
                     success(user.fromDomainToView())
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -71,7 +72,7 @@ class HomeViewModel(
                     }
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -89,7 +90,7 @@ class HomeViewModel(
                     success()
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }

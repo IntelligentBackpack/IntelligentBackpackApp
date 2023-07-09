@@ -5,7 +5,6 @@ import android.nfc.tech.MifareClassic
 import android.nfc.tech.MifareUltralight
 import android.util.Log
 import java.io.IOException
-
 import java.nio.charset.Charset
 
 /**
@@ -32,9 +31,6 @@ data class NFCTag(val rfidId: String, val rfidData: String?) {
             val hexId = toHex(id)
             var data: String? = null
             sb.append("ID (hex): ").append(hexId).append('\n')
-            //sb.append("ID (reversed hex): ").append(toReversedHex(id)).append('\n')
-            //sb.append("ID (dec): ").append(toDec(id)).append('\n')
-            //sb.append("ID (reversed dec): ").append(toReversedDec(id)).append('\n')
             val prefix = "android.nfc.tech."
             sb.append("Technologies: ")
             for (tech in tag.techList) {

@@ -12,6 +12,7 @@ import com.intelligentbackpack.reminderdomain.repository.ReminderDomainRepositor
 import com.intelligentbackpack.schooldomain.entities.calendar.CalendarEvent
 import com.intelligentbackpack.schooldomain.usecase.SchoolUseCase
 import kotlinx.coroutines.flow.map
+import java.lang.IllegalStateException
 import java.time.LocalDate
 
 /**
@@ -145,14 +146,14 @@ class ReminderUseCase(
             if (result.isSuccess) {
                 result.getOrNull()
                     ?.filter { event ->
-                        event.fromSchoolToReminder()?.let { it ->
-                            reminderEvents.map { it }.contains(it)
+                        event.fromSchoolToReminder()?.let { calendarEvent ->
+                            reminderEvents.map { it }.contains(calendarEvent)
                         } ?: false
                     }
                     ?.toSet()
                     ?: emptySet()
             } else {
-                throw result.exceptionOrNull()!!
+                throw result.exceptionOrNull() ?: IllegalStateException()
             }
         }
 
@@ -176,7 +177,7 @@ class ReminderUseCase(
                         date,
                     )
                 } else {
-                    throw desktopResult.exceptionOrNull()!!
+                    throw desktopResult.exceptionOrNull() ?: IllegalStateException()
                 }
             } else {
                 throw ActionNotAllowedForUserException()
@@ -219,10 +220,8 @@ class ReminderUseCase(
                     .mapNotNull { it.getOrNull() }
                     .toSet()
                 ) - inBackpack
-        } else if (result.isFailure) {
-            throw result.exceptionOrNull()!!
         } else {
-            throw IllegalStateException()
+            throw result.exceptionOrNull() ?: IllegalStateException()
         }
     }
 

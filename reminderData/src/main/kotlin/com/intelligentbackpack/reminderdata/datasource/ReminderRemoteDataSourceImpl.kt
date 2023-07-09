@@ -1,11 +1,11 @@
 package com.intelligentbackpack.reminderdata.datasource
 
 import calendar.communication.Lesson
-import calendar.communication.Subject
 import com.intelligentbackpack.networkutility.DownloadException
 import com.intelligentbackpack.networkutility.ErrorHandler
 import com.intelligentbackpack.networkutility.RetrofitHelper
 import com.intelligentbackpack.schooldata.api.CalendarApi
+import com.intelligentbackpack.schooldata.datasource.SchoolRemoteDataSourceImpl
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -19,59 +19,21 @@ class ReminderRemoteDataSourceImpl(
     baseUrl: String,
 ) : ReminderRemoteDataSource {
     private val calendarApi = RetrofitHelper.getInstance(baseUrl).create(CalendarApi::class.java)
-    override suspend fun downloadYear(): String {
-        val response = calendarApi.getYears().execute()
-        if (response.isSuccessful) {
-            return response.body()?.message2List?.maxOf { it } ?: ""
-        } else {
-            throw DownloadException(ErrorHandler.getError(response))
-        }
-    }
+    private val schoolRemoteDataSource = SchoolRemoteDataSourceImpl(baseUrl)
+    override suspend fun downloadYear() = schoolRemoteDataSource.downloadYear()
 
-    override suspend fun downloadSubjects(): List<Subject> {
-        val response = calendarApi.getSubjects().execute()
-        if (response.isSuccessful) {
-            return response.body()?.subjectsList ?: emptyList()
-        } else {
-            throw DownloadException(ErrorHandler.getError(response))
-        }
-    }
+    override suspend fun downloadSubjects() = schoolRemoteDataSource.downloadSubjects()
 
-    override suspend fun downloadLessonsForStudent(email: String, year: String): List<Lesson> {
-        val response = calendarApi.getLessonsForStudent(email, year).execute()
-        if (response.isSuccessful) {
-            return response.body()?.lessonsList ?: emptyList()
-        } else {
-            throw DownloadException(ErrorHandler.getError(response))
-        }
-    }
+    override suspend fun downloadLessonsForStudent(email: String, year: String) =
+        schoolRemoteDataSource.downloadLessonsForStudent(email, year)
 
-    override suspend fun downloadLessonsForProfessor(email: String, year: String): List<Lesson> {
-        val response = calendarApi.getLessonsForProfessor(email, year).execute()
-        if (response.isSuccessful) {
-            return response.body()?.lessonsList ?: emptyList()
-        } else {
-            throw DownloadException(ErrorHandler.getError(response))
-        }
-    }
+    override suspend fun downloadLessonsForProfessor(email: String, year: String) =
+        schoolRemoteDataSource.downloadLessonsForProfessor(email, year)
 
     override suspend fun downloadBooksForLesson(lesson: Lesson): List<String> {
-        val jsonParam = mapOf(
-            ("Nome_lezione" to lesson.nomeLezione),
-            ("Materia" to lesson.materia),
-            ("Giorno" to lesson.giorno),
-            ("Ora_inizio" to lesson.oraInizio),
-            ("Ora_fine" to lesson.oraFine),
-            ("Professore" to lesson.professore),
-            ("Data_Inizio" to lesson.dataInizio),
-            ("Data_Fine" to lesson.dataFine),
-            ("ID_Calendario" to lesson.idCalendario),
-        )
-        val request = RequestBody.create(
-            okhttp3.MediaType.parse("application/json; charset=utf-8"),
-            (JSONObject(jsonParam)).toString(),
-        )
-        val response = calendarApi.getBooksForLesson(request).execute()
+        val response = calendarApi
+            .getBooksForLesson(schoolRemoteDataSource.createJsonForLesson(lesson))
+            .execute()
         if (response.isSuccessful) {
             return response.body()?.message2List ?: emptyList()
         } else {
@@ -92,11 +54,11 @@ class ReminderRemoteDataSourceImpl(
             ("Data_Fine" to lesson.dataFine),
             ("ID_Calendario" to lesson.idCalendario),
         )
-        val lessonjson = JSONObject(jsonParam)
-        val isbnjson = JSONArray(listOf(isbn))
+        val lessonJson = JSONObject(jsonParam)
+        val isbnJson = JSONArray(listOf(isbn))
         val jsonParamReminder = mapOf(
-            ("lesson" to lessonjson),
-            ("ISBNs" to isbnjson),
+            ("lesson" to lessonJson),
+            ("ISBNs" to isbnJson),
             ("email_executor" to email),
         )
         val request = RequestBody.create(

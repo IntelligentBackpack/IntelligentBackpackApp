@@ -111,7 +111,7 @@ object LessonAdapter {
                 calendarId = 0,
             )
 
-            else -> throw IllegalStateException("Unknown type of lesson")
+            else -> error("Unknown type of lesson")
         }
     }
 }

@@ -92,10 +92,10 @@ interface Book {
                         throw ISBNException()
                     }
                 } else {
-                    throw IllegalStateException("Not all properties are initialized")
+                    error("Not all properties are initialized")
                 }
             } else {
-                throw IllegalStateException("Not all properties are initialized")
+                error("Not all properties are initialized")
             }
     }
 }

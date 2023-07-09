@@ -33,15 +33,10 @@ interface Professor : Person {
             name: String,
             surname: String,
         ): Professor {
-            if (email.isBlank()) {
-                throw IllegalArgumentException("email cannot be blank")
-            } else if (name.isBlank()) {
-                throw IllegalArgumentException("name cannot be blank")
-            } else if (surname.isBlank()) {
-                throw IllegalArgumentException("surname cannot be blank")
-            } else {
-                return ProfessorImpl(email, name, surname)
-            }
+            check(email.isBlank()) { "email cannot be blank" }
+            check(name.isBlank()) { "name cannot be blank" }
+            check(surname.isBlank()) { "surname cannot be blank" }
+            return ProfessorImpl(email, name, surname)
         }
     }
 }

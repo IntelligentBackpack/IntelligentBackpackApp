@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.intelligentbackpack.app.App
+import com.intelligentbackpack.app.exceptionhandler.ExceptionMessage.messageOrDefault
 import com.intelligentbackpack.app.viewdata.BookView
 import com.intelligentbackpack.app.viewdata.SchoolSupplyView
 import com.intelligentbackpack.app.viewdata.adapter.BookAdapter.fromDomainToView
@@ -54,7 +55,7 @@ class SchoolSupplyViewModel(
                 .onSuccess { desktop ->
                     schoolSuppliesImpl.postValue(desktop.schoolSupplies.map { it.fromDomainToView() }.toSet())
                 }.onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -77,7 +78,7 @@ class SchoolSupplyViewModel(
             ).onSuccess {
                 schoolSupplyImpl.postValue(it?.fromDomainToView())
             }.onFailure {
-                error(it.message ?: "Unknown error")
+                error(it.messageOrDefault())
             }
         }
     }
@@ -101,22 +102,21 @@ class SchoolSupplyViewModel(
                         success(it.fromDomainToView())
                     } ?: error("Book not found")
                 }.onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
-                /*
-            success(
-                Book.build {
-                    this.isbn = isbn
-                    this.title = "The Art of Computer Programming"
-                    this.authors = setOf("Donald Knuth")
-                }.fromDomainToView()
-            )*/
             }
         } else {
             error("Invalid ISBN")
         }
     }
 
+    /**
+     * Creates a school supply.
+     *
+     * @param schoolSupplyView the school supply view.
+     * @param success the success callback.
+     * @param error the error callback.
+     */
     fun createSchoolSupply(schoolSupplyView: SchoolSupplyView, success: () -> Unit, error: (String) -> Unit) {
         viewModelScope.launch {
             desktopUseCase.addSchoolSupply(schoolSupplyView.fromViewToDomain())
@@ -124,7 +124,7 @@ class SchoolSupplyViewModel(
                     schoolSuppliesImpl.postValue(it.schoolSupplies.map { it.fromDomainToView() }.toSet())
                     success()
                 }.onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }

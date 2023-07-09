@@ -1,5 +1,5 @@
 # IntelligentBackpackApp
-IntelligentBackpackApp
+
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=bugs)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)

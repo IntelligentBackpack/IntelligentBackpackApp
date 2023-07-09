@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.intelligentbackpack.app.App
+import com.intelligentbackpack.app.exceptionhandler.ExceptionMessage.messageOrDefault
 import com.intelligentbackpack.app.viewdata.SchoolSupplyView
 import com.intelligentbackpack.app.viewdata.adapter.SchoolSupplyAdapter.fromDomainToView
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
@@ -49,7 +50,7 @@ class BackpackViewModel(
                 .onSuccess {
                     isBackpackAssociatedImpl.postValue(it.isBackpackAssociated)
                 }.onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -72,7 +73,7 @@ class BackpackViewModel(
                     isBackpackAssociatedImpl.postValue(true)
                     success()
                 }.onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -98,12 +99,12 @@ class BackpackViewModel(
                                     success()
                                 }
                                 .onFailure {
-                                    error(it.message ?: "Unknown error")
+                                    error(it.messageOrDefault())
                                 }
                         }
                     }
                 }.onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
@@ -117,11 +118,6 @@ class BackpackViewModel(
         error: (error: String) -> Unit,
     ) {
         viewModelScope.launch {
-            /*(1..10).asFlow().map { (0..it).toSet() }.flowOn(Dispatchers.IO).collect {
-                viewModelScope.launch(Dispatchers.Main) {
-                    backpackImpl.postValue(it)
-                }
-            }*/
             desktopUseCase.subscribeToBackpack()
                 .onSuccess {
                     viewModelScope.launch(Dispatchers.IO) {
@@ -134,7 +130,7 @@ class BackpackViewModel(
                         }
                     }
                 }.onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }

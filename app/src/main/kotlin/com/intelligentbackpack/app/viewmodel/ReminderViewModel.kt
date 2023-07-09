@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.intelligentbackpack.app.App
+import com.intelligentbackpack.app.exceptionhandler.ExceptionMessage.messageOrDefault
 import com.intelligentbackpack.app.viewdata.SchoolSupplyView
 import com.intelligentbackpack.app.viewdata.adapter.SchoolSupplyAdapter.fromDomainToView
 import com.intelligentbackpack.reminderdomain.usecase.ReminderUseCase
@@ -48,7 +49,7 @@ class ReminderViewModel(
         viewModelScope.launch {
             reminderUseCase.isBackpackAssociated()
                 .onSuccess { success(it) }
-                .onFailure { error(it.message ?: "Unknown error") }
+                .onFailure { error(it.messageOrDefault()) }
         }
     }
 
@@ -68,7 +69,7 @@ class ReminderViewModel(
                     }
                 }
                 .onFailure {
-                    error(it.message ?: "Unknown error")
+                    error(it.messageOrDefault())
                 }
         }
     }
