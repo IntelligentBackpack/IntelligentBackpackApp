@@ -47,7 +47,7 @@ class UserStorageImpl(private val context: Context) : UserStorage {
                 name,
                 masterKey,
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
             )
         val encEdit: SharedPreferences.Editor = esp.edit()
         encEdit.putString("password", user.password)
@@ -55,8 +55,7 @@ class UserStorageImpl(private val context: Context) : UserStorage {
     }
 
     override fun getUser(): User {
-        if (!isUserSaved())
-            throw IllegalStateException("User not saved")
+        check(isUserSaved()) { "User not saved" }
         val sp = context.getSharedPreferences(name, MODE_PRIVATE)
 
         val masterKey: MasterKey = MasterKey.Builder(context)
@@ -67,7 +66,7 @@ class UserStorageImpl(private val context: Context) : UserStorage {
             name,
             masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
         )
         return User.build {
             email = sp.getString("email", "")!!
@@ -79,8 +78,7 @@ class UserStorageImpl(private val context: Context) : UserStorage {
     }
 
     override fun deleteUser() {
-        if (!isUserSaved())
-            throw IllegalStateException("User not saved")
+        check(isUserSaved()) { "User not saved" }
         val sp: SharedPreferences =
             context.getSharedPreferences(name, MODE_PRIVATE)
         val edit: SharedPreferences.Editor = sp.edit()
