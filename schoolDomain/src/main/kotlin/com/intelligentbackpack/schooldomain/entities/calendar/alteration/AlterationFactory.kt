@@ -103,11 +103,8 @@ object AlterationFactory {
         newEvent: CalendarEvent,
         checkCancelOriginalEvent: () -> AlterationEvent,
     ): AlterationEvent {
-        if (originalEvent == newEvent) {
-            throw IllegalArgumentException("New event must be different from rescheduled event")
-        } else {
-            return checkCancelOriginalEvent()
-        }
+        check(newEvent != originalEvent)
+        return checkCancelOriginalEvent()
     }
 
     /**
