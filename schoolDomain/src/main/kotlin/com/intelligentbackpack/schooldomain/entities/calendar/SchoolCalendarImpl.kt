@@ -63,30 +63,29 @@ internal data class SchoolCalendarImpl(
     }
 
     override fun addLessons(lessons: Set<WeekLesson>): SchoolCalendar {
-        if (lessons.any { lesson -> this.lessons.any { it == lesson } }) {
-            throw IllegalArgumentException("lessons must not be in current lessons")
+        check(lessons.any { lesson -> this.lessons.any { it == lesson } }) {
+            "lessons must not be in current lessons"
+        }
+        val checkOverlappingStudents = lessons.any { lesson ->
+            areLessonsInTimeTableOverlapping(
+                lessons,
+                studentsTimeTableLesson[lesson.studentsClass] ?: emptyMap(),
+            ) {
+                it.studentsClass == lesson.studentsClass
+            }
+        }
+        val checkOverlappingProfessors = lessons.any { lesson ->
+            areLessonsInTimeTableOverlapping(
+                lessons,
+                professorsTimeTableLesson[lesson.professor] ?: emptyMap(),
+            ) {
+                it.professor == lesson.professor
+            }
+        }
+        if (checkOverlappingStudents || checkOverlappingProfessors) {
+            throw EventOverlappingException()
         } else {
-            val checkOverlappingStudents = lessons.any { lesson ->
-                areLessonsInTimeTableOverlapping(
-                    lessons,
-                    studentsTimeTableLesson[lesson.studentsClass] ?: emptyMap(),
-                ) {
-                    it.studentsClass == lesson.studentsClass
-                }
-            }
-            val checkOverlappingProfessors = lessons.any { lesson ->
-                areLessonsInTimeTableOverlapping(
-                    lessons,
-                    professorsTimeTableLesson[lesson.professor] ?: emptyMap(),
-                ) {
-                    it.professor == lesson.professor
-                }
-            }
-            if (checkOverlappingStudents || checkOverlappingProfessors) {
-                throw EventOverlappingException()
-            } else {
-                return copy(lessons = this.lessons + lessons)
-            }
+            return copy(lessons = this.lessons + lessons)
         }
     }
 

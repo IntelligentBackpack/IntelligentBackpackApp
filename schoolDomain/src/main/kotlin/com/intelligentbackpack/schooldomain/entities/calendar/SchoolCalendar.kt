@@ -85,11 +85,8 @@ interface SchoolCalendar {
         fun create(
             schoolYear: String,
         ): SchoolCalendar {
-            if (schoolYear.isEmpty()) {
-                throw IllegalArgumentException("schoolYear must not be empty")
-            } else {
-                return SchoolCalendarImpl(schoolYear)
-            }
+            check(schoolYear.isNotBlank()) { "schoolYear must not be blank" }
+            return SchoolCalendarImpl(schoolYear)
         }
     }
 }

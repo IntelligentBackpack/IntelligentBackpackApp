@@ -108,25 +108,26 @@ object CalendarEventFactory {
         subject: Subject,
         module: String? = null,
     ): WeekLesson {
-        if (subject.isBlank()) {
-            throw IllegalArgumentException("subject cannot be blank")
-        } else if (startTime.isAfter(endTime)) {
-            throw IllegalArgumentException("startTime cannot be after endTime")
-        } else if (fromDate.isAfter(toDate)) {
-            throw IllegalArgumentException("fromDate cannot be after toDate")
-        } else {
-            return WeekLessonImpl(
-                subject,
-                module,
-                professor,
-                studentsClass,
-                startTime,
-                endTime,
-                day,
-                fromDate,
-                toDate,
-            )
+        check(subject.isBlank()) {
+            "subject cannot be blank"
         }
+        check(startTime.isAfter(endTime)) {
+            "startTime cannot be after endTime"
+        }
+        check(fromDate.isAfter(toDate)) {
+            "fromDate cannot be after toDate"
+        }
+        return WeekLessonImpl(
+            subject,
+            module,
+            professor,
+            studentsClass,
+            startTime,
+            endTime,
+            day,
+            fromDate,
+            toDate,
+        )
     }
 
     /**
@@ -151,20 +152,20 @@ object CalendarEventFactory {
         subject: Subject,
         module: String? = null,
     ): DateLesson {
-        if (subject.isBlank()) {
-            throw IllegalArgumentException("subject cannot be blank")
-        } else if (startTime.isAfter(endTime)) {
-            throw IllegalArgumentException("startTime cannot be after endTime")
-        } else {
-            return DateLessonImpl(
-                subject,
-                module,
-                professor,
-                studentsClass,
-                startTime,
-                endTime,
-                date,
-            )
+        check(subject.isBlank()) {
+            "subject cannot be blank"
         }
+        check(startTime.isAfter(endTime)) {
+            "startTime cannot be after endTime"
+        }
+        return DateLessonImpl(
+            subject,
+            module,
+            professor,
+            studentsClass,
+            startTime,
+            endTime,
+            date,
+        )
     }
 }
