@@ -5,7 +5,7 @@ import com.intelligentbackpack.accessdomain.exceptions.InvalidPasswordException
 import com.intelligentbackpack.accessdomain.policies.EmailFormatPolicy
 import com.intelligentbackpack.accessdomain.policies.PasswordFormatPolicy
 import com.intelligentbackpack.accessdomain.policies.Policy
-import java.util.Locale
+import com.intelligentbackpack.accessdomain.policies.StringFormat.firstLetterToUpperCaseWithNoSpace
 
 /**
  * User role is used to define the user's permissions.
@@ -117,40 +117,18 @@ interface User {
             with(this) {
                 val trimEmail = email.trim()
                 if (emailPolicies.all { it.isRespected(trimEmail) }) {
-                    if (name.isNotBlank()) {
-                        if (surname.isNotBlank()) {
-                            if (passwordPolicies.all { it.isRespected(password) }) {
-                                UserImpl(
-                                    email = trimEmail,
-                                    name = name
-                                        .trim()
-                                        .replaceFirstChar {
-                                            if (it.isLowerCase()) {
-                                                it.titlecase(Locale.ROOT)
-                                            } else {
-                                                it.toString()
-                                            }
-                                        },
-                                    surname = surname
-                                        .trim()
-                                        .replaceFirstChar {
-                                            if (it.isLowerCase()) {
-                                                it.titlecase(Locale.ROOT)
-                                            } else {
-                                                it.toString()
-                                            }
-                                        },
-                                    password = password,
-                                    role = role,
-                                )
-                            } else {
-                                throw InvalidPasswordException()
-                            }
-                        } else {
-                            throw IllegalArgumentException("Surname not valid")
-                        }
+                    if (passwordPolicies.all { it.isRespected(password) }) {
+                        check(name.isNotBlank()) { "Name cannot be blank." }
+                        check(surname.isNotBlank()) { "Surname cannot be blank." }
+                        UserImpl(
+                            email = trimEmail,
+                            name = name.firstLetterToUpperCaseWithNoSpace(),
+                            surname = surname.firstLetterToUpperCaseWithNoSpace(),
+                            password = password,
+                            role = role,
+                        )
                     } else {
-                        throw IllegalArgumentException("Name not valid")
+                        throw InvalidPasswordException()
                     }
                 } else {
                     throw InvalidEmailException()
