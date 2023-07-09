@@ -1,1 +1,11 @@
 # IntelligentBackpackApp
+IntelligentBackpackApp
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=bugs)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=IntelligentBackpack_IntelligentBackpackApp&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=IntelligentBackpack_IntelligentBackpackApp)
