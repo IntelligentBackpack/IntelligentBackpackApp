@@ -52,11 +52,9 @@ class ReminderRemoteDataSourceImpl(
         )
     }
 
-    override suspend fun createNewReminderForLesson(email: String, lesson: Lesson, isbn: String): String {
+    override suspend fun createNewReminderForLesson(email: String, lesson: Lesson, isbn: String) {
         val response = calendarApi.createReminderForLesson(createJsonForReminder(email, lesson, isbn)).execute()
-        if (response.isSuccessful) {
-            return response.body()?.message ?: ""
-        } else {
+        if (!response.isSuccessful) {
             throw DownloadException(ErrorHandler.getError(response))
         }
     }
