@@ -77,7 +77,7 @@ internal interface ReminderDAO {
             "AND from_date = :fromDate " +
             "AND to_date = :toDate",
     )
-    fun getReminder(lessonId: Int, isbn: String, fromDate: String, toDate: String): Reminder?
+    fun getReminder(lessonId: Int, isbn: String, fromDate: LocalDate, toDate: LocalDate): Reminder?
 
     /**
      * Get all lessons
@@ -90,4 +90,10 @@ internal interface ReminderDAO {
      */
     @Query("SELECT * FROM Reminders")
     fun getReminders(): List<Reminder>
+
+    /**
+     * Delete a reminder
+     */
+    @Query("DELETE FROM Reminders WHERE id = :id")
+    fun deleteReminder(id: Int)
 }
