@@ -65,4 +65,8 @@ class ReminderLocalDataSourceImpl(
     override suspend fun deleteReminder(dbReminder: Reminder) {
         database.reminderDao().deleteReminder(dbReminder.id)
     }
+
+    override suspend fun updateReminder(newReminder: Reminder) {
+        database.reminderDao().updateReminder(newReminder)
+    }
 }

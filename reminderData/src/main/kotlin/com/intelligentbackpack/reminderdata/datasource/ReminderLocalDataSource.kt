@@ -117,4 +117,11 @@ interface ReminderLocalDataSource {
      * @param dbReminder the reminder.
      */
     suspend fun deleteReminder(dbReminder: Reminder)
+
+    /**
+     * Updates a reminder.
+     *
+     * @param newReminder the new reminder.
+     */
+    suspend fun updateReminder(newReminder: Reminder)
 }
