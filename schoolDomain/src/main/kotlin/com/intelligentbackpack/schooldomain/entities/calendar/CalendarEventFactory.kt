@@ -108,13 +108,13 @@ object CalendarEventFactory {
         subject: Subject,
         module: String? = null,
     ): WeekLesson {
-        check(subject.isBlank()) {
+        check(subject.isNotBlank()) {
             "subject cannot be blank"
         }
-        check(startTime.isAfter(endTime)) {
+        check(!startTime.isAfter(endTime)) {
             "startTime cannot be after endTime"
         }
-        check(fromDate.isAfter(toDate)) {
+        check(!fromDate.isAfter(toDate)) {
             "fromDate cannot be after toDate"
         }
         return WeekLessonImpl(

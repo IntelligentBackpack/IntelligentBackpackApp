@@ -63,7 +63,7 @@ internal data class SchoolCalendarImpl(
     }
 
     override fun addLessons(lessons: Set<WeekLesson>): SchoolCalendar {
-        check(lessons.any { lesson -> this.lessons.any { it == lesson } }) {
+        check(!lessons.any { lesson -> this.lessons.any { it == lesson } }) {
             "lessons must not be in current lessons"
         }
         val checkOverlappingStudents = lessons.any { lesson ->

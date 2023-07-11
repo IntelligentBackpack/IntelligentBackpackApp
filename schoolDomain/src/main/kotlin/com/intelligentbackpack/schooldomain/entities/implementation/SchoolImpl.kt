@@ -51,7 +51,7 @@ internal data class SchoolImpl(
      * @throws IllegalArgumentException if the class is already in the school
      */
     override fun addClass(classToAdd: Class): School {
-        check(classes.contains(classToAdd)) {
+        check(!classes.contains(classToAdd)) {
             "class already in school"
         }
         return copy(classes = classes + classToAdd)
@@ -64,7 +64,7 @@ internal data class SchoolImpl(
      * @throws IllegalArgumentException if the student is already in the school
      */
     override fun addStudent(student: Student): School {
-        check(students.contains(student)) {
+        check(!students.contains(student)) {
             "student already in school"
         }
         return copy(students = students + student)
@@ -77,7 +77,7 @@ internal data class SchoolImpl(
      * @throws IllegalArgumentException if the professor is already in the school
      */
     override fun addProfessor(professor: Professor): School {
-        check(professors.contains(professor)) {
+        check(!professors.contains(professor)) {
             "professor already in school"
         }
         return copy(professors = professors + professor)
