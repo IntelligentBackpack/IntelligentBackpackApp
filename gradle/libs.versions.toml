@@ -9,17 +9,17 @@ espressoCore = "3.5.1"
 firebaseCrashlyticsGradle = "2.9.6"
 googleServices = "4.3.15"
 grpc-protobuf = "1.56.1"
-guava = "31.1-android"
+guava = "32.1.1-jre"
 json = "20230618"
 junit-junit = "4.13.2"
 lifecycleRuntimeKtx = "2.6.1"
-mockk = "1.13.3"
+mockk = "1.13.5"
 navigationCompose = "2.6.0"
 orgJacocoCore = "0.8.10"
 protobuf-compiler = "3.23.0"
 junit = "1.1.5"
 kotest = "5.6.2"
-kotlin = "1.8.22"
+kotlin = "1.9.0"
 gradle = "8.0.2"
 kotlinxCoroutines = "1.7.2"
 orchestrator = "1.4.2"
@@ -138,7 +138,7 @@ dokka = "org.jetbrains.dokka:1.8.20"
 android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 application = { id = "com.android.application", version.ref = "gradle" }
 library = { id = "com.android.library", version.ref = "gradle" }
-kotlin-qa = { id = "org.danilopianini.gradle-kotlin-qa", version = "0.47.0" }
+kotlin-qa = { id = "org.danilopianini.gradle-kotlin-qa", version = "0.47.1" }
 taskTree = { id = "com.dorongold.task-tree", version = "2.1.1" }
 protobuf-plugin = { id = "com.google.protobuf", version = "0.9.3" }
 sem-ver = { id = "io.github.andreabrighi.android-git-sensitive-semantic-versioning-gradle-plugin", version = "1.0.2" }
