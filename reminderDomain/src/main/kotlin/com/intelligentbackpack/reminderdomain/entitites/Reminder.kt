@@ -41,17 +41,17 @@ interface Reminder {
      * Get books for lesson.
      *
      * @param event event.
-     * @return books for lesson.
+     * @return the reminder for lesson.
      */
-    fun getBooksForLesson(event: EventAdapter.CalendarEvent): Set<String>
+    fun getBooksForLesson(event: EventAdapter.CalendarEvent): Set<ReminderForLesson>
 
     /**
      * Get lessons for book.
      *
      * @param isbn isbn.
-     * @return lessons for book.
+     * @return the reminder for the book.
      */
-    fun getLessonsForBook(isbn: String): Set<EventAdapter.CalendarEvent>
+    fun getLessonsForBook(isbn: String): Set<ReminderForLesson>
 
     /**
      * Get books for lesson in date.
