@@ -124,6 +124,28 @@ class ReminderDomainRepositoryImpl(
         newReminderForLesson: ReminderForLesson,
         user: User,
     ) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            val subjects = localDataSource.getSubjects()
+            val abstractLessonDB = reminderForLesson.lesson.fromDomainToDB(subjects)
+            val lesson = localDataSource.getLesson(
+                abstractLessonDB.day,
+                abstractLessonDB.startTime,
+                abstractLessonDB.endTime,
+                abstractLessonDB.fromDate,
+                abstractLessonDB.toDate,
+            )
+            require(lesson != null)
+            val dbReminder = localDataSource.getReminder(reminderForLesson.fromDomainToDB(lesson))
+            require(dbReminder != null)
+            val newDbReminder = newReminderForLesson.fromDomainToDB(lesson, dbReminder.id)
+            localDataSource.updateReminder(newDbReminder)
+            remoteDataSource.changeReminderForLesson(
+                user.email,
+                lesson.fromDBToRemote(),
+                newDbReminder.isbn,
+                newDbReminder.fromDate,
+                newDbReminder.toDate,
+            )
+        }
     }
 }
