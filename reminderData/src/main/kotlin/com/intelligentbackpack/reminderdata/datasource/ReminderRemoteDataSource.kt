@@ -57,4 +57,17 @@ interface ReminderRemoteDataSource {
      * @return the id of the reminder.
      */
     suspend fun createNewReminderForLesson(email: String, lesson: Lesson, isbn: String): String
+
+    /**
+     * Deletes the reminder for the given lesson.
+     *
+     * @param email the email of the student.
+     * @param lesson the lesson.
+     * @param isbn the isbn of the book.
+     */
+    suspend fun deleteReminderForLesson(
+        email: String,
+        lesson: Lesson,
+        isbn: String,
+    )
 }
