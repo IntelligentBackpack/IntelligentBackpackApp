@@ -207,6 +207,53 @@ class CalendarViewModel(
         }
     }
 
+    /**
+     * Deletes a reminder.
+     *
+     * @param reminderView the reminder view to delete.
+     * @param success the success callback.
+     * @param error the error callback.
+     */
+    fun deleteReminder(reminderView: ReminderView, success: () -> Unit, error: (String) -> Unit) {
+        viewModelScope.launch {
+            reminderUseCase.removeSchoolSupplyForEvent(reminderView.fromViewToDomain())
+                .onSuccess {
+                    success()
+                }
+                .onFailure {
+                    error(it.messageOrDefault())
+                }
+        }
+    }
+
+    /**
+     * Changes a reminder.
+     *
+     * @param oldReminderView the old reminder view.
+     * @param newReminderView the new reminder view.
+     * @param success the success callback.
+     * @param error the error callback.
+     */
+    fun changeReminder(
+        oldReminderView: ReminderView,
+        newReminderView: ReminderView,
+        success: () -> Unit,
+        error: (String) -> Unit,
+    ) {
+        viewModelScope.launch {
+            reminderUseCase.changeSchoolSupplyForEvent(
+                oldReminderView.fromViewToDomain(),
+                newReminderView.fromViewToDomain(),
+            )
+                .onSuccess {
+                    success()
+                }
+                .onFailure {
+                    error(it.messageOrDefault())
+                }
+        }
+    }
+
     companion object {
 
         /**
