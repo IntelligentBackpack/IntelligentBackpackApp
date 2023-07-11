@@ -12,7 +12,6 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 class ReminderTest : StringSpec({
-    val className = "1A"
     val subject = "math"
     val isbn = "9788843025343"
     val reminder = Reminder.create()
