@@ -97,7 +97,26 @@ class ReminderDomainRepositoryImpl(
         }
 
     override suspend fun removeBookForLesson(reminderForLesson: ReminderForLesson, user: User) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            val subjects = localDataSource.getSubjects()
+            val abstractLessonDB = reminderForLesson.lesson.fromDomainToDB(subjects)
+            val lesson = localDataSource.getLesson(
+                abstractLessonDB.day,
+                abstractLessonDB.startTime,
+                abstractLessonDB.endTime,
+                abstractLessonDB.fromDate,
+                abstractLessonDB.toDate,
+            )
+            require(lesson != null)
+            val dbReminder = localDataSource.getReminder(reminderForLesson.fromDomainToDB(lesson))
+            require(dbReminder != null)
+            localDataSource.deleteReminder(dbReminder)
+            remoteDataSource.deleteReminderForLesson(
+                user.email,
+                lesson.fromDBToRemote(),
+                reminderForLesson.isbn,
+            )
+        }
     }
 
     override suspend fun changeBookForLesson(
