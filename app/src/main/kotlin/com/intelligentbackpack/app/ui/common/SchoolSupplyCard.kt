@@ -19,12 +19,19 @@ import com.intelligentbackpack.app.ui.navigation.MainNavigation
 import com.intelligentbackpack.app.viewdata.BookView
 import com.intelligentbackpack.app.viewdata.SchoolSupplyView
 
+/**
+ * A card that displays the details of a [SchoolSupplyView].
+ *
+ * @param navHostController The [NavHostController] used to navigate to the [SchoolSupplyView].
+ * @param schoolSupply The [SchoolSupplyView] to display.
+ * @param modifier The modifier to apply to this layout.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SchoolSupplyCard(
+    modifier: Modifier = Modifier,
     navHostController: NavHostController,
     schoolSupply: SchoolSupplyView,
-    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
@@ -45,7 +52,7 @@ fun SchoolSupplyCard(
                 thickness = 1.dp,
                 color = Color.Black,
             )
-            schoolSupply.book?.let { BookDetails(it) }
+            schoolSupply.book?.let { BookDetails(book = it) }
         }
     }
 }
@@ -54,6 +61,7 @@ fun SchoolSupplyCard(
 @Composable
 fun SchoolSupplyCardPreview() {
     SchoolSupplyCard(
+        Modifier.fillMaxWidth(0.9f),
         navHostController = rememberNavController(),
         schoolSupply = SchoolSupplyView(
             rfidCode = "1234567890",
@@ -64,6 +72,5 @@ fun SchoolSupplyCardPreview() {
                 isbn = "1234567890",
             ),
         ),
-        Modifier.fillMaxWidth(0.9f),
     )
 }

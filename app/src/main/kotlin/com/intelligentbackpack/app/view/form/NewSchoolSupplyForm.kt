@@ -33,6 +33,15 @@ import com.intelligentbackpack.app.viewdata.BookView
 
 /**
  * Form for creating a new school supply.
+ *
+ * @param rfid RFID tag of the school supply.
+ * @param isbn ISBN of the book.
+ * @param book Book associated with the school supply.
+ * @param error Error message to display.
+ * @param onIsbnChange Callback for when the ISBN changes.
+ * @param createSchoolSupply Callback for when the school supply is created.
+ * @param openCameraDialog Callback for when the camera dialog should be opened.
+ * @param localFocusManager Focus manager.
  */
 @Composable
 fun NewSchoolSupplyForm(
@@ -103,7 +112,7 @@ fun NewSchoolSupplyForm(
                 Text(text = "Book found")
                 Icon(imageVector = Icons.Outlined.Done, "")
             }
-            BookDetails(it)
+            BookDetails(book = it)
         } ?: error?.let {
             if (it.isNotBlank()) {
                 Row(
