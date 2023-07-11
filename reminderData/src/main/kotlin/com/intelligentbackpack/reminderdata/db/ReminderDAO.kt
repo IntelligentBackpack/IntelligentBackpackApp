@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.intelligentbackpack.reminderdata.db.entities.Lesson
 import com.intelligentbackpack.reminderdata.db.entities.Reminder
 import com.intelligentbackpack.reminderdata.db.entities.Subject
@@ -96,4 +97,12 @@ internal interface ReminderDAO {
      */
     @Query("DELETE FROM Reminders WHERE id = :id")
     fun deleteReminder(id: Int)
+
+    /**
+     * Update a reminder
+     *
+     * @param newReminder the reminder to update
+     */
+    @Update
+    fun updateReminder(newReminder: Reminder)
 }
