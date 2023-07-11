@@ -9,6 +9,7 @@ import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.Desktop
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import com.intelligentbackpack.reminderdomain.adapter.EventAdapter
+import com.intelligentbackpack.reminderdomain.adapter.ReminderWithSupply
 import com.intelligentbackpack.reminderdomain.entitites.Reminder
 import com.intelligentbackpack.reminderdomain.entitites.ReminderForLessonDate
 import com.intelligentbackpack.reminderdomain.repository.ReminderDomainRepository
@@ -245,7 +246,7 @@ class UseCaseTest : StringSpec({
         coEvery { repository.getReminder() } returns reminder
         val result = useCase.getSchoolSuppliesForEvent(lessonCalendar)
         result.isSuccess shouldBe true
-        result.getOrNull() shouldBe setOf(copy)
+        result.getOrNull() shouldBe setOf(ReminderWithSupply(copy, reminderForLesson))
     }
 
     "should be able to get the book for a lesson if the user is a student" {
@@ -271,7 +272,7 @@ class UseCaseTest : StringSpec({
         coEvery { repository.getReminder() } returns reminder
         val result = useCase.getSchoolSuppliesForEvent(lessonCalendar)
         result.isSuccess shouldBe true
-        result.getOrNull() shouldBe setOf(copy)
+        result.getOrNull() shouldBe setOf(ReminderWithSupply(copy, reminderForLesson))
     }
 
     "should have an error if the user isn't a student or a professor and try to get the book for a lesson" {
@@ -470,7 +471,6 @@ class UseCaseTest : StringSpec({
             toDate = LocalDate.of(2021, 1, 31),
             subject = math,
         )
-        private const val schoolYear = "2022-2023"
         val studentClass = Class.create(className)
         val professor = Professor.create(
             email = professorUser.email,
