@@ -99,7 +99,22 @@ interface ReminderLocalDataSource {
     suspend fun getReminders(): List<Reminder>
 
     /**
+     * Gets the reminder for the given lesson, isbn, from date and to date.
+     *
+     * @param reminder the reminder with the lesson, isbn, from date and to date.
+     * @return the reminder.
+     */
+    suspend fun getReminder(reminder: Reminder): Reminder?
+
+    /**
      * Deletes all the data.
      */
     suspend fun deleteData()
+
+    /**
+     * Deletes a reminder.
+     *
+     * @param dbReminder the reminder.
+     */
+    suspend fun deleteReminder(dbReminder: Reminder)
 }
