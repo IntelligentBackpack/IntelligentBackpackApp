@@ -2,6 +2,7 @@ package com.intelligentbackpack.reminderdata.datasource
 
 import calendar.communication.Lesson
 import calendar.communication.Subject
+import java.time.LocalDate
 
 /**
  * Remote data source for the reminder module.
@@ -69,5 +70,22 @@ interface ReminderRemoteDataSource {
         email: String,
         lesson: Lesson,
         isbn: String,
+    )
+
+    /**
+     * Changes the reminder for the given lesson.
+     *
+     * @param email the email of the student.
+     * @param lesson the lesson.
+     * @param isbn the isbn of the book.
+     * @param fromDate the new from date.
+     * @param toDate the new to date.
+     */
+    suspend fun changeReminderForLesson(
+        email: String,
+        lesson: Lesson,
+        isbn: String,
+        fromDate: LocalDate,
+        toDate: LocalDate,
     )
 }
