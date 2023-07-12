@@ -1,17 +1,6 @@
 {
-  "groupName": "all dependencies",
-  "groupSlug": "all",
-  "lockFileMaintenance": {
-    "enabled": false
-  },
-  "packageRules": [
-    {
-      "groupName": "all dependencies",
-      "groupSlug": "all",
-      "matchPackagePatterns": [
-        "*"
-      ]
-    }
+  "extends": [
+    "config:base"
   ],
-  "separateMajorMinor": false
+  "schedule": ["every weekend"]
 }
