@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.qa)
     alias(libs.plugins.taskTree)
+    alias(libs.plugins.sonarqube)
     jacoco
 }
 
@@ -19,6 +20,9 @@ tasks.test {
 }
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+    }
 }
 
 tasks.jacocoTestReport {
