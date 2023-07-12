@@ -80,29 +80,27 @@ class ReminderTest : StringSpec({
             date = LocalDate.of(2021, 1, 1),
         )
         val newReminder = reminder.addBookForLesson(reminderForLesson)
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn)
+        newReminder.getLessonsForBook(isbn) shouldBe setOf(reminderForLesson)
+        newReminder.getBooksForLesson(lesson) shouldBe setOf(reminderForLesson)
     }
 
     "should be able to have more than one element" {
-        val oneElementReminder = Reminder.create(
-            setOf(
-                ReminderForLessonDate.create(
-                    isbn = isbn,
-                    lesson = lesson,
-                    date = LocalDate.of(2021, 1, 1),
-                ),
-            ),
-        )
-        val newReminder = oneElementReminder.addBookForLesson(
+        val initialReminders = setOf(
             ReminderForLessonDate.create(
                 isbn = isbn,
                 lesson = lesson,
-                date = LocalDate.of(2021, 1, 2),
+                date = LocalDate.of(2021, 1, 1),
             ),
         )
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn)
+        val oneElementReminder = Reminder.create(initialReminders)
+        val newReminderForLesson = ReminderForLessonDate.create(
+            isbn = isbn,
+            lesson = lesson,
+            date = LocalDate.of(2021, 1, 2),
+        )
+        val newReminder = oneElementReminder.addBookForLesson(newReminderForLesson)
+        newReminder.getLessonsForBook(isbn) shouldBe initialReminders + newReminderForLesson
+        newReminder.getBooksForLesson(lesson) shouldBe initialReminders + newReminderForLesson
         newReminder.getBooksForLessonInDate(lesson, LocalDate.of(2021, 1, 1)) shouldBe setOf(isbn)
         newReminder.getBooksForLessonInDate(lesson, LocalDate.of(2021, 1, 2)) shouldBe setOf(isbn)
         newReminder.getBooksForLessonInDate(lesson, LocalDate.of(2021, 1, 3)) shouldBe setOf()
@@ -110,25 +108,23 @@ class ReminderTest : StringSpec({
 
     "should be able to have more than one book" {
         val newIsbn = "9788843025344"
-        val oneElementReminder = Reminder.create(
-            setOf(
-                ReminderForLessonDate.create(
-                    isbn = isbn,
-                    lesson = lesson,
-                    date = LocalDate.of(2021, 1, 1),
-                ),
-            ),
-        )
-        val newReminder = oneElementReminder.addBookForLesson(
+        val initialReminders = setOf(
             ReminderForLessonDate.create(
-                isbn = newIsbn,
+                isbn = isbn,
                 lesson = lesson,
                 date = LocalDate.of(2021, 1, 1),
             ),
         )
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getLessonsForBook(newIsbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn, newIsbn)
+        val oneElementReminder = Reminder.create(initialReminders)
+        val newReminderForLesson = ReminderForLessonDate.create(
+            isbn = newIsbn,
+            lesson = lesson,
+            date = LocalDate.of(2021, 1, 1),
+        )
+        val newReminder = oneElementReminder.addBookForLesson(newReminderForLesson)
+        newReminder.getLessonsForBook(isbn) shouldBe initialReminders
+        newReminder.getLessonsForBook(newIsbn) shouldBe setOf(newReminderForLesson)
+        newReminder.getBooksForLesson(lesson) shouldBe initialReminders + newReminderForLesson
         newReminder.getBooksForLessonInDate(lesson, LocalDate.of(2021, 1, 1)) shouldBe setOf(isbn, newIsbn)
         newReminder.getBooksForLessonInDate(lesson, LocalDate.of(2021, 1, 2)) shouldBe setOf()
     }
@@ -140,8 +136,8 @@ class ReminderTest : StringSpec({
             date = LocalDate.of(2021, 1, 1),
         )
         val newReminder = reminder.addBookForLesson(reminderForLesson)
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn)
+        newReminder.getLessonsForBook(isbn) shouldBe setOf(reminderForLesson)
+        newReminder.getBooksForLesson(lesson) shouldBe setOf(reminderForLesson)
         val reminderWithoutBook = newReminder.removeBookForLesson(reminderForLesson)
         reminderWithoutBook.getLessonsForBook(isbn) shouldBe setOf()
         reminderWithoutBook.getBooksForLesson(lesson) shouldBe setOf()
@@ -154,8 +150,8 @@ class ReminderTest : StringSpec({
             date = LocalDate.of(2021, 1, 1),
         )
         val newReminder = reminder.addBookForLesson(reminderForLesson)
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn)
+        newReminder.getLessonsForBook(isbn) shouldBe setOf(reminderForLesson)
+        newReminder.getBooksForLesson(lesson) shouldBe setOf(reminderForLesson)
         shouldThrow<IllegalArgumentException> {
             newReminder.removeBookForLesson(
                 ReminderForLessonDate.create(
@@ -174,8 +170,8 @@ class ReminderTest : StringSpec({
             date = LocalDate.of(2021, 1, 1),
         )
         val newReminder = reminder.addBookForLesson(reminderForLesson)
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn)
+        newReminder.getLessonsForBook(isbn) shouldBe setOf(reminderForLesson)
+        newReminder.getBooksForLesson(lesson) shouldBe setOf(reminderForLesson)
         shouldThrow<IllegalArgumentException> {
             newReminder.removeBookForLesson(
                 ReminderForLessonDate.create(
@@ -199,8 +195,8 @@ class ReminderTest : StringSpec({
             date = LocalDate.of(2021, 1, 1),
         )
         val newReminder = reminder.addBookForLesson(reminderForLesson)
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn)
+        newReminder.getLessonsForBook(isbn) shouldBe setOf(reminderForLesson)
+        newReminder.getBooksForLesson(lesson) shouldBe setOf(reminderForLesson)
         val reminderForLessonUpdated = ReminderForLessonDate.create(
             isbn = isbn,
             lesson = lesson,
@@ -208,7 +204,7 @@ class ReminderTest : StringSpec({
         )
         val reminderUpdated =
             newReminder.changePeriodOfBookForLesson(reminderForLesson, reminderForLessonUpdated)
-        reminderUpdated.getLessonsForBook(isbn) shouldBe setOf(lesson)
+        reminderUpdated.getLessonsForBook(isbn) shouldBe setOf(reminderForLessonUpdated)
         reminderUpdated.getBooksForLessonInDate(lesson, LocalDate.of(2021, 1, 2)) shouldBe setOf(isbn)
         reminderUpdated.getBooksForLessonInDate(lesson, LocalDate.of(2021, 1, 1)) shouldBe setOf()
     }
@@ -220,8 +216,8 @@ class ReminderTest : StringSpec({
             date = LocalDate.of(2021, 1, 1),
         )
         val newReminder = reminder.addBookForLesson(reminderForLesson)
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn)
+        newReminder.getLessonsForBook(isbn) shouldBe setOf(reminderForLesson)
+        newReminder.getBooksForLesson(lesson) shouldBe setOf(reminderForLesson)
         val reminderForLessonUpdated = ReminderForLessonDate.create(
             isbn = isbn,
             lesson = lesson,
@@ -246,8 +242,8 @@ class ReminderTest : StringSpec({
             date = LocalDate.of(2021, 1, 1),
         )
         val newReminder = reminder.addBookForLesson(reminderForLesson)
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn)
+        newReminder.getLessonsForBook(isbn) shouldBe setOf(reminderForLesson)
+        newReminder.getBooksForLesson(lesson) shouldBe setOf(reminderForLesson)
         val reminderForLessonUpdated = ReminderForLessonDate.create(
             isbn = isbn,
             lesson = EventAdapter.DateLessonImpl(
@@ -270,8 +266,8 @@ class ReminderTest : StringSpec({
             date = LocalDate.of(2021, 1, 1),
         )
         val newReminder = reminder.addBookForLesson(reminderForLesson)
-        newReminder.getLessonsForBook(isbn) shouldBe setOf(lesson)
-        newReminder.getBooksForLesson(lesson) shouldBe setOf(isbn)
+        newReminder.getLessonsForBook(isbn) shouldBe setOf(reminderForLesson)
+        newReminder.getBooksForLesson(lesson) shouldBe setOf(reminderForLesson)
         val reminderForLessonUpdated = ReminderForLessonDate.create(
             isbn = "9788843025344",
             lesson = lesson,
