@@ -61,8 +61,8 @@ interface School {
          * @throws IllegalArgumentException if the name or the city is blank
          */
         fun create(name: String, city: String): School {
-            check(name.isNotBlank()) { "name cannot be blank" }
-            check(city.isNotBlank()) { "city cannot be blank" }
+            require(name.isNotBlank()) { "name cannot be blank" }
+            require(city.isNotBlank()) { "city cannot be blank" }
             return SchoolImpl(name, city)
         }
     }

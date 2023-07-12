@@ -30,9 +30,9 @@ interface Student : Person {
             name: String,
             surname: String,
         ): Student {
-            check(email.isNotBlank()) { "email cannot be blank" }
-            check(name.isNotBlank()) { "name cannot be blank" }
-            check(surname.isNotBlank()) { "surname cannot be blank" }
+            require(email.isNotBlank()) { "email cannot be blank" }
+            require(name.isNotBlank()) { "name cannot be blank" }
+            require(surname.isNotBlank()) { "surname cannot be blank" }
             return StudentImpl(email, name, surname)
         }
     }
