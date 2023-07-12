@@ -50,7 +50,7 @@ jobs:
         env:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
       - name: Unit test with Gradle
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew test jacocoTestReport sonarqube
 
   gen-api-latest:
     runs-on: ubuntu-latest
