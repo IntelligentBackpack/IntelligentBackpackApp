@@ -44,12 +44,15 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.intelligentbackpack.app.ui.common.BookDetails
 import com.intelligentbackpack.app.ui.common.LargeDropdownMenu
 import com.intelligentbackpack.app.ui.common.LargeDropdownMenuItem
+import com.intelligentbackpack.app.ui.common.ReminderDetails
 import com.intelligentbackpack.app.ui.navigation.MainNavigation
+import com.intelligentbackpack.app.view.form.EditReminderForm
 import com.intelligentbackpack.app.viewdata.BookView
 import com.intelligentbackpack.app.viewdata.EventView
+import com.intelligentbackpack.app.viewdata.ReminderView
+import com.intelligentbackpack.app.viewdata.SchoolSupplyView
 import com.intelligentbackpack.app.viewmodel.CalendarViewModel
 import java.time.LocalDate
 
@@ -95,14 +98,58 @@ fun EventDetails(
             },
         )
     }
+    var openEditDialog by remember { mutableStateOf(false) }
+    var selectedReminderView by remember { mutableStateOf<ReminderView?>(null) }
+    if (openEditDialog) {
+        Dialog(
+            onDismissRequest = { openEditDialog = false },
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false,
+            ),
+        ) {
+            Surface {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(text = "Edit reminder")
+                    EditReminderForm(
+                        reminderView = selectedReminderView!!,
+                        onDismissRequest = { openEditDialog = false },
+                        onSave = { newReminder ->
+                            calendarViewModel.changeReminder(
+                                selectedReminderView!!,
+                                newReminder,
+                                {
+                                    openEditDialog = false
+                                },
+                                {
+                                    error = it
+                                    openErrorDialog = true
+                                },
+                            )
+                        },
+                    )
+                }
+            }
+        }
+    }
     var eventView: EventView? by rememberSaveable { mutableStateOf(null) }
     var books: List<BookView> by rememberSaveable { mutableStateOf(emptyList()) }
+    var remindersView: List<ReminderView> by rememberSaveable { mutableStateOf(emptyList()) }
     var isUserProfessor by rememberSaveable { mutableStateOf(false) }
     var openBookDialog by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = eventIndex) {
         eventView = calendarViewModel.getEventAt(eventIndex)
-        calendarViewModel.getSuppliesForEvent(eventIndex, { supplies ->
-            books = supplies.filter { it.book != null }.map { it.book!! }
+        calendarViewModel.getSuppliesForEvent(eventIndex, { reminders ->
+            books = reminders.mapNotNull { it.schoolSupplyView.book }
+            remindersView = reminders
         }) {
             error = it
             openErrorDialog = true
@@ -187,7 +234,7 @@ fun EventDetails(
                                         openBookDialog = false
                                         selectedBook = null
                                         calendarViewModel.getSuppliesForEvent(eventIndex, { supplies ->
-                                            books = supplies.filter { it.book != null }.map { it.book!! }
+                                            books = supplies.mapNotNull { it.schoolSupplyView.book }
                                         }) {
                                             error = it
                                             openErrorDialog = true
@@ -238,10 +285,27 @@ fun EventDetails(
                     containerColor = MaterialTheme.colorScheme.primary,
                 ),
             )
-            eventView?.let {
+            eventView?.let { event ->
                 EventDetailsPage(
-                    event = it,
-                    books = books,
+                    event = event,
+                    reminderView = remindersView,
+                    onEditClicked = {
+                        selectedReminderView = it
+                        openEditDialog = true
+                    },
+                    onDeleteClicked = { reminderView ->
+                        calendarViewModel.deleteReminder(
+                            reminderView,
+                            {
+                                remindersView = remindersView.filter { reminder -> reminder != reminderView }
+                            },
+                            {
+                                error = it
+                                openErrorDialog = true
+                            },
+                        )
+                    },
+                    isUserProfessor = isUserProfessor,
                 )
             }
         }
@@ -267,12 +331,15 @@ fun EventDetails(
  * UI for the event details page.
  *
  * @param event The event to display.
- * @param books The books to display.
+ * @param reminderView The reminders for the event.
  */
 @Composable
 fun EventDetailsPage(
     event: EventView,
-    books: List<BookView>,
+    reminderView: List<ReminderView>,
+    onEditClicked: (ReminderView) -> Unit = {},
+    onDeleteClicked: (ReminderView) -> Unit = {},
+    isUserProfessor: Boolean = false,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -307,8 +374,20 @@ fun EventDetailsPage(
                 Text(text = "Books:")
             }
         }
-        items(books) { book ->
-            BookDetails(book = book)
+        items(reminderView) { reminder ->
+            ReminderDetails(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                reminder = reminder,
+                onEditClicker = {
+                    onEditClicked(reminder)
+                },
+                onDeleteClicker = {
+                    onDeleteClicked(reminder)
+                },
+                isUserProfessor = isUserProfessor,
+            )
         }
     }
 }
@@ -331,15 +410,27 @@ fun EventDetailsPagePreview() {
         startTime = "10:00",
         endTime = "11:00",
     )
-    val schoolSupplies = listOf(
-        BookView(
-            "123456789",
-            title = "Mathematics",
-            authors = setOf("John Doe"),
+    val reminderView = listOf(
+        ReminderView(
+            SchoolSupplyView(
+                "123456789",
+                "Book",
+                BookView(
+                    "123456789",
+                    title = "Mathematics",
+                    authors = setOf("John Doe"),
+                ),
+            ),
+            event,
+            null,
+            null,
+            LocalDate.of(2021, 10, 10).toString(),
+
         ),
     )
     EventDetailsPage(
         event = event,
-        books = schoolSupplies,
+        reminderView = reminderView,
+        isUserProfessor = true,
     )
 }
