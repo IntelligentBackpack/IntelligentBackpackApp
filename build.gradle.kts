@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.qa)
     alias(libs.plugins.taskTree)
-    alias(libs.plugins.sonarqube)
     jacoco
     alias(libs.plugins.dokka)
 }

@@ -142,4 +142,3 @@ kotlin-qa = { id = "org.danilopianini.gradle-kotlin-qa", version = "0.47.0" }
 taskTree = { id = "com.dorongold.task-tree", version = "2.1.1" }
 protobuf-plugin = { id = "com.google.protobuf", version = "0.9.3" }
 sem-ver = { id = "io.github.andreabrighi.android-git-sensitive-semantic-versioning-gradle-plugin", version = "1.0.2" }
-sonarqube = { id = "org.sonarqube", version = "3.5.0.2730" }
