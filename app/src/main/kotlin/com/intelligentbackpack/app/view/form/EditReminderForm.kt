@@ -61,66 +61,18 @@ fun EditReminderForm(reminderView: ReminderView, onDismissRequest: () -> Unit, o
         var openPickerDialog by remember { mutableStateOf(false) }
         var selectedDate by remember { mutableStateOf(LocalDate.now()) }
         if (openPickerDialog) {
-            val datePickerState = rememberDatePickerState(
-                Calendar.getInstance(Locale.getDefault()).apply {
-                    set(selectedDate.year, selectedDate.monthValue - 1, selectedDate.dayOfMonth)
-                }.timeInMillis + ZoneId.systemDefault().rules.getOffset(Instant.now()).totalSeconds * 1000,
-            )
-
-            DatePickerDialog(
-                modifier = Modifier.fillMaxSize(),
-                onDismissRequest = { openPickerDialog = false },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            selectedDate = datePickerState.selectedDateMillis?.let {
-                                Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())
-                                    .toLocalDate()
-                            }
-                            when (inputDateType) {
-                                InputDateType.FROM -> fromDate = selectedDate.toString()
-                                InputDateType.TO -> toDate = selectedDate.toString()
-                                InputDateType.DATE -> date = selectedDate.toString()
-                            }
-                            openPickerDialog = false
-                        },
-                        modifier = Modifier
-                            .padding(top = 10.dp),
-                        enabled = true,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.background,
-                        ),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                        shape = MaterialTheme.shapes.medium,
-                    ) {
-                        Text("Ok", color = MaterialTheme.colorScheme.onPrimary)
+            DatePickerDialogCommon(
+                selectedDate = selectedDate,
+                onDateSelected = {
+                    selectedDate = it
+                    when (inputDateType) {
+                        InputDateType.FROM -> fromDate = selectedDate.toString()
+                        InputDateType.TO -> toDate = selectedDate.toString()
+                        InputDateType.DATE -> date = selectedDate.toString()
                     }
+                    openPickerDialog = false
                 },
-                dismissButton = {
-                    Button(
-                        onClick = {
-                            openPickerDialog = false
-                        },
-                        modifier = Modifier
-                            .padding(top = 10.dp),
-                        enabled = true,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.background,
-                            contentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                        shape = MaterialTheme.shapes.medium,
-                    ) {
-                        Text("Cancel", color = MaterialTheme.colorScheme.onBackground)
-                    }
-                },
-                content = {
-                    DatePicker(state = datePickerState, modifier = Modifier)
-                },
-                colors = DatePickerDefaults.colors(
-                    selectedDayContentColor = Color.White,
-                ),
+                onDismissed = { openPickerDialog = false },
             )
         }
         Row(
