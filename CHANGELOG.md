@@ -1,3 +1,104 @@
+## [1.1.0](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.0.0...1.1.0) (2023-07-12)
+
+
+### Features
+
+* **app:** create adapter for ReminderView from ReminderWithSupply and to ReminderForLesson ([65b894a](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/65b894a4370816ecdff86f627e5e38132e4efb1f))
+* **app:** create class ReminderView ([1565931](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/1565931bcf59a1e370c0270155ade2d670910057))
+* **app:** create ui EditReminderForm ([5953f51](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/5953f51810002981f44328774aafeafd6455561f))
+* **app:** create ui ReminderDetails ([43bfd5c](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/43bfd5c028a64c00c18919eae9046db7636aa654))
+* **app:** in CalendarViewModel add methods deleteReminder and deleteReminder ([98d999d](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/98d999d021f2108e6bdd223f6345c82bf7160da6))
+* **app:** in CalendarViewModel change success type in getSuppliesForEvent ([3979339](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/3979339d9bac24a6de8fc00e4f7ab332aef8a308))
+* **app:** in ui EventDetails add ui to change and delete reminder ([2ff65f7](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/2ff65f7d8fd4432f3c89b5a057796b0f13657131))
+* **reminder:** Create class to return object with reminder and SchoolSupply ([78246cb](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/78246cb077adfc70645f7751c02cb82247a2c97f))
+* **reminder:** create method deleteReminder to delete a reminder and getReminder to get a reminder in ReminderRemoteDataSource ([72c7746](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/72c7746556aaaf8a2752f95c3e409271e8cc2cfb))
+* **reminder:** create method deleteReminderForLesson to delete a reminder in ReminderRemoteDataSource ([548599f](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/548599f40d163b3f6e1c0c219a33a0d0d7633082))
+* **reminder:** create query to db deleteReminder in ReminderDAO ([a26a17f](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/a26a17fd319177552946efdcb21dc97dcd2cd90d))
+* **reminder:** in ReminderDAO add method updateReminder ([b159406](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/b159406ab58753c9419e2e85e21b6816800424e8))
+* **reminder:** in ReminderDomainRepositoryImpl implemented method changeBookForLesson ([17cd86d](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/17cd86dfca3f0c2b7d93d7adeec53b9c7fb6e796))
+* **reminder:** in ReminderDomainRepositoryImpl implemented method removeBookForLesson ([8b915b0](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/8b915b094fd706c55fef04fffe348a4dce740eff))
+* **reminder:** in ReminderLocalDataSource add method updateReminder implemented in ReminderLocalDataSourceImpl ([b1be506](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/b1be5062d0e4f424f37f11297d617acc27d02df7))
+* **reminder:** in ReminderRemoteDataSource add method changeReminderForLesson implemented in ReminderRemoteDataSourceImpl ([791bfc3](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/791bfc3b02916e4ccc1b52425f4a0dd91ea385eb))
+* **reminder:** new return for method getSchoolSuppliesForEvent, return a set of ReminderWithSupply ([12f55e1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/12f55e1fc9a84908cf9f9c420c5985363cad711a))
+
+
+### Dependency updates
+
+* **deps:** rollback guava from 32.1.1 to 31.1 ([7fd56b5](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/7fd56b5669a62a3bd85d8f0c31c2baecc418e563))
+* **deps:** update all dependencies ([73205d1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/73205d15dc1a273139a55726f2d7fb903175957a))
+* **deps:** update all dependencies ([a9d51a5](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/a9d51a56aaf749012f369d24ee00b6d967d60b7a))
+* **deps:** update compose compiler and rollback mokk from 1.13.5 to 1.13.5 and kotlin from 1.9.0 to 1.8.22 ([a9a0992](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/a9a0992944234f4014679e4f142b6fc777ab8ed4))
+* **deps:** use guava for android ([22d4db9](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/22d4db9f2d3ef3c8b515d911cb7b64effda46ecb))
+
+
+### Bug Fixes
+
+* **access:** In User use require instead of check ([0b686cd](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/0b686cdcf6661f5b171fdb0d0bad6c2e3ed1a226))
+* **calendar:** in CalendarApi use a RequestBody for problems with serialization for object BooksForLesson ([8272e5b](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/8272e5b39f7a6d2e0221d0d410767e57502b7557))
+* **reminder:** change return type for method getBooksForLesson and getLessonsForBook, both now return ReminderForLesson ([25f2f78](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/25f2f784d2d9ed886f68556d227a9ff2d50b8128))
+* **school:** reverse all condition in checks ([edfb6c5](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/edfb6c59c9af508e70f93b461eb69f621b85b96b))
+* **school:** Use require instead of check or if throw fro CalendarEventFactory, Class, ClassImpl, Professor, School and Student ([eb69a10](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/eb69a10d1d6281f6abbf36745a8921b5c1ef56f8))
+
+
+### Documentation
+
+* **app:** improve docs for BookView, SchoolSupplyView and UserView ([6dfe65e](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/6dfe65e8cde6abe2684273fd443c6ea7ae178623))
+
+
+### Tests
+
+* **desktop:** fix test Associate backpack, remove final check ([c104a0e](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/c104a0ecaf641456b55aff1f58f514eddec2d797))
+* **reminder:** add test for removing a reminder and change a reminder ([f7cd115](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/f7cd1154f8e742b3c12384ba79c6b3d2610a9e2b))
+* **reminder:** In ReminderTest update test with new return for methods getLessonsForBook and getBooksForLesson ([d8361e2](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/d8361e2a6bb6e2c922b368b66b63f189a9f538c7))
+* **reminder:** ReminderTest adapt to new return type ([e134d80](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/e134d80fb3ac9a663ea65cfb81f14567803c2f5c))
+* **reminder:** update test for new return type ([7078ebb](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/7078ebbe8c8ca85a93bb20566d9f72a128e406f6))
+
+
+### Build and continuous integration
+
+* add check in release to not run job when device-test-latest fail or is cancelled ([61bfdc8](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/61bfdc8c21801a14d67c62b69a07a0fb341aab6d))
+* add dokka and remove al configuration of jacoco ([7a252f9](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/7a252f9c8ea1b65e4e015044d12003098963ff4f))
+* add jacoco check to ci in job test ([605ede8](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/605ede87965d856ba15a8a96202c0890361f6d46))
+* add sonarqube plugin ([01a81ae](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/01a81ae37e382a566340fe0bfe1de92867de0363))
+* change schedule for renovate.json ([cac4376](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/cac4376040e08a3ab6e4cad22248b7e16518c1da))
+* check device test for main branch ([cfcf33e](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/cfcf33eb84df190b065a0df8093cd0840c8df37e))
+* remove schedule for renovate.json ([5f6654b](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/5f6654b736ef669ae8fa07484776154f84e2851d))
+* remove sonarqube ([196e277](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/196e277e1a87d7998d59fa10230375ca71f2bbf8))
+* remove sonarqube and add creation of documentation ([4f0f411](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/4f0f41127d601377efaf60f87b3dcb409e147294))
+* **renovate:** restore renovate default, with schedule every weekend ([dcc8f9a](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/dcc8f9acac4e8937b2be812638e5152bdf2809ba))
+* rollback to kotlin 1.8.21 (no compose compiler yet for 1.8.22) ([e242b6a](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/e242b6aed93c4fad59cb6eff7856c258a4626a71))
+* rollback to mockk 1.13.3 (issues with instrumentTest fro 1.13.5) ([6d8261a](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/6d8261a6a14fb9bac323b3b3f321cd4c189016c0))
+* use JamesIves/github-pages-deploy-action fro deploy documentation ([d07dcb3](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/d07dcb3269870096ca3de18d7a21eed916a34fbe))
+
+
+### General maintenance
+
+* **access:** create object to handle string format and in build use check instead of if ([9e420b1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/9e420b16687cb1a71d77a905aad6212910d6b3ef))
+* **access:** create use check instead of if ([d1dd560](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/d1dd560dd1856ac8ec6e46468b00a2174d0ec769))
+* **app:** clear code ([f281551](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/f281551a23a7271b40eb010a942ed9a4db0e070d))
+* **app:** create DatePickerDialogCommon (avoid repetition) ([623a0aa](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/623a0aab089cc6d12eb74654d0d209f318aa0299))
+* **app:** create object to handler default error message ([98d4ba1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/98d4ba14a410b1bf7d327d9e9561ed01033d74b3))
+* **app:** explicitly remove clear communication in AndroidManifest.xml ([dbe5ddd](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/dbe5ddd387b7b68e7a789234a8e97f04e1a10513))
+* **app:** in EditReminderForm create DateSelector (avoid repeat the date input) ([3a04e14](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/3a04e14266eaa3a054ab8a0572398c7248235023))
+* **app:** in ReminderAdapter create private constant for error message ([01e6b40](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/01e6b40702845ed9e4da4637d7ce91cf161484fe))
+* **app:** remove option for backup in AndroidManifest.xml, backup_rules.xml and data_extraction_rules.xml (not used) ([12f5676](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/12f5676dcb2262688c3bbdcb37338dc6d02c464b))
+* **app:** use Column in BookDetails and add param modifier ([e4a1575](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/e4a1575521a92b39265df9449084e4485009643e))
+* **app:** use DatePickerDialogCommon in CalendarTopBar and EditReminderForm ([7f4eea2](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/7f4eea265702f291750b163095698bb8e1a5e1c6))
+* Create LICENSE ([23341a9](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/23341a93402b3e92fb6cfdcabcc9ae3007a612b4))
+* **desktop:** use check instead of if ([6c93d49](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/6c93d4973e4c839a623dcfdb674946bb9b05a677))
+* **desktop:** use error instead of throw IllegalStateException ([9af5c71](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/9af5c71c8162ac4aee9b2f8b2670ef14aa5be489))
+* **readme:** add sonarcloud badge in README.md ([9090f01](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/9090f0165931511e01acd5a1bb90bbb2e16641c9))
+* **readme:** fix typo in README.md ([8817254](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/8817254c54ec2694ecbbc135ddf0ffb81bf6311c))
+* **reminder:** in ReminderAdapter create method fromDomainToDB with id as parameter ([e079793](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/e07979318e9de157c55416c72e29aa42eb1a7309))
+* **reminder:** in ReminderRemoteDataSource remove return from method createNewReminderForLesson ([5afd364](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/5afd36426bf2cbc8f0a75cf120fed40eb40d2b43))
+* **reminder:** remove duplication in ReminderRemoteDataSourceImpl for method similar to SchoolRemoteDataSourceImpl ([8382d79](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/8382d7936442f7b19ec645cad984f926eff83324))
+* **reminder:** throw IllegalStateException when is not success and there is no exception ([fb16297](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/fb162978133fe2cfc906c51b658403ec78afa5cb))
+* **reminder:** use check or require instead of if and error instead of throw IllegalArgumentException ([a96e572](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/a96e572e1d19d9c27803f11a901b3ec7dd41b426))
+* **school:** remove duplication in AlterationPolicy ([f1d5910](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/f1d5910f8bb4e3baa8d7c36c80bd399dc2d6406e))
+* **school:** remove duplication in areEventsInTimeTableOverlapping in AlterationPolicy ([c9db27d](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/c9db27d80d50493f6e2ad8def82ac1344345c541))
+* **school:** use check instead of if and error instead of throw IllegalArgumentException ([ec1e3fd](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/ec1e3fdd81aae8e01ba2ea44a436476679322399))
+* **school:** use check instead of if e throw ([4c0ba40](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/4c0ba4026bd9a2ca2b45176058b40892f6def957))
+
 ## 1.0.0 (2023-06-28)
 
 
