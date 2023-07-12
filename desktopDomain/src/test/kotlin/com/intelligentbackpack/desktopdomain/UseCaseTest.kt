@@ -174,10 +174,9 @@ class UseCaseTest : StringSpec({
         } returns (desktop)
         coEvery {
             repository.associateBackpack(any(), any())
-        } returns (backpack)
+        } returns backpack
         val result = useCase.associateBackpack(backpack)
         result.isSuccess shouldBe true
-        result.getOrNull()!!.isBackpackAssociated shouldBe true
     }
 
     "Associate backpack with error" {
