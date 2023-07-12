@@ -17,6 +17,8 @@ import java.time.LocalDate
  */
 object ReminderAdapter {
 
+    private const val errorMessage = "Invalid reminder"
+
     /**
      * Converts a reminder from the domain to the view.
      *
@@ -67,13 +69,13 @@ object ReminderAdapter {
                             endDate = LocalDate.parse(toDate),
                         )
 
-                        else -> throw IllegalArgumentException("Invalid reminder")
+                        else -> throw IllegalArgumentException(errorMessage)
                     }
 
-                else -> throw IllegalArgumentException("Invalid reminder")
+                else -> throw IllegalArgumentException(errorMessage)
             }
         } else {
-            throw IllegalArgumentException("Invalid reminder")
+            throw IllegalArgumentException(errorMessage)
         }
     }
 }
