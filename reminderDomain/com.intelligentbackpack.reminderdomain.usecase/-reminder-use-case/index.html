@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ReminderUseCase</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+<a href="../../../index.html">
+<span>IntelligentBackpackApp</span>            </a>    </div>
+    <div>
+    </div>
+    <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":reminderDomain:dokkaHtmlPartial/main">jvm</button>
+        </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="reminderDomain::com.intelligentbackpack.reminderdomain.usecase/ReminderUseCase///PointingToDeclaration//-2097371854">
+  <div class="breadcrumbs"><a href="../../index.html">reminderDomain</a><span class="delimiter">/</span><a href="../index.html">com.intelligentbackpack.reminderdomain.usecase</a><span class="delimiter">/</span><span class="current">ReminderUseCase</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Reminder</span><wbr><span>Use</span><wbr><span><span>Case</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">ReminderUseCase</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">accessUseCase<span class="token operator">: </span><a href="../../../accessDomain/com.intelligentbackpack.accessdomain.usecase/-access-use-case/index.html">AccessUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">desktopUseCase<span class="token operator">: </span><a href="../../../desktopDomain/com.intelligentbackpack.desktopdomain.usecase/-desktop-use-case/index.html">DesktopUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">schoolUseCase<span class="token operator">: </span><a href="../../../schoolDomain/com.intelligentbackpack.schooldomain.usecase/-school-use-case/index.html">SchoolUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">reminderDomainRepository<span class="token operator">: </span><a href="../../com.intelligentbackpack.reminderdomain.repository/-reminder-domain-repository/index.html">ReminderDomainRepository</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Reminder use case</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>access</span><wbr><span>Use</span><wbr><span><span>Case</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the use case for access</p></div></div></div></div><div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>desktop</span><wbr><span>Use</span><wbr><span><span>Case</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the use case for desktop</p></div></div></div></div><div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>school</span><wbr><span>Use</span><wbr><span><span>Case</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the use case for school</p></div></div></div></div><div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>reminder</span><wbr><span>Domain</span><wbr><span><span>Repository</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the repository of reminder</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-28239535%2FConstructors%2F-2097371854" anchor-label="ReminderUseCase" id="-28239535%2FConstructors%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-reminder-use-case.html"><span>Reminder</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-28239535%2FConstructors%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">accessUseCase<span class="token operator">: </span><a href="../../../accessDomain/com.intelligentbackpack.accessdomain.usecase/-access-use-case/index.html">AccessUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">desktopUseCase<span class="token operator">: </span><a href="../../../desktopDomain/com.intelligentbackpack.desktopdomain.usecase/-desktop-use-case/index.html">DesktopUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">schoolUseCase<span class="token operator">: </span><a href="../../../schoolDomain/com.intelligentbackpack.schooldomain.usecase/-school-use-case/index.html">SchoolUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">reminderDomainRepository<span class="token operator">: </span><a href="../../com.intelligentbackpack.reminderdomain.repository/-reminder-domain-repository/index.html">ReminderDomainRepository</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="37987234%2FFunctions%2F-2097371854" anchor-label="addSchoolSupplyForEvent" id="37987234%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-school-supply-for-event.html"><span>add</span><wbr><span>School</span><wbr><span>Supply</span><wbr><span>For</span><wbr><span><span>Event</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="37987234%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="add-school-supply-for-event.html"><span class="token function">addSchoolSupplyForEvent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">reminderForLesson<span class="token operator">: </span><a href="../../com.intelligentbackpack.reminderdomain.entitites/-reminder-for-lesson/index.html">ReminderForLesson</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Add a school supply for an event</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1648188924%2FFunctions%2F-2097371854" anchor-label="changeSchoolSupplyForEvent" id="1648188924%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="change-school-supply-for-event.html"><span>change</span><wbr><span>School</span><wbr><span>Supply</span><wbr><span>For</span><wbr><span><span>Event</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1648188924%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="change-school-supply-for-event.html"><span class="token function">changeSchoolSupplyForEvent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">oldReminderForLesson<span class="token operator">: </span><a href="../../com.intelligentbackpack.reminderdomain.entitites/-reminder-for-lesson/index.html">ReminderForLesson</a><span class="token punctuation">, </span></span><span class="parameter ">newReminderForLesson<span class="token operator">: </span><a href="../../com.intelligentbackpack.reminderdomain.entitites/-reminder-for-lesson/index.html">ReminderForLesson</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Change the period of school supply for an event</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-230626803%2FFunctions%2F-2097371854" anchor-label="downloadReminder" id="-230626803%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="download-reminder.html"><span>download</span><wbr><span><span>Reminder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-230626803%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="download-reminder.html"><span class="token function">downloadReminder</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Download the reminder from server</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1663316698%2FFunctions%2F-2097371854" anchor-label="getEventsForSchoolSupply" id="1663316698%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-events-for-school-supply.html"><span>get</span><wbr><span>Events</span><wbr><span>For</span><wbr><span>School</span><wbr><span><span>Supply</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1663316698%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="get-events-for-school-supply.html"><span class="token function">getEventsForSchoolSupply</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">supply<span class="token operator">: </span><a href="../../../desktopDomain/com.intelligentbackpack.desktopdomain.entities/-school-supply/index.html">SchoolSupply</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../schoolDomain/com.intelligentbackpack.schooldomain.entities.calendar/-calendar-event/index.html">CalendarEvent</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Get the events for a school supply</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1965412732%2FFunctions%2F-2097371854" anchor-label="getSchoolSuppliesForEvent" id="-1965412732%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-school-supplies-for-event.html"><span>get</span><wbr><span>School</span><wbr><span>Supplies</span><wbr><span>For</span><wbr><span><span>Event</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1965412732%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="get-school-supplies-for-event.html"><span class="token function">getSchoolSuppliesForEvent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">calendarEvent<span class="token operator">: </span><a href="../../../schoolDomain/com.intelligentbackpack.schooldomain.entities.calendar/-calendar-event/index.html">CalendarEvent</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.intelligentbackpack.reminderdomain.adapter/-reminder-with-supply/index.html">ReminderWithSupply</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Get the school supplies and the reminder for an event</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-57125001%2FFunctions%2F-2097371854" anchor-label="isBackpackAssociated" id="-57125001%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-backpack-associated.html"><span>is</span><wbr><span>Backpack</span><wbr><span><span>Associated</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-57125001%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="is-backpack-associated.html"><span class="token function">isBackpackAssociated</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Check if the backpack is associated</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="480087993%2FFunctions%2F-2097371854" anchor-label="isUserProfessor" id="480087993%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-user-professor.html"><span>is</span><wbr><span>User</span><wbr><span><span>Professor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="480087993%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="is-user-professor.html"><span class="token function">isUserProfessor</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Check if the user is a professor</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="491787404%2FFunctions%2F-2097371854" anchor-label="remindUserOfMissingSchoolSupplyForDate" id="491787404%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remind-user-of-missing-school-supply-for-date.html"><span>remind</span><wbr><span>User</span><wbr><span>Of</span><wbr><span>Missing</span><wbr><span>School</span><wbr><span>Supply</span><wbr><span>For</span><wbr><span><span>Date</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="491787404%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="remind-user-of-missing-school-supply-for-date.html"><span class="token function">remindUserOfMissingSchoolSupplyForDate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">date<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html">LocalDate</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../desktopDomain/com.intelligentbackpack.desktopdomain.entities/-school-supply/index.html">SchoolSupply</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Get the missing school supplies for a date</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1136737139%2FFunctions%2F-2097371854" anchor-label="removeSchoolSupplyForEvent" id="1136737139%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-school-supply-for-event.html"><span>remove</span><wbr><span>School</span><wbr><span>Supply</span><wbr><span>For</span><wbr><span><span>Event</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1136737139%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="remove-school-supply-for-event.html"><span class="token function">removeSchoolSupplyForEvent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">reminderForLesson<span class="token operator">: </span><a href="../../com.intelligentbackpack.reminderdomain.entitites/-reminder-for-lesson/index.html">ReminderForLesson</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Remove a school supply from an event</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1915972891%2FFunctions%2F-2097371854" anchor-label="subscribeToRemindUserOfMissingSchoolSupplyForDate" id="-1915972891%2FFunctions%2F-2097371854" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":reminderDomain:dokkaHtmlPartial/main" data-filterable-set=":reminderDomain:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="subscribe-to-remind-user-of-missing-school-supply-for-date.html"><span>subscribe</span><wbr><span>To</span><wbr><span>Remind</span><wbr><span>User</span><wbr><span>Of</span><wbr><span>Missing</span><wbr><span>School</span><wbr><span>Supply</span><wbr><span>For</span><wbr><span><span>Date</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1915972891%2FFunctions%2F-2097371854"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderDomain:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="subscribe-to-remind-user-of-missing-school-supply-for-date.html"><span class="token function">subscribeToRemindUserOfMissingSchoolSupplyForDate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">date<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html">LocalDate</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html">Result</a><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../desktopDomain/com.intelligentbackpack.desktopdomain.entities/-school-supply/index.html">SchoolSupply</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Subscribe to the missing school supplies for a date</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
+</html>
+

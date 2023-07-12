@@ -1,0 +1,278 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Lesson</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+<a href="../../../index.html">
+<span>IntelligentBackpackApp</span>            </a>    </div>
+    <div>
+    </div>
+    <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":reminderData:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="reminderData::com.intelligentbackpack.reminderdata.db.entities/Lesson///PointingToDeclaration//-797112425">
+  <div class="breadcrumbs"><a href="../../index.html">reminderData</a><span class="delimiter">/</span><a href="../index.html">com.intelligentbackpack.reminderdata.db.entities</a><span class="delimiter">/</span><span class="current">Lesson</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Lesson</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">Lesson</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>subjectId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>module<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>day<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>startTime<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalTime.html">LocalTime</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>endTime<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalTime.html">LocalTime</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>fromDate<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDate.html">LocalDate</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>toDate<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDate.html">LocalDate</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>professor<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>calendarId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Represents a lesson in the database. Foreign key: <a href="subject-id.html">subjectId</a> -&gt;<a href="../-subject/subject-id.html">Subject.subjectId</a> Indices: (<a href="day.html">day</a>, <a href="start-time.html">startTime</a>, <a href="end-time.html">endTime</a>, <a href="from-date.html">fromDate</a>, <a href="to-date.html">toDate</a>), <a href="subject-id.html">subjectId</a></p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-457337273%2FConstructors%2F-797112425" anchor-label="Lesson" id="-457337273%2FConstructors%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-lesson.html"><span><span>Lesson</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-457337273%2FConstructors%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">subjectId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">module<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">day<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">startTime<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalTime.html">LocalTime</a><span class="token punctuation">, </span></span><span class="parameter ">endTime<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalTime.html">LocalTime</a><span class="token punctuation">, </span></span><span class="parameter ">fromDate<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDate.html">LocalDate</a><span class="token punctuation">, </span></span><span class="parameter ">toDate<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDate.html">LocalDate</a><span class="token punctuation">, </span></span><span class="parameter ">professor<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">calendarId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="21351289%2FProperties%2F-797112425" anchor-label="calendarId" id="21351289%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="calendar-id.html"><span>calendar</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="21351289%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="calendar-id.html">calendarId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The ID of the calendar of the lesson in the remote calendar service.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="495958700%2FProperties%2F-797112425" anchor-label="day" id="495958700%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="day.html"><span><span>day</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="495958700%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="day.html">day</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The day of the lesson.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-993398784%2FProperties%2F-797112425" anchor-label="endTime" id="-993398784%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="end-time.html"><span>end</span><wbr><span><span>Time</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-993398784%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="end-time.html">endTime</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalTime.html">LocalTime</a></div><div class="brief "><p class="paragraph">The end time of the lesson.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-959815654%2FProperties%2F-797112425" anchor-label="fromDate" id="-959815654%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="from-date.html"><span>from</span><wbr><span><span>Date</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-959815654%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="from-date.html">fromDate</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDate.html">LocalDate</a></div><div class="brief "><p class="paragraph">The start date of the lesson.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-542745961%2FProperties%2F-797112425" anchor-label="id" id="-542745961%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="id.html"><span><span>id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-542745961%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="id.html">id</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The ID of the lesson.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-803709978%2FProperties%2F-797112425" anchor-label="module" id="-803709978%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="module.html"><span><span>module</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-803709978%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="module.html">module</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The module of the lesson.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1994557703%2FProperties%2F-797112425" anchor-label="professor" id="-1994557703%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="professor.html"><span><span>professor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1994557703%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="professor.html">professor</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The professor of the lesson.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-619847911%2FProperties%2F-797112425" anchor-label="startTime" id="-619847911%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start-time.html"><span>start</span><wbr><span><span>Time</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-619847911%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="start-time.html">startTime</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalTime.html">LocalTime</a></div><div class="brief "><p class="paragraph">The start time of the lesson.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-484732671%2FProperties%2F-797112425" anchor-label="subjectId" id="-484732671%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="subject-id.html"><span>subject</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-484732671%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="subject-id.html">subjectId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The ID of the subject.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="850212905%2FProperties%2F-797112425" anchor-label="toDate" id="850212905%2FProperties%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="to-date.html"><span>to</span><wbr><span><span>Date</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="850212905%2FProperties%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="to-date.html">toDate</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDate.html">LocalDate</a></div><div class="brief "><p class="paragraph">The end date of the lesson.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="EXTENSION_FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="342950638%2FFunctions%2F-797112425" anchor-label="fromDBToDomain" id="342950638%2FFunctions%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.intelligentbackpack.reminderdata.adapter/-lesson-adapter/from-d-b-to-domain.html"><span>from</span><wbr><span>DBTo</span><wbr><span><span>Domain</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="342950638%2FFunctions%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html">Lesson</a><span class="token punctuation">.</span><a href="../../com.intelligentbackpack.reminderdata.adapter/-lesson-adapter/from-d-b-to-domain.html"><span class="token function">fromDBToDomain</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">subjects<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-subject/index.html">Subject</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../reminderDomain/com.intelligentbackpack.reminderdomain.adapter/-event-adapter/-lesson/index.html">EventAdapter.Lesson</a></div><div class="brief "><p class="paragraph">Converts a <a href="index.html">DBLesson</a> to a <a href="../../../reminderDomain/com.intelligentbackpack.reminderdomain.adapter/-event-adapter/-lesson/index.html">EventAdapter.Lesson</a>. if the <a href="index.html">DBLesson</a> is a <a href="index.html">DBLesson</a> with the same <a href="from-date.html">DBLesson.fromDate</a> and <a href="to-date.html">DBLesson.toDate</a> then it will be converted to a <a href="../../../reminderDomain/com.intelligentbackpack.reminderdomain.adapter/-event-adapter/-date-lesson-impl/index.html">EventAdapter.DateLessonImpl</a>. if the <a href="index.html">DBLesson</a> is a <a href="index.html">DBLesson</a> with different <a href="from-date.html">DBLesson.fromDate</a> and <a href="to-date.html">DBLesson.toDate</a> then it will be converted to a <a href="../../../reminderDomain/com.intelligentbackpack.reminderdomain.adapter/-event-adapter/-week-lesson-impl/index.html">EventAdapter.WeekLessonImpl</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1305567345%2FFunctions%2F-797112425" anchor-label="fromDBToRemote" id="1305567345%2FFunctions%2F-797112425" data-filterable-set=":reminderData:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":reminderData:dokkaHtmlPartial/release" data-filterable-set=":reminderData:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.intelligentbackpack.reminderdata.adapter/-lesson-adapter/from-d-b-to-remote.html"><span>from</span><wbr><span>DBTo</span><wbr><span><span>Remote</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1305567345%2FFunctions%2F-797112425"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":reminderData:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html">Lesson</a><span class="token punctuation">.</span><a href="../../com.intelligentbackpack.reminderdata.adapter/-lesson-adapter/from-d-b-to-remote.html"><span class="token function">fromDBToRemote</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="calendar.communication/Lesson///PointingToDeclaration/">Lesson</span></div><div class="brief "><p class="paragraph">Converts a <a href="index.html">DBLesson</a> to a <span data-unresolved-link="calendar.communication/Lesson///PointingToDeclaration/">RemoteLesson</span>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
+</html>
+
