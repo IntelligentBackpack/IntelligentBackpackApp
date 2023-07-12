@@ -50,7 +50,7 @@ jobs:
         env:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
       - name: Unit test with Gradle
-        run: ./gradlew test jacocoTestReport sonarqube
+        run: ./gradlew test jacocoTestReport
 
   gen-api-latest:
     runs-on: ubuntu-latest
@@ -148,7 +148,7 @@ jobs:
       - name: create key
         run: echo "$SIGNING_KEY" | base64 -d > key.jks
         env:
-         SIGNING_KEY: ${{secrets.SIGNING_KEY}}
+          SIGNING_KEY: ${{secrets.SIGNING_KEY}}
       - name: google services
         run: |
           echo $GOOGLE_SERVICES > app/google-services.json
@@ -163,3 +163,64 @@ jobs:
         run: |
           npm install
           npx semantic-release
+
+  documentation:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - test
+      - device-test-latest
+    if: github.ref == 'refs/heads/main'
+    concurrency:
+      group: release
+      cancel-in-progress: false
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - uses: actions/checkout@v3
+      - name: set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: create key
+        run: echo "$SIGNING_KEY" | base64 -d > key.jks
+        env:
+          SIGNING_KEY: ${{secrets.SIGNING_KEY}}
+      - name: google services
+        run: |
+          echo $GOOGLE_SERVICES > app/google-services.json
+        env:
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+      - name: Create documentation
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN}}
+        run: ./gradlew dokkaHtmlMultiModule
+      - name: Deploy documentation
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.DEPLOYMENT_TOKEN }}
+          publish_dir: ./build/docs/partial
+
+  success:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - test
+      - device-test-latest
+      - release
+      - documentation
+    if: >-
+      always() && (
+        contains(join(needs.*.result, ','), 'failure')
+        || !contains(join(needs.*.result, ','), 'cancelled')
+      )
+    steps:
+      - name: Verify that there were no failures
+        run: ${{ !contains(join(needs.*.result, ','), 'failure') }}
