@@ -4,19 +4,13 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,18 +18,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.intelligentbackpack.app.ui.common.DatePickerDialogCommon
 import com.intelligentbackpack.app.viewdata.BookView
 import com.intelligentbackpack.app.viewdata.EventView
 import com.intelligentbackpack.app.viewdata.ReminderView
 import com.intelligentbackpack.app.viewdata.SchoolSupplyView
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
-import java.util.Calendar
-import java.util.Locale
 
 /**
  * Form for editing a reminder.
@@ -44,7 +34,6 @@ import java.util.Locale
  * @param onDismissRequest Callback for when the form is dismissed.
  * @param onSave Callback for when the form is saved.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditReminderForm(reminderView: ReminderView, onDismissRequest: () -> Unit, onSave: (ReminderView) -> Unit) {
     Column(
@@ -88,60 +77,18 @@ fun EditReminderForm(reminderView: ReminderView, onDismissRequest: () -> Unit, o
             Text(text = "Single date")
         }
         if (checkedState) {
-            Text(text = "Date: ${date ?: fromDate}")
-            Button(
-                onClick = {
-                    inputDateType = InputDateType.DATE
-                    openPickerDialog = true
-                },
-                modifier = Modifier
-                    .padding(top = 10.dp),
-                enabled = true,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                shape = MaterialTheme.shapes.medium,
-            ) {
-                Text("Select date", color = MaterialTheme.colorScheme.onBackground)
+            DateSelector(text = "Date: ${date ?: fromDate}") {
+                inputDateType = InputDateType.DATE
+                openPickerDialog = true
             }
         } else {
-            Text(text = "From: ${fromDate ?: date}")
-            Button(
-                onClick = {
-                    inputDateType = InputDateType.FROM
-                    openPickerDialog = true
-                },
-                modifier = Modifier
-                    .padding(top = 10.dp),
-                enabled = true,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                shape = MaterialTheme.shapes.medium,
-            ) {
-                Text("Select date", color = MaterialTheme.colorScheme.onBackground)
+            DateSelector(text = "From: ${fromDate ?: date}") {
+                inputDateType = InputDateType.FROM
+                openPickerDialog = true
             }
-            Text(text = "To: ${toDate ?: LocalDate.parse(date).plusDays(7).toString()}")
-            Button(
-                onClick = {
-                    inputDateType = InputDateType.TO
-                    openPickerDialog = true
-                },
-                modifier = Modifier
-                    .padding(top = 10.dp),
-                enabled = true,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                shape = MaterialTheme.shapes.medium,
-            ) {
-                Text("Select date", color = MaterialTheme.colorScheme.onBackground)
+            DateSelector(text = "To: ${toDate ?: LocalDate.parse(date).plusDays(7).toString()}") {
+                inputDateType = InputDateType.TO
+                openPickerDialog = true
             }
         }
         Row(
@@ -196,6 +143,25 @@ fun EditReminderForm(reminderView: ReminderView, onDismissRequest: () -> Unit, o
                 androidx.compose.material3.Text("Cancel")
             }
         }
+    }
+}
+
+@Composable
+fun DateSelector(text: String, onClick: () -> Unit) {
+    Text(text = text)
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .padding(top = 10.dp),
+        enabled = true,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.primary,
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+        shape = MaterialTheme.shapes.medium,
+    ) {
+        Text("Select date", color = MaterialTheme.colorScheme.onBackground)
     }
 }
 
