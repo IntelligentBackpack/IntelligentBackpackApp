@@ -111,6 +111,11 @@ tasks {
     }
 }
 
+tasks.dokkaHtmlPartial {
+    dependsOn(tasks.findByName("kaptDebugKotlin"))
+    dependsOn(tasks.findByName("kaptReleaseKotlin"))
+}
+
 protobuf {
     protoc {
         // The artifact spec for the Protobuf Compiler

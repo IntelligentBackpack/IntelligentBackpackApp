@@ -12,10 +12,11 @@ import com.intelligentbackpack.app.App
 import com.intelligentbackpack.app.exceptionhandler.ExceptionMessage.messageOrDefault
 import com.intelligentbackpack.app.viewdata.BookView
 import com.intelligentbackpack.app.viewdata.EventView
-import com.intelligentbackpack.app.viewdata.SchoolSupplyView
+import com.intelligentbackpack.app.viewdata.ReminderView
 import com.intelligentbackpack.app.viewdata.adapter.BookAdapter.fromDomainToView
 import com.intelligentbackpack.app.viewdata.adapter.EventAdapter.fromDomainToView
-import com.intelligentbackpack.app.viewdata.adapter.SchoolSupplyAdapter.fromDomainToView
+import com.intelligentbackpack.app.viewdata.adapter.ReminderAdapter.fromDomainToView
+import com.intelligentbackpack.app.viewdata.adapter.ReminderAdapter.fromViewToDomain
 import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import com.intelligentbackpack.reminderdomain.adapter.EventAdapter
@@ -95,18 +96,20 @@ class CalendarViewModel(
      */
     fun getSuppliesForEvent(
         index: Int,
-        success: (List<SchoolSupplyView>) -> Unit,
+        success: (List<ReminderView>) -> Unit,
         error: (String) -> Unit,
     ) {
         viewModelScope.launch {
             eventsImpl.value?.getOrNull(index)?.let { event ->
                 reminderUseCase.getSchoolSuppliesForEvent(event)
                     .onSuccess { supplies ->
-                        success(
-                            supplies.map { supply ->
-                                supply.fromDomainToView()
-                            },
-                        )
+                        event.fromDomainToView(index)?.let { eventView ->
+                            success(
+                                supplies.map { supply ->
+                                    supply.fromDomainToView(eventView)
+                                },
+                            )
+                        } ?: error("Event not found")
                     }
                     .onFailure {
                         error(it.messageOrDefault())
@@ -200,6 +203,53 @@ class CalendarViewModel(
             reminderUseCase.isUserProfessor()
                 .onSuccess {
                     success(it)
+                }
+                .onFailure {
+                    error(it.messageOrDefault())
+                }
+        }
+    }
+
+    /**
+     * Deletes a reminder.
+     *
+     * @param reminderView the reminder view to delete.
+     * @param success the success callback.
+     * @param error the error callback.
+     */
+    fun deleteReminder(reminderView: ReminderView, success: () -> Unit, error: (String) -> Unit) {
+        viewModelScope.launch {
+            reminderUseCase.removeSchoolSupplyForEvent(reminderView.fromViewToDomain())
+                .onSuccess {
+                    success()
+                }
+                .onFailure {
+                    error(it.messageOrDefault())
+                }
+        }
+    }
+
+    /**
+     * Changes a reminder.
+     *
+     * @param oldReminderView the old reminder view.
+     * @param newReminderView the new reminder view.
+     * @param success the success callback.
+     * @param error the error callback.
+     */
+    fun changeReminder(
+        oldReminderView: ReminderView,
+        newReminderView: ReminderView,
+        success: () -> Unit,
+        error: (String) -> Unit,
+    ) {
+        viewModelScope.launch {
+            reminderUseCase.changeSchoolSupplyForEvent(
+                oldReminderView.fromViewToDomain(),
+                newReminderView.fromViewToDomain(),
+            )
+                .onSuccess {
+                    success()
                 }
                 .onFailure {
                     error(it.messageOrDefault())

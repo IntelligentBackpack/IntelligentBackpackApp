@@ -1,6 +1,5 @@
 package com.intelligentbackpack.app.ui.common
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,16 +14,9 @@ import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Today
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,17 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.intelligentbackpack.app.ui.theme.IntelligentBackpackAppTheme
-import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.util.Calendar
-import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarTopBar(
     onDateChange: (LocalDate) -> Unit = {},
@@ -51,63 +38,14 @@ fun CalendarTopBar(
     var openPickerDialog by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(today) }
     if (openPickerDialog) {
-        val datePickerState = rememberDatePickerState(
-            Calendar.getInstance(Locale.getDefault()).apply {
-                set(selectedDate.year, selectedDate.monthValue - 1, selectedDate.dayOfMonth)
-            }.timeInMillis + ZoneId.systemDefault().rules.getOffset(Instant.now()).totalSeconds * 1000,
-        )
-
-        DatePickerDialog(
-            modifier = Modifier.fillMaxSize(),
-            onDismissRequest = { openPickerDialog = false },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        selectedDate = datePickerState.selectedDateMillis?.let {
-                            Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())
-                                .toLocalDate()
-                        }
-                        onDateChange(selectedDate)
-                        openPickerDialog = false
-                    },
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    enabled = true,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.background,
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                    shape = MaterialTheme.shapes.medium,
-                ) {
-                    Text("Ok", color = MaterialTheme.colorScheme.onPrimary)
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = {
-                        openPickerDialog = false
-                    },
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    enabled = true,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                    shape = MaterialTheme.shapes.medium,
-                ) {
-                    Text("Cancel", color = MaterialTheme.colorScheme.onBackground)
-                }
-            },
-            content = {
-                DatePicker(state = datePickerState, modifier = Modifier)
-            },
-            colors = DatePickerDefaults.colors(
-                selectedDayContentColor = Color.White,
-            ),
-        )
+        DatePickerDialogCommon(selectedDate = selectedDate, onDateSelected = {
+            selectedDate = it
+            onDateChange(selectedDate)
+            openPickerDialog = false
+        }) {
+            openPickerDialog = false
+//
+        }
     }
     Column(modifier = Modifier.fillMaxWidth()) {
         val textColor = MaterialTheme.colorScheme.onSurface

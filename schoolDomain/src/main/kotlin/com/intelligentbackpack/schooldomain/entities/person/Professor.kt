@@ -33,9 +33,9 @@ interface Professor : Person {
             name: String,
             surname: String,
         ): Professor {
-            check(email.isBlank()) { "email cannot be blank" }
-            check(name.isBlank()) { "name cannot be blank" }
-            check(surname.isBlank()) { "surname cannot be blank" }
+            require(email.isNotBlank()) { "email cannot be blank" }
+            require(name.isNotBlank()) { "name cannot be blank" }
+            require(surname.isNotBlank()) { "surname cannot be blank" }
             return ProfessorImpl(email, name, surname)
         }
     }

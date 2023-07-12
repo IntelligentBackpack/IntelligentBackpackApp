@@ -118,8 +118,8 @@ interface User {
                 val trimEmail = email.trim()
                 if (emailPolicies.all { it.isRespected(trimEmail) }) {
                     if (passwordPolicies.all { it.isRespected(password) }) {
-                        check(name.isNotBlank()) { "Name cannot be blank." }
-                        check(surname.isNotBlank()) { "Surname cannot be blank." }
+                        require(name.isNotBlank()) { "Name cannot be blank." }
+                        require(surname.isNotBlank()) { "Surname cannot be blank." }
                         UserImpl(
                             email = trimEmail,
                             name = name.firstLetterToUpperCaseWithNoSpace(),

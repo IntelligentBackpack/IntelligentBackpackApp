@@ -1,8 +1,6 @@
 package com.intelligentbackpack.schooldata.api
 
 import calendar.communication.BasicMessage
-import calendar.communication.BooksForLesson
-import calendar.communication.ChangeLessonBookPeriodDate
 import calendar.communication.Lessons
 import calendar.communication.Subjects
 import calendar.communication.UserInformations
@@ -127,7 +125,7 @@ interface CalendarApi {
      * @return the result as a [BasicMessage].
      */
     @HTTP(method = "DELETE", path = "/remove/bookForLesson", hasBody = true)
-    fun deleteReminderForLesson(@Body remainderForLesson: BooksForLesson): Call<BasicMessage>
+    fun deleteReminderForLesson(@Body remainderForLesson: RequestBody): Call<BasicMessage>
 
     /**
      * Modifies a reminder for a lesson, its period of validity.
@@ -136,5 +134,5 @@ interface CalendarApi {
      * @return the result as a [BasicMessage].
      */
     @POST("/modify/bookForTimePeriod/")
-    fun modifyReminderForLesson(@Body remainderForLesson: ChangeLessonBookPeriodDate): Call<BasicMessage>
+    fun modifyReminderForLesson(@Body remainderForLesson: RequestBody): Call<BasicMessage>
 }

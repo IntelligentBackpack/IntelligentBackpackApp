@@ -33,12 +33,11 @@ internal data class ClassImpl(
      * @throws IllegalArgumentException if the student is already in the class or if the student is not in the class
      */
     override fun addStudent(student: Student): Class {
-        if (students.contains(student)) {
-            error("student is already in this class")
-        } else {
-            return copy().apply {
-                students = students + student
-            }
+        require(!students.contains(student)) {
+            "student is already in this class"
+        }
+        return copy().apply {
+            students = students + student
         }
     }
 
@@ -51,21 +50,20 @@ internal data class ClassImpl(
      * @throws IllegalArgumentException if the professor is not in the class or if the professor doesn't teach the subjects in the class
      */
     override fun addProfessor(professor: Professor, subjects: Set<Subject>): Class {
-        if (subjects.isEmpty()) {
-            error("subjects cannot be empty")
-        } else {
-            val newClass = if (professors.contains(professor)) {
-                val oldSubjects = professorTeachSubjects[professor] ?: error("professor is not in this class")
-                copy().apply {
-                    professorTeachSubjects = professorTeachSubjects + (professor to oldSubjects + subjects)
-                }
-            } else {
-                copy().apply {
-                    professors = professors + professor
-                    professorTeachSubjects = professorTeachSubjects + (professor to subjects)
-                }
-            }
-            return newClass
+        require(subjects.isNotEmpty()) {
+            "subjects cannot be empty"
         }
+        val newClass = if (professors.contains(professor)) {
+            val oldSubjects = professorTeachSubjects[professor] ?: error("professor is not in this class")
+            copy().apply {
+                professorTeachSubjects = professorTeachSubjects + (professor to oldSubjects + subjects)
+            }
+        } else {
+            copy().apply {
+                professors = professors + professor
+                professorTeachSubjects = professorTeachSubjects + (professor to subjects)
+            }
+        }
+        return newClass
     }
 }

@@ -7,11 +7,13 @@ plugins {
     alias(libs.plugins.kotlin.qa)
     alias(libs.plugins.taskTree)
     jacoco
+    alias(libs.plugins.dokka)
 }
 
 subprojects {
     apply(plugin = "org.danilopianini.gradle-kotlin-qa")
     apply(plugin = "jacoco")
+    apply(plugin = "org.jetbrains.dokka")
 }
 
 tasks.test {
@@ -19,14 +21,13 @@ tasks.test {
 }
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+    }
 }
 
-tasks.jacocoTestReport {
-    reports {
-        xml.required.set(false)
-        csv.required.set(false)
-        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
-    }
+tasks.dokkaHtmlMultiModule {
+    outputDirectory.set(buildDir.resolve("docs/partial"))
 }
 
 buildscript {

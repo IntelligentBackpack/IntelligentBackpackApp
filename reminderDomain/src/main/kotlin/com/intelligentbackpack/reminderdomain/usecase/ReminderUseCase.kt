@@ -7,6 +7,7 @@ import com.intelligentbackpack.desktopdomain.entities.BookCopy
 import com.intelligentbackpack.desktopdomain.entities.SchoolSupply
 import com.intelligentbackpack.desktopdomain.usecase.DesktopUseCase
 import com.intelligentbackpack.reminderdomain.adapter.EventAdapter.fromSchoolToReminder
+import com.intelligentbackpack.reminderdomain.adapter.ReminderWithSupply
 import com.intelligentbackpack.reminderdomain.entitites.ReminderForLesson
 import com.intelligentbackpack.reminderdomain.repository.ReminderDomainRepository
 import com.intelligentbackpack.schooldomain.entities.calendar.CalendarEvent
@@ -103,7 +104,7 @@ class ReminderUseCase(
         }
 
     /**
-     * Get the school supplies for an event
+     * Get the school supplies and the reminder for an event
      *
      * @param calendarEvent the event
      * @return the result of the operation, if the user isn't a professor or a student exception ActionNotAllowedForUserException
@@ -112,12 +113,26 @@ class ReminderUseCase(
         accessUseCase.getLoggedUser().mapCatching { user ->
             if (user.role == Role.PROFESSOR || user.role == Role.STUDENT) {
                 val reminder = reminderDomainRepository.getReminder()
-                calendarEvent.fromSchoolToReminder()?.let { reminder.getBooksForLesson(it) }
-                    ?.map { desktopUseCase.getBookCopy(it) }
-                    ?.filter { it.isSuccess }
-                    ?.mapNotNull { it.getOrNull() }
-                    ?.toSet()
-                    ?: emptySet()
+                val remindersForLesson =
+                    calendarEvent.fromSchoolToReminder()?.let { reminder.getBooksForLesson(it) } ?: emptySet()
+                val bookCopies = remindersForLesson
+                    .map { desktopUseCase.getBookCopy(it.isbn) }
+                    .filter { it.isSuccess }
+                    .mapNotNull { it.getOrNull() }
+                    .toSet()
+                remindersForLesson.mapNotNull { reminderForLesson ->
+                    bookCopies.find {
+                        when (it) {
+                            is BookCopy -> it.book.isbn == reminderForLesson.isbn
+                            else -> false
+                        }
+                    }?.let {
+                        ReminderWithSupply(
+                            it,
+                            reminderForLesson,
+                        )
+                    }
+                }.toSet()
             } else {
                 throw ActionNotAllowedForUserException()
             }
@@ -147,7 +162,7 @@ class ReminderUseCase(
                 result.getOrNull()
                     ?.filter { event ->
                         event.fromSchoolToReminder()?.let { calendarEvent ->
-                            reminderEvents.map { it }.contains(calendarEvent)
+                            reminderEvents.map { it.lesson }.contains(calendarEvent)
                         } ?: false
                     }
                     ?.toSet()

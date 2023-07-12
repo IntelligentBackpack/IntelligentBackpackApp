@@ -56,9 +56,17 @@ object ReminderAdapter {
      *
      * @param lesson The [DBLesson] to get the [DBLesson.id] from.
      */
-    fun ReminderForLesson.fromDomainToDB(lesson: DBLesson): DBReminder {
+    fun ReminderForLesson.fromDomainToDB(lesson: DBLesson): DBReminder = fromDomainToDB(lesson, 0)
+
+    /**
+     * Converts a [ReminderForLesson] to a [DBReminder].
+     *
+     * @param lesson The [DBLesson] to get the [DBLesson.id] from.
+     * @param id The id of the [DBReminder].
+     */
+    fun ReminderForLesson.fromDomainToDB(lesson: DBLesson, id: Int): DBReminder {
         return DBReminder(
-            id = 0,
+            id = id,
             lessonId = lesson.id,
             isbn = isbn,
             fromDate = when (this) {

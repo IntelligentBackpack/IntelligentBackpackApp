@@ -7,8 +7,8 @@ import com.intelligentbackpack.networkutility.RetrofitHelper
 import com.intelligentbackpack.schooldata.api.CalendarApi
 import com.intelligentbackpack.schooldata.datasource.SchoolRemoteDataSourceImpl
 import okhttp3.RequestBody
-import org.json.JSONArray
 import org.json.JSONObject
+import java.time.LocalDate
 
 /**
  * Implementation of Remote data source for the reminder module.
@@ -41,34 +41,51 @@ class ReminderRemoteDataSourceImpl(
         }
     }
 
-    override suspend fun createNewReminderForLesson(email: String, lesson: Lesson, isbn: String): String {
-        val jsonParam = mapOf(
-            ("Email" to email),
-            ("Nome_lezione" to lesson.nomeLezione),
-            ("Materia" to lesson.materia),
-            ("Giorno" to lesson.giorno),
-            ("Ora_inizio" to lesson.oraInizio),
-            ("Ora_fine" to lesson.oraFine),
-            ("Professore" to lesson.professore),
-            ("Data_Inizio" to lesson.dataInizio),
-            ("Data_Fine" to lesson.dataFine),
-            ("ID_Calendario" to lesson.idCalendario),
-        )
-        val lessonJson = JSONObject(jsonParam)
-        val isbnJson = JSONArray(listOf(isbn))
-        val jsonParamReminder = mapOf(
-            ("lesson" to lessonJson),
-            ("ISBNs" to isbnJson),
-            ("email_executor" to email),
-        )
-        val request = RequestBody.create(
+    private fun createJsonForReminder(email: String, lesson: Lesson, isbn: String): RequestBody {
+        val json = JSONObject()
+        json.put("email_executor", email)
+        json.put("lesson", schoolRemoteDataSource.createJsonForLesson(lesson))
+        json.put("isbn", isbn)
+        return RequestBody.create(
             okhttp3.MediaType.parse("application/json; charset=utf-8"),
-            (JSONObject(jsonParamReminder)).toString(),
+            json.toString(),
         )
-        val response = calendarApi.createReminderForLesson(request).execute()
-        if (response.isSuccessful) {
-            return response.body()?.message ?: ""
-        } else {
+    }
+
+    override suspend fun createNewReminderForLesson(email: String, lesson: Lesson, isbn: String) {
+        val response = calendarApi.createReminderForLesson(createJsonForReminder(email, lesson, isbn)).execute()
+        if (!response.isSuccessful) {
+            throw DownloadException(ErrorHandler.getError(response))
+        }
+    }
+
+    override suspend fun deleteReminderForLesson(email: String, lesson: Lesson, isbn: String) {
+        val response = calendarApi.deleteReminderForLesson(createJsonForReminder(email, lesson, isbn)).execute()
+        if (!response.isSuccessful) {
+            throw DownloadException(ErrorHandler.getError(response))
+        }
+    }
+
+    override suspend fun changeReminderForLesson(
+        email: String,
+        lesson: Lesson,
+        isbn: String,
+        fromDate: LocalDate,
+        toDate: LocalDate,
+    ) {
+        val json = JSONObject()
+        json.put("email_executor", email)
+        json.put("lesson", schoolRemoteDataSource.createJsonForLesson(lesson))
+        json.put("isbn", isbn)
+        json.put("nuovaInizioData", fromDate.toString())
+        json.put("nuovaFineData", toDate.toString())
+        val response = calendarApi.modifyReminderForLesson(
+            RequestBody.create(
+                okhttp3.MediaType.parse("application/json; charset=utf-8"),
+                json.toString(),
+            ),
+        ).execute()
+        if (!response.isSuccessful) {
             throw DownloadException(ErrorHandler.getError(response))
         }
     }

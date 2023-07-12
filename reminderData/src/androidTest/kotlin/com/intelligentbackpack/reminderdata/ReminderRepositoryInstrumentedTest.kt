@@ -133,7 +133,7 @@ class ReminderRepositoryInstrumentedTest {
     fun addReminder(): Unit = runBlocking {
         val date = LocalDate.of(2021, 10, 11)
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        coEvery { remoteDataSource.createNewReminderForLesson(any(), any(), any()) } returns "OK"
+        coEvery { remoteDataSource.createNewReminderForLesson(any(), any(), any()) } returns Unit
         val db = ReminderDatabaseHelper.getDatabase(appContext)
         val localDataSource = ReminderLocalDataSourceImpl(db)
         val repository = ReminderDomainRepositoryImpl(remoteDataSource, localDataSource)
@@ -153,5 +153,70 @@ class ReminderRepositoryInstrumentedTest {
         assertEquals(reminders[0].isbn, isbn)
         assertEquals(reminders[0].fromDate, date)
         assertEquals(reminders[0].toDate, date)
+    }
+
+    @Test
+    fun deleteReminder(): Unit = runBlocking {
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        coEvery { remoteDataSource.deleteReminderForLesson(any(), any(), any()) } returns Unit
+        val db = ReminderDatabaseHelper.getDatabase(appContext)
+        val localDataSource = ReminderLocalDataSourceImpl(db)
+        val repository = ReminderDomainRepositoryImpl(remoteDataSource, localDataSource)
+        localDataSource.insertSubject(dbSubject)
+        localDataSource.saveLesson(dbLesson)
+        val date = LocalDate.of(2021, 10, 11)
+        localDataSource.saveReminder(Reminder(0, dbLesson.id, isbn, date, date))
+        repository.removeBookForLesson(
+            ReminderForLessonDateImpl(
+                lesson = dbLesson.fromDBToDomain(listOf(dbSubject)),
+                isbn = isbn,
+                date = date,
+            ),
+            professorUser,
+        )
+        val reminders = localDataSource.getReminders()
+        coVerify(exactly = 1) { remoteDataSource.deleteReminderForLesson(professorUser.email, any(), isbn) }
+        assertEquals(reminders.size, 0)
+    }
+
+    @Test
+    fun changeReminder(): Unit = runBlocking {
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        coEvery { remoteDataSource.changeReminderForLesson(any(), any(), any(), any(), any()) } returns Unit
+        val db = ReminderDatabaseHelper.getDatabase(appContext)
+        val localDataSource = ReminderLocalDataSourceImpl(db)
+        val repository = ReminderDomainRepositoryImpl(remoteDataSource, localDataSource)
+        localDataSource.insertSubject(dbSubject)
+        localDataSource.saveLesson(dbLesson)
+        val date = LocalDate.of(2021, 10, 11)
+        localDataSource.saveReminder(Reminder(0, dbLesson.id, isbn, date, date))
+        val newDate = LocalDate.of(2021, 11, 12)
+        repository.changeBookForLesson(
+            ReminderForLessonDateImpl(
+                lesson = dbLesson.fromDBToDomain(listOf(dbSubject)),
+                isbn = isbn,
+                date = date,
+            ),
+            ReminderForLessonDateImpl(
+                lesson = dbLesson.fromDBToDomain(listOf(dbSubject)),
+                isbn = isbn,
+                date = newDate,
+            ),
+            professorUser,
+        )
+        val reminders = localDataSource.getReminders()
+        coVerify(exactly = 1) {
+            remoteDataSource.changeReminderForLesson(
+                professorUser.email,
+                any(),
+                isbn,
+                newDate,
+                newDate,
+            )
+        }
+        assertEquals(reminders.size, 1)
+        assertEquals(reminders[0].isbn, isbn)
+        assertEquals(reminders[0].fromDate, newDate)
+        assertEquals(reminders[0].toDate, newDate)
     }
 }

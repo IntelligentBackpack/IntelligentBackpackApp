@@ -7,6 +7,9 @@ import java.time.LocalDate
 
 /**
  * Reminder implementation
+ *
+ * @param booksForLesson map of books for lesson
+ * @param lessonsForBook map of lessons for book
  */
 data class ReminderImpl(
     val booksForLesson: Map<EventAdapter.CalendarEvent, Set<ReminderForLesson>> = mapOf(),
@@ -109,12 +112,12 @@ data class ReminderImpl(
         )
     }
 
-    override fun getBooksForLesson(event: EventAdapter.CalendarEvent): Set<String> {
-        return booksForLesson[event]?.map { it.isbn }?.toSet() ?: setOf()
+    override fun getBooksForLesson(event: EventAdapter.CalendarEvent): Set<ReminderForLesson> {
+        return booksForLesson[event]?.toSet() ?: setOf()
     }
 
-    override fun getLessonsForBook(isbn: String): Set<EventAdapter.Lesson> {
-        return lessonsForBook[isbn]?.map { it.lesson }?.toSet() ?: setOf()
+    override fun getLessonsForBook(isbn: String): Set<ReminderForLesson> {
+        return lessonsForBook[isbn]?.toSet() ?: setOf()
     }
 
     override fun getBooksForLessonInDate(event: EventAdapter.CalendarEvent, date: LocalDate): Set<String> {

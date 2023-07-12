@@ -108,13 +108,13 @@ object CalendarEventFactory {
         subject: Subject,
         module: String? = null,
     ): WeekLesson {
-        check(subject.isBlank()) {
+        require(subject.isNotBlank()) {
             "subject cannot be blank"
         }
-        check(startTime.isAfter(endTime)) {
+        require(!startTime.isAfter(endTime)) {
             "startTime cannot be after endTime"
         }
-        check(fromDate.isAfter(toDate)) {
+        require(!fromDate.isAfter(toDate)) {
             "fromDate cannot be after toDate"
         }
         return WeekLessonImpl(
@@ -152,10 +152,10 @@ object CalendarEventFactory {
         subject: Subject,
         module: String? = null,
     ): DateLesson {
-        check(subject.isBlank()) {
+        require(subject.isNotBlank()) {
             "subject cannot be blank"
         }
-        check(startTime.isAfter(endTime)) {
+        require(!startTime.isAfter(endTime)) {
             "startTime cannot be after endTime"
         }
         return DateLessonImpl(

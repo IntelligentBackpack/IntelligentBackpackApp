@@ -53,8 +53,20 @@ class ReminderLocalDataSourceImpl(
         return database.reminderDao().getReminders()
     }
 
+    override suspend fun getReminder(reminder: Reminder): Reminder? {
+        return database.reminderDao().getReminder(reminder.lessonId, reminder.isbn, reminder.fromDate, reminder.toDate)
+    }
+
     override suspend fun deleteData() {
         database.reminderDao().deleteReminders()
         database.reminderDao().deleteLessons()
+    }
+
+    override suspend fun deleteReminder(dbReminder: Reminder) {
+        database.reminderDao().deleteReminder(dbReminder.id)
+    }
+
+    override suspend fun updateReminder(newReminder: Reminder) {
+        database.reminderDao().updateReminder(newReminder)
     }
 }
