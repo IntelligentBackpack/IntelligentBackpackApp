@@ -1,3 +1,17 @@
+## [1.1.1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.0...1.1.1) (2023-07-16)
+
+
+### Dependency updates
+
+* **deps:** update dependency gradle to v8.2.1 ([93bdf76](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/93bdf76b70c32a290389765081193ffdd7d045c6))
+* **deps:** update plugin kotlin-qa to v0.47.1 ([5d378a1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/5d378a15d3ee84c14107625d0d4f8305673c629d))
+* **deps:** update plugin protobuf-plugin to v0.9.4 ([847a368](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/847a3683be08ca37e8e2b7cab25bc82f95c2f16d))
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.firebase:firebase-crashlytics-gradle to v2.9.7 ([ec345b9](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/ec345b97bdbdf53cbbcb74cd0fe4f7117886bf71))
+
 ## [1.1.0](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.0.0...1.1.0) (2023-07-12)
 
 
