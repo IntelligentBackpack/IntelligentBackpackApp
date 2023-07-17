@@ -90,7 +90,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation(libs.bundles.camera.view)
     implementation(libs.bundles.barcode.scanning)
-    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
+    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation(project(":accessData"))
