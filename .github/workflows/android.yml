@@ -175,7 +175,7 @@ jobs:
       - device-test-latest
     if: github.ref == 'refs/heads/main'
     concurrency:
-      group: release
+      group: docs
       cancel-in-progress: false
     steps:
       - name: Check out repository code
