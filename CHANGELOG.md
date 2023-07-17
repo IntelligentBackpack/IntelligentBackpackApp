@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.1...1.1.2) (2023-07-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.firebase:firebase-bom to v32.2.0 ([b77aa47](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/b77aa47d9289f8654d70a8f2bb4991c65b254b32))
+
 ## [1.1.1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.0...1.1.1) (2023-07-16)
 
 
