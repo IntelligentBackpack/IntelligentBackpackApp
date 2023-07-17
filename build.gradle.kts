@@ -14,11 +14,43 @@ subprojects {
     apply(plugin = "org.danilopianini.gradle-kotlin-qa")
     apply(plugin = "jacoco")
     apply(plugin = "org.jetbrains.dokka")
+
+    configurations.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin")) {
+                useVersion(org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION)
+                because(
+                    "All Kotlin modules should use the same version, and " +
+                        "compiler uses ${org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION}",
+                )
+            }
+        }
+    }
+
+    tasks {
+        withType<Test> {
+            useJUnitPlatform()
+            testLogging {
+                showCauses = true
+                showStackTraces = true
+                showStandardStreams = true
+                events(*org.gradle.api.tasks.testing.logging.TestLogEvent.values())
+            }
+        }
+        withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+            kotlinOptions {
+                jvmTarget = "17"
+                allWarningsAsErrors = true
+                freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn", "-Xinline-classes")
+            }
+        }
+    }
 }
 
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
+
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
@@ -43,4 +75,8 @@ buildscript {
         classpath(libs.firebase.crashlytics.gradle)
         classpath(libs.org.jacoco.core)
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }

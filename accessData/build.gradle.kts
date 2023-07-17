@@ -1,7 +1,4 @@
 import com.google.protobuf.gradle.id
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 
 plugins {
     id("com.android.library")
@@ -52,10 +49,6 @@ android {
     }
 }
 
-kotlin {
-    jvmToolchain(17)
-}
-
 dependencies {
     implementation(libs.core.ktx)
     implementation(libs.kotlinx.coroutines.core)
@@ -68,34 +61,6 @@ dependencies {
     androidTestImplementation(libs.bundles.androidTest)
     androidTestImplementation(libs.mockk.android)
     androidTestUtil(libs.orchestrator)
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency {
-        if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin")) {
-            useVersion(KOTLIN_VERSION)
-            because("All Kotlin modules should use the same version, and compiler uses $KOTLIN_VERSION")
-        }
-    }
-}
-
-tasks {
-    withType<Test> {
-        useJUnitPlatform()
-        testLogging {
-            showCauses = true
-            showStackTraces = true
-            showStandardStreams = true
-            events(*TestLogEvent.values())
-        }
-    }
-    withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "17"
-            allWarningsAsErrors = true
-            freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn", "-Xinline-classes")
-        }
-    }
 }
 
 protobuf {

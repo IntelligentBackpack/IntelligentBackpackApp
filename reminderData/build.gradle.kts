@@ -1,7 +1,4 @@
 import com.google.protobuf.gradle.id
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 
 plugins {
     id("com.android.library")
@@ -62,10 +59,6 @@ android {
     }
 }
 
-kotlin {
-    jvmToolchain(17)
-}
-
 dependencies {
     implementation(libs.core.ktx)
     implementation(libs.bundles.retrofit)
@@ -84,63 +77,7 @@ dependencies {
     androidTestUtil(libs.orchestrator)
 }
 
-configurations.all {
-    resolutionStrategy.eachDependency {
-        if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin")) {
-            useVersion(KOTLIN_VERSION)
-            because("All Kotlin modules should use the same version, and compiler uses $KOTLIN_VERSION")
-        }
-    }
-}
-
-tasks {
-    withType<Test> {
-        useJUnitPlatform()
-        testLogging {
-            showCauses = true
-            showStackTraces = true
-            showStandardStreams = true
-            events(*TestLogEvent.values())
-        }
-    }
-    withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "17"
-            allWarningsAsErrors = true
-            freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn", "-Xinline-classes")
-        }
-    }
-}
-
 tasks.dokkaHtmlPartial {
     dependsOn(tasks.findByName("kaptDebugKotlin"))
     dependsOn(tasks.findByName("kaptReleaseKotlin"))
-}
-
-protobuf {
-    protoc {
-        // The artifact spec for the Protobuf Compiler
-        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.compiler.get()}"
-    }
-    plugins {
-        // Optional: an artifact spec for a protoc plugin, with "grpc" as
-        // the identifier, which can be referred to in the "plugins"
-        // container of the "generateProtoTasks" closure.
-        id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:${libs.versions.grpc.protobuf.get()}"
-        }
-    }
-
-    generateProtoTasks {
-        all().forEach() {
-            // The "plugins" container is a NamedDomainObjectContainer<GenerateProtoTask.PluginOptions>
-            // which can be used to configure the plugins applied to the task.
-            it.builtins {
-                id("kotlin") {
-                }
-                id("java") {
-                }
-            }
-        }
-    }
 }
