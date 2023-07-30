@@ -1,3 +1,32 @@
+## [1.1.3](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.2...1.1.3) (2023-07-30)
+
+
+### Dependency updates
+
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.43 ([801ccb4](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/801ccb47921fa5c515e2ae100d38e862b6b4c092))
+* **deps:** update gradle to v8.1.0 ([688db60](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/688db6067c2801cbd06ada39b0bd0406ce7cfe61))
+* **deps:** update node.js to 18.17 ([beb0445](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/beb0445d96a63eed25a94da9800a06779e8b7e76))
+* **deps:** update plugin com.gradle.enterprise to v3.14 ([03547ac](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/03547ac26e332aea1b9fb42e145d258625c0706d))
+* **deps:** update plugin com.gradle.enterprise to v3.14.1 ([b59a49d](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/b59a49de9cbea6efd1a581a8edf5dd15dd8b0fcf))
+* **deps:** update plugin kotlin-qa to v0.48.0 ([8c8d197](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/8c8d1979d508fecde2ecc63c0afb4172ddb93670))
+
+
+### Bug Fixes
+
+* **deps:** update grpc.protobuf to v1.57.0 ([5844517](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/58445171d50a8c20cbb0d6ad27ed8233a8992568))
+* **deps:** update kotlinxcoroutines to v1.7.3 ([41143bd](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/41143bdcc2529fe81a3667f259cf31eb75fa4c4d))
+
+
+### Build and continuous integration
+
+* change documentation job group ([0f0b3de](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/0f0b3ded4d887969db832f33c1d483977aee03fa))
+
+
+### General maintenance
+
+* **build:** remove duplicate code in configuration ([9c0f65c](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/9c0f65c44f95d5389c0fc0714b781a8e8d953d77))
+* improve README.md and add model's images ([618ed89](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/618ed898edbfdb507c05c11f65a47fb454776af5))
+
 ## [1.1.2](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.1...1.1.2) (2023-07-17)
 
 
