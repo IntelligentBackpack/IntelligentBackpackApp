@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.3...1.1.4) (2023-07-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency io.github.andreabrighi:retrofitprotobufjsonconverter to v1.0.5 ([9d75f45](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/9d75f451ea6c9face3a6c3c20f116db2341c7003))
+
 ## [1.1.3](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.2...1.1.3) (2023-07-30)
 
 
