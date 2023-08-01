@@ -2,5 +2,8 @@
   "extends": [
     "config:base"
   ],
-  "schedule": ["every weekend"]
+  "schedule": ["every weekend"],
+  "git-submodules": {
+    "enabled": true
+  }
 }
