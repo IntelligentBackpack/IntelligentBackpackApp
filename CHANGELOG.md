@@ -1,3 +1,21 @@
+## [1.1.5](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.4...1.1.5) (2023-08-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.guava:guava to v32 ([a6e3288](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/a6e3288f10325022fcc88f9becc31ddbfb53f53f))
+* **deps:** update dependency com.google.mlkit:barcode-scanning to v17.2.0 ([76df4bd](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/76df4bd8a5862e57a0e1931ce0e289aeed535759))
+* **deps:** update dependency io.github.andreabrighi:retrofitprotobufjsonconverter to v1.0.6 ([e2f74d6](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/e2f74d6d22ddd750538154745aff0672511708e9))
+* **deps:** update grpc.protobuf to v1.57.1 ([fb4b269](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/fb4b2696874c4993e16833a44b540537ccb67124))
+* **deps:** update kotlin ([3e4d15c](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/3e4d15c8010c695c731a7963254bd284c33d6b69))
+
+
+### Build and continuous integration
+
+* add compose compile as library dependency ([af181c5](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/af181c5527640b6718aae99babfa82cff6916c02))
+* add git submodule to renovate.json dependency ([f6e6cea](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/f6e6ceabec33ab51191434026e3db26037aa70ca))
+* add package rules for compose compiler and kotlin ([ed6f056](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/ed6f056b2e9af20bca389e9a5f84e226e26c617d))
+
 ## [1.1.4](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.3...1.1.4) (2023-07-31)
 
 
