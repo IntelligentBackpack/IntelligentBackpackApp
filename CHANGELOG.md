@@ -1,3 +1,16 @@
+## [1.1.6](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.5...1.1.6) (2023-08-08)
+
+
+### Dependency updates
+
+* **deps:** update plugin kotlin-qa to v0.49.0 ([80f1732](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/80f1732061d349c21209583b6b6eda15ebd9d648))
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.firebase:firebase-bom to v32.2.2 ([553ddce](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/553ddce0439391ad1a49955d74da6ac67082f207))
+* **deps:** update dependency com.google.firebase:firebase-crashlytics-gradle to v2.9.8 ([b4acb85](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/b4acb85a6df05cc00dd43263b07098b5dda770d2))
+
 ## [1.1.5](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.4...1.1.5) (2023-08-02)
 
 
