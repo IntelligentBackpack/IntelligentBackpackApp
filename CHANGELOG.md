@@ -1,3 +1,43 @@
+## [1.2.0](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.4...1.2.0) (2023-08-10)
+
+
+### Features
+
+* **app:** update targetSdk to 34 ([07efc72](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/07efc723aaca164e97dbcb65dd52375b2f6b9a93))
+
+
+### Dependency updates
+
+* **deps:** update plugin kotlin-qa to v0.49.0 ([526c5d9](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/526c5d991a052a9bbe5b14d4c8982b57ce90ac6e))
+
+
+### Bug Fixes
+
+* **deps:** update cameralifecycle to v1.3.0-beta02 ([84aa884](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/84aa884ead84114199bf061012452c374fd0a37e))
+* **deps:** update dependency androidx.compose:compose-bom to v2023.08.00 ([552882e](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/552882efc520eb09190bd9f90e771a7f61cecffb))
+* **deps:** update dependency androidx.navigation:navigation-compose to v2.7.0 ([3254b5e](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/3254b5e9f166d1253cd55af36511855303c417e0))
+* **deps:** update dependency com.google.firebase:firebase-bom to v32.2.2 ([51c77b0](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/51c77b020e28b4279d61093eadeceab96b81a68e))
+* **deps:** update dependency com.google.firebase:firebase-crashlytics-gradle to v2.9.8 ([fdd8f92](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/fdd8f92dd57538970a44f87db4c52308c1af2c21))
+* **deps:** update dependency com.google.guava:guava to v32 ([a6e3288](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/a6e3288f10325022fcc88f9becc31ddbfb53f53f))
+* **deps:** update dependency com.google.mlkit:barcode-scanning to v17.2.0 ([76df4bd](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/76df4bd8a5862e57a0e1931ce0e289aeed535759))
+* **deps:** update dependency io.github.andreabrighi:retrofitprotobufjsonconverter to v1.0.6 ([e2f74d6](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/e2f74d6d22ddd750538154745aff0672511708e9))
+* **deps:** update grpc.protobuf to v1.57.1 ([8920cba](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/8920cba2d423bd689712d364e88f90320029ca90))
+* **deps:** update kotlin ([72a5f49](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/72a5f49f4348a3010682e79090000b4ffb21c67c))
+* **deps:** update protobuf to v3.24.0 ([ca94959](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/ca94959686dd0cee9cce917e2438cbae911cc935))
+
+
+### Build and continuous integration
+
+* add compose compile as library dependency ([00d51e9](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/00d51e9db3d41cc990b0d68b7fed52052273e838))
+* add git submodule to renovate.json dependency ([f6e6cea](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/f6e6ceabec33ab51191434026e3db26037aa70ca))
+* add package rules for compose compiler and kotlin ([c610582](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/c610582ca09821c0204deb09cc0258bfac063246))
+
+
+### General maintenance
+
+* **release:** 1.1.5 [skip ci] ([384653a](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/384653aa3c6163179951ae6891b1b352d51c66dd))
+* **release:** 1.1.6 [skip ci] ([26c6a91](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/26c6a91dde785407b549a5f27ca8ca3d2f6ca979))
+
 ## [1.1.6](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.5...1.1.6) (2023-08-08)
 
 
