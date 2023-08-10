@@ -14,12 +14,12 @@ androidGitSemVer {
 
 android {
     namespace = "com.intelligentbackpack.app"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.intelligentbackpack.app"
         minSdk = 29
-        targetSdk = 33
+        targetSdk = 34
         versionCode = androidGitSemVer.computeVersionCode()
         versionName = androidGitSemVer.computeVersion()
 
