@@ -1,3 +1,17 @@
+## [1.2.1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.2.0...1.2.1) (2023-08-19)
+
+
+### Dependency updates
+
+* **deps:** update dependency gradle to v8.3 ([f568e53](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/f568e5341f8ff0c3eb18123c810fc60b46d20258))
+
+
+### Bug Fixes
+
+* **deps:** update dependency io.github.andreabrighi:retrofitprotobufjsonconverter to v1.0.8 ([88a01a2](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/88a01a27d66f31f9fa7ed5704b990ee9fcddaf9b))
+* **deps:** update grpc.protobuf to v1.57.2 ([a03ea92](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/a03ea92c5efd7f7d1bce895be830d2def44231e8))
+* **deps:** update protobuf to v3.24.1 ([8513cb1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/8513cb148e87d58c6e900a847de21dbab6e3fdff))
+
 ## [1.2.0](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.1.4...1.2.0) (2023-08-10)
 
 
