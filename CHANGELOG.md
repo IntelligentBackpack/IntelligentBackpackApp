@@ -1,3 +1,12 @@
+## [1.2.3](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.2.2...1.2.3) (2023-08-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.accompanist:accompanist-permissions to v0.32.0 ([b0e0763](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/b0e0763dabef9aa3596bc53350a8bf8f3b3f67a9))
+* **deps:** update dependency com.google.accompanist:accompanist-systemuicontroller to v0.32.0 ([2042702](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/2042702c7074608d2f9a3e37b605caf44e49c8dd))
+* **deps:** update protobuf to v3.24.2 ([f6deac1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/f6deac14c0dde194ce3d0689d739e42bf7221863))
+
 ## [1.2.2](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.2.1...1.2.2) (2023-08-26)
 
 
