@@ -1,3 +1,20 @@
+## [1.2.2](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.2.1...1.2.2) (2023-08-26)
+
+
+### Dependency updates
+
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.46 ([00458aa](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/00458aa49eb743f5c32dcf5a12dc07963e536e9d))
+* **deps:** update gradle to v8.1.1 ([bae17dc](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/bae17dc0d268b6855823a1b304ccf1a141efcec8))
+
+
+### Bug Fixes
+
+* **deps:** update cameralifecycle to v1.3.0-rc01 ([8471aa3](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/8471aa37e98357bf16721260ef6852d67426babb))
+* **deps:** update dependency androidx.navigation:navigation-compose to v2.7.1 ([ae89e2c](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/ae89e2ccf4ba4dc455df35cafc1b4dfe76344006))
+* **deps:** update dependency com.google.firebase:firebase-bom to v32.2.3 ([e248f07](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/e248f07755b94c77d58668da55a1796c75f1995c))
+* **deps:** update dependency com.google.firebase:firebase-crashlytics-gradle to v2.9.9 ([45ee7f9](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/45ee7f906c75daf299d1fdc3f301bf1b519786b9))
+* **deps:** update dependency io.github.andreabrighi:retrofitprotobufjsonconverter to v1.0.9 ([3f61935](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/3f61935f533fa3b05289a0660aec74c24957f46b))
+
 ## [1.2.1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.2.0...1.2.1) (2023-08-19)
 
 
