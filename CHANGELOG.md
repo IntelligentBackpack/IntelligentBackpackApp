@@ -1,3 +1,20 @@
+## [1.2.4](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.2.3...1.2.4) (2023-09-06)
+
+
+### Dependency updates
+
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.48 ([59d1847](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/59d184773a7b357b92645a868262a0b96235c305))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.53 ([1dd8403](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/1dd8403551cf8c4f1f8704217a656b864a595177))
+* **deps:** update plugin dokka to v1.9.0 ([f4c0828](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/f4c0828a6eab3f36cada243b6d0bb6aa640e499a))
+* **deps:** update plugin kotlin-qa to v0.49.1 ([07e5020](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/07e5020f15af24e3f76e0343834179cc31c884ef))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.10 ([f740b74](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/f740b74b9d95b3490cbac52940cccc27a355d1df))
+
+
+### Bug Fixes
+
+* **deps:** update kotest to v5.7.2 ([40a8370](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/40a83705a27264bbe6d281594d8f5d9b06f53b0e))
+* **deps:** update kotlin ([7c77e6c](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/7c77e6cf3f9b570fc470d38a28ab4e72c489b2d4))
+
 ## [1.2.3](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.2.2...1.2.3) (2023-08-26)
 
 
