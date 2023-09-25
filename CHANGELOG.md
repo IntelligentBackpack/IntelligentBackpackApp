@@ -1,3 +1,18 @@
+## [1.2.5](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.2.4...1.2.5) (2023-09-25)
+
+
+### Dependency updates
+
+* **deps:** update plugin sem-ver to v1.0.3 ([a76a6c0](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/a76a6c098744aa25b6f353e889cf4e0fc0e227c8))
+
+
+### Bug Fixes
+
+* **deps:** update dependency androidx.compose:compose-bom to v2023.09.01 ([0feeadd](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/0feeaddadc7fe3f5b07c3b70c9d1de7d379466b9))
+* **deps:** update dependency androidx.navigation:navigation-compose to v2.7.3 ([c3f35d1](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/c3f35d1040ff7a45e15f6b1393b64748c37c234b))
+* **deps:** update dependency io.github.andreabrighi:retrofitprotobufjsonconverter to v1.0.12 ([2a9d21d](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/2a9d21dd1cf2db0aa51f5d8c159e674fd97f3fff))
+* **deps:** update mockk to v1.13.8 ([8fa497e](https://github.com/IntelligentBackpack/IntelligentBackpackApp/commit/8fa497e70124bf5a064e125880246984531f3617))
+
 ## [1.2.4](https://github.com/IntelligentBackpack/IntelligentBackpackApp/compare/1.2.3...1.2.4) (2023-09-06)
 
 
